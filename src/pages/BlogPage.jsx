@@ -254,7 +254,7 @@ const BlogPage = () => {
               <div
                 key={post.id}
                 className="opacity-0 animate-fade-in"
-                style={{ animationDelay: `${Math.min(index * 0.05, 0.3)}s` }}
+                style={{ '--animation-delay': Math.min(index * 0.05, 0.3) } as React.CSSProperties}
               >
                 <Link 
                   to={`/blog/${post.id}`}

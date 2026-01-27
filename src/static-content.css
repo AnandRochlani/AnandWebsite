@@ -1,5 +1,47 @@
 /* Static Content Styles - Used for initial HTML render before React loads */
 
+/* Static Hero Section */
+#static-content > section:first-child {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#static-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=500&q=40&fm=webp&fit=crop');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 767px) {
+  #static-hero-bg {
+    background-image: url('https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=300&q=40&fm=webp&fit=crop');
+  }
+}
+
+#static-hero-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, rgba(88, 28, 135, 0.9), rgba(15, 23, 42, 0.95), rgba(190, 24, 93, 0.9));
+  z-index: 10;
+}
+
+#static-hero-content {
+  position: relative;
+  z-index: 20;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+}
+
 /* Noscript fallback */
 noscript > div {
   padding: 20px;

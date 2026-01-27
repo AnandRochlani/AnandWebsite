@@ -49,23 +49,7 @@
 		<link rel="preload" as="image" href="https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=500&q=40&fm=webp&fit=crop" fetchpriority="high" crossorigin="anonymous" media="(min-width: 768px)" />
 		<link rel="preload" as="image" href="https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=300&q=40&fm=webp&fit=crop" fetchpriority="high" crossorigin="anonymous" media="(max-width: 767px)" />
 		
-		<!-- Inline critical hero image in static HTML for instant LCP -->
-		<style>
-			#static-hero-bg {
-				position: absolute;
-				inset: 0;
-				z-index: 0;
-				background-image: url('https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=500&q=40&fm=webp&fit=crop');
-				background-size: cover;
-				background-position: center;
-				background-repeat: no-repeat;
-			}
-			@media (max-width: 767px) {
-				#static-hero-bg {
-					background-image: url('https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=300&q=40&fm=webp&fit=crop');
-				}
-			}
-		</style>
+		<!-- Hero image styles moved to static-content.css to avoid inline styles -->
 		
 		<!-- Preload critical CSS for faster FCP -->
 		<link rel="preload" as="style" href="/src/index.css" />
@@ -115,11 +99,11 @@
 			
 			<main id="static-content">
 				<!-- Hero Section -->
-				<section style="position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+				<section>
 					<!-- Static hero background image for instant LCP -->
 					<div id="static-hero-bg"></div>
-					<div style="position: absolute; inset: 0; background: linear-gradient(to bottom right, rgba(88, 28, 135, 0.9), rgba(15, 23, 42, 0.95), rgba(190, 24, 93, 0.9)); z-index: 10;"></div>
-					<div style="position: relative; z-index: 20; max-width: 80rem; margin: 0 auto; padding: 1rem; text-align: center;">
+					<div id="static-hero-gradient"></div>
+					<div id="static-hero-content">
 						<div>
 							<span>Welcome to the future of learning</span>
 						</div>

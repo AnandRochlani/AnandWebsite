@@ -43,3 +43,8 @@ body {
     display: none !important;
   }
 }
+
+/* Animation delay for blog posts using data attribute */
+[data-animation-delay] {
+  animation-delay: calc(var(--animation-delay, 0) * 1s);
+}
