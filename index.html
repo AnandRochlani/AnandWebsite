@@ -45,7 +45,7 @@
 		<link rel="preconnect" href="https://images.unsplash.com" crossorigin />
 		
 		<!-- Preload critical hero image for homepage LCP - extremely small for fastest mobile load -->
-		<link rel="preload" as="image" href="https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=250&q=40&fm=webp&fit=crop" fetchpriority="high" crossorigin="anonymous" />
+		<link rel="preload" as="image" href="https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=200&q=35&fm=webp&fit=crop" fetchpriority="high" crossorigin="anonymous" />
 		
 		<!-- Hero image styles moved to static-content.css to avoid inline styles -->
 		
@@ -68,9 +68,9 @@
 			// Immediately start loading hero image before React
 			(function() {
 				var img = new Image();
-				img.src = 'https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=250&q=40&fm=webp&fit=crop';
-				img.fetchPriority = 'high';
-				img.loading = 'eager';
+				img.src = 'https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=200&q=35&fm=webp&fit=crop';
+				if (img.fetchPriority !== undefined) img.fetchPriority = 'high';
+				if (img.loading !== undefined) img.loading = 'eager';
 			})();
 		</script>
 		
@@ -111,13 +111,16 @@
 				<section>
 					<!-- Static hero background image for instant LCP - actual img tag for faster loading -->
 					<div class="static-hero-img-container">
+						<!-- Gradient fallback shows immediately, image loads on top -->
+						<div class="static-hero-gradient-fallback"></div>
 						<img 
-							src="https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=250&q=40&fm=webp&fit=crop" 
+							src="https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=200&q=35&fm=webp&fit=crop" 
 							alt="Learning Background"
 							class="static-hero-img"
 							fetchpriority="high"
 							loading="eager"
 							decoding="async"
+							onerror="this.style.display='none';"
 						/>
 					</div>
 					<div id="static-hero-gradient"></div>

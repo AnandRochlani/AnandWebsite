@@ -13,7 +13,7 @@ export function cn(...inputs) {
  * @param {number} quality - Image quality (1-100, default: 40 for maximum compression)
  * @returns {string} - Optimized image URL
  */
-export function optimizeImageUrl(url, width = 500, quality = 40) {
+export function optimizeImageUrl(url, width = 500, quality = 35) {
 	if (!url) return url;
 	
 	// If it's an Unsplash URL, use Unsplash Source API for optimization
