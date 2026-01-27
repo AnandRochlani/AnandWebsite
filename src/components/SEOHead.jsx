@@ -13,7 +13,10 @@ const SEOHead = ({
   const location = useLocation();
   const siteUrl = 'https://www.anandrochlani.com';
   const fullUrl = canonical || `${siteUrl}${location.pathname}`;
-  const fullTitle = title ? `${title} | AnandRochlani` : 'Expert Online Courses & Tech Blog | AnandRochlani';
+  // Only append brand name if title doesn't already contain it
+  const fullTitle = title 
+    ? (title.includes('AnandRochlani') ? title : `${title} | AnandRochlani`)
+    : 'Expert Online Courses & Tech Blog | AnandRochlani';
   const fullDescription = description || 'Master web development, design, and data science with expert-led courses and tech blog posts. Join thousands learning new skills.';
 
   return (

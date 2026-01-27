@@ -9,9 +9,9 @@ const HomePage = () => {
   return (
     <>
       <SEOHead 
-        title="Expert Online Courses & Tech Blog | AnandRochlani"
-        description="Master web development, design, and data science with expert-led courses and tech blog posts. Join thousands learning new skills at AnandRochlani."
-        keywords="online courses, web development courses, react courses, javascript tutorials, UI/UX design courses, data science courses, programming courses, tech blog, learn coding online"
+        title="Cutting-Edge Courses & Insightful Blog Posts"
+        description="Discover cutting-edge courses and insightful blog posts in web development, design, and data science. Expert-led learning to accelerate your journey."
+        keywords="cutting-edge courses, insightful blog posts, online courses, web development courses, react courses, javascript tutorials, UI/UX design courses, data science courses, programming courses, tech blog, learn coding online"
         canonical="https://www.anandrochlani.com/"
       />
 
@@ -47,14 +47,14 @@ const HomePage = () => {
               </motion.div>
 
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight">
-                Empower Your
+                Cutting-Edge Courses & 
                 <span className="block bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-                  Learning Journey
+                  Insightful Blog Posts
                 </span>
               </h1>
 
               <p className="text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto">
-                Discover cutting-edge courses and insightful blog posts to accelerate your growth in web development, design, and data science.
+                Discover cutting-edge courses and insightful blog posts to accelerate your growth in web development, design, and data science. Join thousands of students mastering new skills with our expert-led courses and comprehensive tech blog.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -121,7 +121,7 @@ const HomePage = () => {
                   <BookOpen className="w-12 h-12 text-purple-400 mb-4" />
                   <h2 className="text-2xl font-bold text-white mb-3">Insightful Blog Posts</h2>
                   <p className="text-gray-300 mb-4">
-                    Stay updated with the latest trends, tutorials, and best practices in technology and design.
+                    Stay updated with the latest trends, tutorials, and best practices in technology and design. Our insightful blog posts cover cutting-edge topics in web development, UI/UX design, and data science to help you stay ahead in your career.
                   </p>
                   <span className="inline-flex items-center text-purple-400 font-medium group-hover:gap-2 transition-all duration-300">
                     Read Articles
@@ -138,9 +138,9 @@ const HomePage = () => {
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-500/20 to-transparent rounded-full blur-3xl group-hover:scale-150 transition-transform duration-500" />
                   <GraduationCap className="w-12 h-12 text-pink-400 mb-4" />
-                  <h2 className="text-2xl font-bold text-white mb-3">Expert-Led Courses</h2>
+                  <h2 className="text-2xl font-bold text-white mb-3">Cutting-Edge Courses</h2>
                   <p className="text-gray-300 mb-4">
-                    Master new skills with comprehensive courses taught by industry professionals.
+                    Master new skills with comprehensive cutting-edge courses taught by industry professionals. Explore our collection of expert-led courses covering web development, design, and data science with hands-on projects and real-world applications.
                   </p>
                   <span className="inline-flex items-center text-pink-400 font-medium group-hover:gap-2 transition-all duration-300">
                     Explore Courses
@@ -148,6 +148,49 @@ const HomePage = () => {
                   </span>
                 </motion.div>
               </Link>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Additional Content Section for SEO */}
+        <section className="py-16 bg-slate-900">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="max-w-4xl mx-auto text-center"
+            >
+              <h2 className="text-3xl font-bold text-white mb-6">Why Choose AnandRochlani?</h2>
+              <div className="grid md:grid-cols-3 gap-8 text-left mt-8">
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-3">Cutting-Edge Content</h3>
+                  <p className="text-gray-300">
+                    Our courses and blog posts feature the latest technologies and industry best practices. Stay ahead with cutting-edge content that keeps you at the forefront of web development, design, and data science.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-3">Insightful Blog Posts</h3>
+                  <p className="text-gray-300">
+                    Read our insightful blog posts covering tutorials, case studies, and expert insights. Our blog provides valuable content to help you grow your skills and advance your career in technology.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-3">Expert-Led Learning</h3>
+                  <p className="text-gray-300">
+                    Learn from industry professionals with years of experience. Our expert-led courses provide practical knowledge and real-world applications to help you master new skills effectively.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-12 text-gray-300 space-y-4">
+                <p>
+                  At AnandRochlani, we offer cutting-edge courses and insightful blog posts designed to help you excel in web development, UI/UX design, and data science. Whether you're looking for cutting-edge courses on React, JavaScript, or Node.js, or insightful blog posts about the latest tech trends, we have the resources you need.
+                </p>
+                <p>
+                  Our platform combines cutting-edge course content with insightful blog posts to create a comprehensive learning experience. Explore our cutting-edge courses and read our insightful blog posts to stay updated with the latest in technology and design. Join thousands of students who are already benefiting from our cutting-edge courses and insightful blog posts.
+                </p>
+              </div>
             </motion.div>
           </div>
         </section>
