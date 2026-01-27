@@ -112,7 +112,17 @@ const BlogPage = () => {
               transition={{ duration: 0.4 }}
               className="mb-12"
             >
-              <Link to={`/blog/${featuredPost.id}`}>
+              <Link 
+                to={`/blog/${featuredPost.id}`}
+                onMouseEnter={() => {
+                  // Prefetch featured post detail route on hover
+                  const link = document.createElement('link');
+                  link.rel = 'prefetch';
+                  link.href = `/blog/${featuredPost.id}`;
+                  link.as = 'document';
+                  document.head.appendChild(link);
+                }}
+              >
                 <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl">
                   <div className="absolute top-4 left-4 z-10">
                     <span className="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-sm font-medium">
