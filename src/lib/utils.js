@@ -7,13 +7,13 @@ export function cn(...inputs) {
 
 /**
  * Optimize Unsplash image URLs for better performance
- * Uses Unsplash Source API with very aggressive optimization
+ * Uses Unsplash Source API with extremely aggressive optimization
  * @param {string} url - Original Unsplash image URL
- * @param {number} width - Desired image width in pixels (aggressively reduced)
- * @param {number} quality - Image quality (1-100, default: 50 for maximum compression)
+ * @param {number} width - Desired image width in pixels (extremely reduced)
+ * @param {number} quality - Image quality (1-100, default: 40 for maximum compression)
  * @returns {string} - Optimized image URL
  */
-export function optimizeImageUrl(url, width = 600, quality = 50) {
+export function optimizeImageUrl(url, width = 500, quality = 40) {
 	if (!url) return url;
 	
 	// If it's an Unsplash URL, use Unsplash Source API for optimization
@@ -22,9 +22,9 @@ export function optimizeImageUrl(url, width = 600, quality = 50) {
 		const photoMatch = url.match(/photo-([a-zA-Z0-9]+)/);
 		if (photoMatch && photoMatch[1]) {
 			const photoId = photoMatch[1];
-			// Use Unsplash Source API with very aggressive optimization
+			// Use Unsplash Source API with extremely aggressive optimization
 			// Format: https://images.unsplash.com/photo-{id}?w={width}&q={quality}&fm=webp&fit=crop
-			// Using smaller widths and lower quality for maximum compression
+			// Using very small widths and lower quality for maximum compression
 			return `https://images.unsplash.com/photo-${photoId}?w=${width}&q=${quality}&fm=webp&fit=crop`;
 		}
 		// Fallback: try to use existing URL with parameters
@@ -38,7 +38,7 @@ export function optimizeImageUrl(url, width = 600, quality = 50) {
 
 /**
  * Generate responsive image srcset for Unsplash images
- * Uses very small sizes and lower quality for maximum compression
+ * Uses extremely small sizes and lower quality for maximum compression
  * @param {string} url - Original Unsplash image URL
  * @returns {string} - srcset string with multiple sizes
  */
@@ -50,7 +50,7 @@ export function generateImageSrcset(url) {
 	if (!photoMatch || !photoMatch[1]) return undefined;
 	
 	const photoId = photoMatch[1];
-	// Use very small sizes for maximum compression: 200, 400, 600, 800
-	const sizes = [200, 400, 600, 800];
-	return sizes.map(size => `https://images.unsplash.com/photo-${photoId}?w=${size}&q=50&fm=webp&fit=crop ${size}w`).join(', ');
+	// Use extremely small sizes for maximum compression: 150, 300, 450, 600
+	const sizes = [150, 300, 450, 600];
+	return sizes.map(size => `https://images.unsplash.com/photo-${photoId}?w=${size}&q=40&fm=webp&fit=crop ${size}w`).join(', ');
 }

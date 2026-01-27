@@ -8,7 +8,7 @@ import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
 
 const HomePage = () => {
   const heroImageUrl = "https://images.unsplash.com/photo-1504983875-d3b163aba9e6";
-  const optimizedHeroImage = optimizeImageUrl(heroImageUrl, 800, 50);
+  const optimizedHeroImage = optimizeImageUrl(heroImageUrl, 600, 40);
 
   // Preload hero image for better LCP (immediate, not deferred)
   useEffect(() => {

@@ -60,7 +60,7 @@ const CourseDetail = () => {
   // Preload course featured image for better LCP
   useEffect(() => {
     if (course?.featuredImage) {
-      const optimizedImage = optimizeImageUrl(course.featuredImage, 800, 50);
+      const optimizedImage = optimizeImageUrl(course.featuredImage, 600, 40);
       const existingPreload = document.querySelector(`link[rel="preload"][href="${optimizedImage}"]`);
       if (!existingPreload) {
         const link = document.createElement('link');
@@ -162,7 +162,7 @@ const CourseDetail = () => {
 
               <div className="relative h-96 rounded-2xl overflow-hidden mb-8 shadow-2xl border border-white/10 group">
                 <img
-                  src={optimizeImageUrl(course.featuredImage, 800, 50)}
+                  src={optimizeImageUrl(course.featuredImage, 600, 40)}
                   srcSet={generateImageSrcset(course.featuredImage)}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
                   alt={course.name}
@@ -352,7 +352,7 @@ const CourseDetail = () => {
                         <div className="group rounded-lg overflow-hidden bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/50 transition-all duration-300">
                           <div className="relative h-32 overflow-hidden">
                             <img
-                              src={optimizeImageUrl(relatedCourse.featuredImage, 250, 50)}
+                              src={optimizeImageUrl(relatedCourse.featuredImage, 200, 40)}
                               srcSet={generateImageSrcset(relatedCourse.featuredImage)}
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
                               alt={relatedCourse.name}
