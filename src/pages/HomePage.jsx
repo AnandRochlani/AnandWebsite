@@ -8,7 +8,7 @@ import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
 
 const HomePage = () => {
   const heroImageUrl = "https://images.unsplash.com/photo-1504983875-d3b163aba9e6";
-  const optimizedHeroImage = optimizeImageUrl(heroImageUrl, 600, 40);
+  const optimizedHeroImage = optimizeImageUrl(heroImageUrl, 400, 40); // Further reduced for faster LCP
 
   // Preload hero image for better LCP (immediate, not deferred)
   useEffect(() => {
@@ -121,26 +121,17 @@ const HomePage = () => {
               className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-2"
             >
               <motion.div className="w-1.5 h-1.5 rounded-full bg-white" />
-            </motion.div>
-          </motion.div>
+              </div>
+            </div>
         </section>
 
         {/* Features Section */}
         <section className="py-16 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-8"
-            >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Blog Feature */}
               <Link to="/blog">
-                <motion.div
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10 p-8 hover:border-purple-500/50 transition-all duration-300"
-                >
+                <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10 p-8 hover:border-purple-500/50 transition-all duration-300">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-transparent rounded-full blur-3xl group-hover:scale-150 transition-transform duration-500" />
                   <BookOpen className="w-12 h-12 text-purple-400 mb-4" />
                   <h2 className="text-2xl font-bold text-white mb-3">Insightful Blog Posts</h2>
@@ -151,15 +142,12 @@ const HomePage = () => {
                     View Blog Posts
                     <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
                   </span>
-                </motion.div>
+                </div>
               </Link>
 
               {/* Courses Feature */}
               <Link to="/courses">
-                <motion.div
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 backdrop-blur-sm border border-white/10 p-8 hover:border-pink-500/50 transition-all duration-300"
-                >
+                <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 backdrop-blur-sm border border-white/10 p-8 hover:border-pink-500/50 transition-all duration-300">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-500/20 to-transparent rounded-full blur-3xl group-hover:scale-150 transition-transform duration-500" />
                   <GraduationCap className="w-12 h-12 text-pink-400 mb-4" />
                   <h2 className="text-2xl font-bold text-white mb-3">Cutting-Edge Courses</h2>
@@ -170,22 +158,16 @@ const HomePage = () => {
                     View All Courses
                     <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
                   </span>
-                </motion.div>
+                </div>
               </Link>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Additional Content Section for SEO */}
         <section className="py-16 bg-slate-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="max-w-4xl mx-auto text-center"
-            >
+            <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl font-bold text-white mb-6">Why Choose AnandRochlani?</h2>
               <div className="grid md:grid-cols-3 gap-8 text-left mt-8">
                 <div>
