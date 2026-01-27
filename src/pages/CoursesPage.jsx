@@ -11,6 +11,7 @@ const CoursesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedLevel, setSelectedLevel] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [visibleCourses, setVisibleCourses] = useState(4); // Initially show only 4 courses to reduce initial load
 
   // Memoize courses to prevent unnecessary recalculations
   const allCourses = useMemo(() => getAllCourses(), []);
