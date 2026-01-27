@@ -9,7 +9,7 @@ import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
 const BlogPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('date');
-  const [visiblePosts, setVisiblePosts] = useState(6); // Initially show only 6 posts
+  const [visiblePosts, setVisiblePosts] = useState(4); // Initially show only 4 posts to reduce initial load
   const observerRef = useRef(null);
 
   // Memoize blog posts to prevent unnecessary recalculations

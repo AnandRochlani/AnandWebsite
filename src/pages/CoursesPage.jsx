@@ -379,7 +379,7 @@ const CoursesPage = () => {
           {filteredCourses.length > visibleCourses && (
             <div className="text-center mt-12">
               <button
-                onClick={() => setVisibleCourses(prev => Math.min(prev + 6, filteredCourses.length))}
+                onClick={() => setVisibleCourses(prev => Math.min(prev + 4, filteredCourses.length))}
                 className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Load More Courses
