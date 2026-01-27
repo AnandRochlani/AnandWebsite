@@ -86,8 +86,11 @@ const SavedCoursesPage = () => {
                       <div className="group h-full rounded-xl overflow-hidden bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
                         <div className="relative h-48 overflow-hidden">
                           <img
-                            src={course.featuredImage}
+                            src={optimizeImageUrl(course.featuredImage, 600, 70)}
+                            srcSet={generateImageSrcset(course.featuredImage)}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             alt={course.name}
+                            loading="lazy"
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent" />

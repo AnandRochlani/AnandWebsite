@@ -57,6 +57,18 @@ const CourseDetail = () => {
     
   const isSystemDesign = useMemo(() => course?.category === 'System Design', [course]);
 
+  // Preload course featured image for better LCP
+  useEffect(() => {
+    if (course?.featuredImage) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = optimizeImageUrl(course.featuredImage, 1200, 80);
+      link.fetchPriority = 'high';
+      document.head.appendChild(link);
+    }
+  }, [course]);
+
   return (
     <>
       <SEOHead 
