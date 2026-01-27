@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, BookOpen, GraduationCap, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
+import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
 
 const HomePage = () => {
+  const heroImageUrl = "https://images.unsplash.com/photo-1504983875-d3b163aba9e6";
+  const optimizedHeroImage = optimizeImageUrl(heroImageUrl, 1920, 75);
+
+  // Preload hero image for better LCP
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'image';
+    link.href = optimizedHeroImage;
+    link.fetchPriority = 'high';
+    document.head.appendChild(link);
+  }, [optimizedHeroImage]);
+
   return (
     <>
       <SEOHead 
@@ -22,8 +36,12 @@ const HomePage = () => {
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-900/90 via-slate-900/95 to-pink-900/90 z-10" />
             <img
-              src="https://images.unsplash.com/photo-1504983875-d3b163aba9e6"
+              src={optimizedHeroImage}
+              srcSet={generateImageSrcset(heroImageUrl)}
+              sizes="100vw"
               alt="Learning Background"
+              fetchPriority="high"
+              loading="eager"
               className="w-full h-full object-cover"
             />
           </div>
