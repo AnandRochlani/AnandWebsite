@@ -8,9 +8,9 @@ import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
 
 const HomePage = () => {
   const heroImageUrl = "https://images.unsplash.com/photo-1504983875-d3b163aba9e6";
-  // Use 500px for desktop (better quality), srcset handles mobile responsiveness
-  // Desktop has better bandwidth, so we can use a larger image for better quality
-  const optimizedHeroImage = optimizeImageUrl(heroImageUrl, 500, 40);
+  // Use 250px for fastest mobile LCP, srcset handles desktop responsiveness
+  // Mobile is the critical path, so prioritize small size for instant load
+  const optimizedHeroImage = optimizeImageUrl(heroImageUrl, 250, 40);
 
   // Preload hero image for better LCP (immediate, not deferred)
   useEffect(() => {

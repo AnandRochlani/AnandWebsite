@@ -10,7 +10,7 @@ import { preloadCriticalResources } from '@/utils/preload';
 const removeStaticContent = () => {
   // Hide immediately to prevent visual flash and reduce rendering percentage
   // Include blog content and blog post content in removal
-  const staticElements = document.querySelectorAll('#static-header, #static-content, #static-footer, #static-blog-content, #static-blog-post-content, #static-hero-bg');
+  const staticElements = document.querySelectorAll('#static-header, #static-content, #static-footer, #static-blog-content, #static-blog-post-content');
   staticElements.forEach(el => {
     if (el && el.parentNode) {
       el.style.display = 'none'; // Hide first for instant visual removal

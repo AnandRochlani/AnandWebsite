@@ -44,10 +44,8 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
 		<link rel="preconnect" href="https://images.unsplash.com" crossorigin />
 		
-		<!-- Preload critical hero image for homepage LCP - responsive sizing -->
-		<!-- Use picture element with media queries for responsive preload -->
-		<link rel="preload" as="image" href="https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=500&q=40&fm=webp&fit=crop" fetchpriority="high" crossorigin="anonymous" media="(min-width: 768px)" />
-		<link rel="preload" as="image" href="https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=300&q=40&fm=webp&fit=crop" fetchpriority="high" crossorigin="anonymous" media="(max-width: 767px)" />
+		<!-- Preload critical hero image for homepage LCP - extremely small for fastest mobile load -->
+		<link rel="preload" as="image" href="https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=250&q=40&fm=webp&fit=crop" fetchpriority="high" crossorigin="anonymous" />
 		
 		<!-- Hero image styles moved to static-content.css to avoid inline styles -->
 		
@@ -100,8 +98,17 @@
 			<main id="static-content">
 				<!-- Hero Section -->
 				<section>
-					<!-- Static hero background image for instant LCP -->
-					<div id="static-hero-bg"></div>
+					<!-- Static hero background image for instant LCP - actual img tag for faster loading -->
+					<div style="position: absolute; inset: 0; z-index: 0;">
+						<img 
+							src="https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=250&q=40&fm=webp&fit=crop" 
+							alt="Learning Background"
+							style="width: 100%; height: 100%; object-fit: cover;"
+							fetchpriority="high"
+							loading="eager"
+							decoding="async"
+						/>
+					</div>
 					<div id="static-hero-gradient"></div>
 					<div id="static-hero-content">
 						<div>
