@@ -6,6 +6,7 @@ import { getAllBlogPosts } from '@/data/blogPosts';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import SEOHead from '@/components/SEOHead';
+import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
 
 const BlogPostDetail = () => {
   const { id } = useParams();
@@ -125,8 +126,12 @@ const BlogPostDetail = () => {
             className="relative h-96 rounded-2xl overflow-hidden mb-8 shadow-2xl"
           >
             <img
-              src={post.featuredImage}
+              src={optimizeImageUrl(post.featuredImage, 1200, 80)}
+              srcSet={generateImageSrcset(post.featuredImage)}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
               alt={post.title}
+              loading="eager"
+              fetchPriority="high"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
@@ -230,8 +235,11 @@ const BlogPostDetail = () => {
                     <div className="group rounded-xl overflow-hidden bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
                       <div className="relative h-40 overflow-hidden">
                         <img
-                          src={relatedPost.featuredImage}
+                          src={optimizeImageUrl(relatedPost.featuredImage, 400, 70)}
+                          srcSet={generateImageSrcset(relatedPost.featuredImage)}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
                           alt={relatedPost.title}
+                          loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent" />

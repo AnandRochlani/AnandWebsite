@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, ArrowRight, Filter, Star } from 'lucide-react';
 import { getAllBlogPosts } from '@/data/blogPosts';
 import SEOHead from '@/components/SEOHead';
+import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
 
 const BlogPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -172,7 +173,9 @@ const BlogPage = () => {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="relative h-64 md:h-full overflow-hidden">
                       <img
-                        src={featuredPost.featuredImage}
+                        src={optimizeImageUrl(featuredPost.featuredImage, 1200, 80)}
+                        srcSet={generateImageSrcset(featuredPost.featuredImage)}
+                        sizes="(max-width: 768px) 100vw, 50vw"
                         alt={featuredPost.title}
                         fetchPriority="high"
                         loading="eager"
@@ -262,7 +265,9 @@ const BlogPage = () => {
                   <div className="group h-full rounded-xl overflow-hidden bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
                     <div className="relative h-48 overflow-hidden bg-slate-800">
                       <img
-                        data-lazy={post.featuredImage}
+                        data-lazy={optimizeImageUrl(post.featuredImage, 600, 70)}
+                        srcSet={generateImageSrcset(post.featuredImage)}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         alt={post.title}
                         loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
