@@ -85,7 +85,8 @@ noscript nav a {
   color: #e5e7eb;
 }
 
-#static-content > section:first-of-type h2 {
+#static-content > section:first-of-type h2,
+#static-content > section:first-of-type h1 {
   font-size: 3rem;
   font-weight: bold;
   color: white;
