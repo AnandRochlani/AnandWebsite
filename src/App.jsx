@@ -8,6 +8,7 @@ import { AdminProvider } from '@/context/AdminContext';
 import { AuthProvider } from '@/context/AuthContext';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { Loader2 } from 'lucide-react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import('@/pages/HomePage'));
@@ -55,6 +56,7 @@ function App() {
               </Suspense>
               <Footer />
               <Toaster />
+              <SpeedInsights />
             </div>
           </SavedCoursesProvider>
         </AdminProvider>
