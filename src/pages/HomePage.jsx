@@ -10,14 +10,19 @@ const HomePage = () => {
   const heroImageUrl = "https://images.unsplash.com/photo-1504983875-d3b163aba9e6";
   const optimizedHeroImage = optimizeImageUrl(heroImageUrl, 800, 50);
 
-  // Preload hero image for better LCP
+  // Preload hero image for better LCP (immediate, not deferred)
   useEffect(() => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'image';
-    link.href = optimizedHeroImage;
-    link.fetchPriority = 'high';
-    document.head.appendChild(link);
+    // Check if already preloaded in HTML
+    const existingPreload = document.querySelector(`link[rel="preload"][href="${optimizedHeroImage}"]`);
+    if (!existingPreload) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = optimizedHeroImage;
+      link.fetchPriority = 'high';
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+    }
   }, [optimizedHeroImage]);
 
   return (

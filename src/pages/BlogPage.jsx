@@ -70,12 +70,17 @@ const BlogPage = () => {
   // Preload featured post image for better LCP
   useEffect(() => {
     if (featuredPost?.featuredImage) {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = featuredPost.featuredImage;
-      link.fetchPriority = 'high';
-      document.head.appendChild(link);
+      const optimizedImage = optimizeImageUrl(featuredPost.featuredImage, 700, 50);
+      const existingPreload = document.querySelector(`link[rel="preload"][href="${optimizedImage}"]`);
+      if (!existingPreload) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = optimizedImage;
+        link.fetchPriority = 'high';
+        link.crossOrigin = 'anonymous';
+        document.head.appendChild(link);
+      }
     }
   }, [featuredPost]);
 

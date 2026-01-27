@@ -60,12 +60,17 @@ const CourseDetail = () => {
   // Preload course featured image for better LCP
   useEffect(() => {
     if (course?.featuredImage) {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = optimizeImageUrl(course.featuredImage, 800, 50);
-      link.fetchPriority = 'high';
-      document.head.appendChild(link);
+      const optimizedImage = optimizeImageUrl(course.featuredImage, 800, 50);
+      const existingPreload = document.querySelector(`link[rel="preload"][href="${optimizedImage}"]`);
+      if (!existingPreload) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = optimizedImage;
+        link.fetchPriority = 'high';
+        link.crossOrigin = 'anonymous';
+        document.head.appendChild(link);
+      }
     }
   }, [course]);
 

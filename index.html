@@ -45,7 +45,11 @@
 		<link rel="preconnect" href="https://images.unsplash.com" crossorigin />
 		
 		<!-- Preload critical hero image for homepage LCP -->
-		<link rel="preload" as="image" href="https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=800&q=50&fm=webp&fit=crop" fetchpriority="high" />
+		<link rel="preload" as="image" href="https://images.unsplash.com/photo-1504983875-d3b163aba9e6?w=800&q=50&fm=webp&fit=crop" fetchpriority="high" crossorigin="anonymous" />
+		
+		<!-- Preload critical CSS for faster FCP -->
+		<link rel="preload" as="style" href="/src/index.css" />
+		<link rel="preload" as="style" href="/src/static-content.css" />
 		
 		<!-- HTTP/2 Optimizations: Preload critical resources for faster initial render -->
 		<!-- HTTP/2 server push can be used for these resources (configured on server) -->
@@ -450,6 +454,6 @@
 			})();
 		</script>
 		
-		<script type="module" src="/src/main.jsx"></script>
+		<script type="module" src="/src/main.jsx" defer></script>
 	</body>
 </html>

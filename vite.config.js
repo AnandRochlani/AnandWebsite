@@ -18,17 +18,21 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Separate vendor chunks for better caching
+          // Separate vendor chunks for better caching and smaller initial bundle
           if (id.includes('node_modules')) {
+            // Critical: React core (loads first)
             if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
               return 'react-vendor';
             }
+            // Defer: Animation library (can load later)
             if (id.includes('framer-motion')) {
               return 'framer-motion';
             }
+            // Defer: Icons (can load later)
             if (id.includes('lucide-react')) {
               return 'lucide-react';
             }
+            // Defer: UI components (can load later)
             if (id.includes('@radix-ui')) {
               return 'radix-ui';
             }
@@ -49,6 +53,10 @@ export default defineConfig({
         drop_console: true,
         drop_debugger: true,
         pure_funcs: ['console.log', 'console.info', 'console.debug'],
+        passes: 2, // Multiple passes for better compression
+      },
+      mangle: {
+        safari10: true, // Fix Safari 10 issues
       },
     },
     // Optimize chunk size
@@ -58,6 +66,8 @@ export default defineConfig({
     // Optimize CSS
     cssCodeSplit: true,
     cssMinify: true,
+    // Target modern browsers for smaller bundles
+    target: 'esnext',
   },
   // Pre-optimize dependencies
   optimizeDeps: {
