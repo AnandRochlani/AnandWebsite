@@ -307,7 +307,8 @@
 				try {
 					const removeStatic = () => {
 						try {
-							const staticElements = document.querySelectorAll('#static-header, #static-content, #static-footer');
+							// Include blog content and blog post content in removal
+							const staticElements = document.querySelectorAll('#static-header, #static-content, #static-footer, #static-blog-content, #static-blog-post-content');
 							staticElements.forEach(el => {
 								if (el && el.parentNode) {
 									el.style.display = 'none';
