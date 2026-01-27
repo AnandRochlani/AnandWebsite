@@ -38,8 +38,8 @@ export const AdminProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
-      console.error("Error adding course:", error);
-      return { success: false, error: error.message };
+      // Silently handle errors - return error message to caller
+      return { success: false, error: error.message || 'Failed to add course' };
     }
   };
 
@@ -61,8 +61,8 @@ export const AdminProvider = ({ children }) => {
 
       return { success: true };
     } catch (error) {
-      console.error("Error adding blog post:", error);
-      return { success: false, error: error.message };
+      // Silently handle errors - return error message to caller
+      return { success: false, error: error.message || 'Failed to add blog post' };
     }
   };
 

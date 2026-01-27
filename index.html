@@ -12,33 +12,23 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		
 		<!-- Primary Meta Tags -->
+		<!-- Note: Title, description, and canonical are handled by SEOHead component per page -->
 		<title>Cutting-Edge Courses & Insightful Blog Posts | AnandRochlani</title>
-		<meta name="title" content="Cutting-Edge Courses & Insightful Blog Posts | AnandRochlani" />
-		<meta name="description" content="Discover cutting-edge courses and insightful blog posts in web development, design, and data science. Expert-led learning to accelerate your journey." />
 		<meta name="keywords" content="online courses, web development, react, javascript, UI/UX design, data science, machine learning, programming tutorials, tech blog, learn coding" />
 		<meta name="author" content="AnandRochlani" />
 		<meta name="robots" content="index, follow" />
-		<meta name="language" content="en" />
-		<meta name="revisit-after" content="7 days" />
 		
 		<!-- Canonical URL - Removed from static HTML, handled by SEOHead component per page -->
 		
 		<!-- Open Graph / Facebook -->
+		<!-- Note: OG tags (url, title, description, image) are handled by SEOHead component per page -->
 		<meta property="og:type" content="website" />
-		<meta property="og:url" content="https://www.anandrochlani.com/" />
-		<meta property="og:title" content="AnandRochlani - Expert-Led Online Courses & Tech Blog" />
-		<meta property="og:description" content="Master new skills with comprehensive courses and insightful blog posts. Learn web development, UI/UX design, and data science from industry experts." />
-		<meta property="og:image" content="https://www.anandrochlani.com/og-image.jpg" />
 		<meta property="og:site_name" content="AnandRochlani" />
 		<meta property="og:locale" content="en_US" />
-		<meta property="og:locale:alternate" content="en" />
 		
 		<!-- Twitter Card -->
+		<!-- Note: Twitter Card tags (url, title, description, image) are handled by SEOHead component per page -->
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:url" content="https://www.anandrochlani.com/" />
-		<meta name="twitter:title" content="AnandRochlani - Expert-Led Online Courses & Tech Blog" />
-		<meta name="twitter:description" content="Master new skills with comprehensive courses and insightful blog posts. Learn web development, UI/UX design, and data science from industry experts." />
-		<meta name="twitter:image" content="https://www.anandrochlani.com/og-image.jpg" />
 		
 		<!-- Additional Meta Tags -->
 		<meta name="theme-color" content="#7c3aed" />
@@ -201,6 +191,7 @@
 							<h4>Connect</h4>
 							<nav>
 								<a href="https://www.youtube.com/@anandrochlani5226" target="_blank" rel="noopener noreferrer">YouTube</a>
+								<a href="https://in.linkedin.com/in/anand-rochlani" target="_blank" rel="noopener noreferrer">LinkedIn</a>
 							</nav>
 						</div>
 					</div>
@@ -214,22 +205,34 @@
 		<script>
 			// Remove static content when React loads to prevent duplicate H1 tags and reduce rendering percentage
 			(function() {
-				// Remove immediately when React starts loading
-				const removeStatic = () => {
-					const staticElements = document.querySelectorAll('#static-header, #static-content, #static-footer');
-					staticElements.forEach(el => {
-						if (el) {
-							el.style.display = 'none'; // Hide instantly
-							setTimeout(() => el.remove(), 0); // Remove from DOM
+				try {
+					// Remove immediately when React starts loading
+					const removeStatic = () => {
+						try {
+							const staticElements = document.querySelectorAll('#static-header, #static-content, #static-footer');
+							staticElements.forEach(el => {
+								if (el && el.parentNode) {
+									el.style.display = 'none'; // Hide instantly
+									setTimeout(() => {
+										if (el.parentNode) {
+											el.remove(); // Remove from DOM
+										}
+									}, 0);
+								}
+							});
+						} catch (e) {
+							// Silently fail - static content removal should not break the site
 						}
-					});
-				};
-				
-				// Try to remove as early as possible
-				if (document.readyState === 'loading') {
-					document.addEventListener('DOMContentLoaded', removeStatic);
-				} else {
-					removeStatic();
+					};
+					
+					// Try to remove as early as possible
+					if (document.readyState === 'loading') {
+						document.addEventListener('DOMContentLoaded', removeStatic);
+					} else {
+						removeStatic();
+					}
+				} catch (error) {
+					// Silently fail - script should not break the site
 				}
 			})();
 		</script>

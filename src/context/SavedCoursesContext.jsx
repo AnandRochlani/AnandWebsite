@@ -23,7 +23,7 @@ export const SavedCoursesProvider = ({ children }) => {
       try {
         setSavedCourseIds(JSON.parse(saved));
       } catch (e) {
-        console.error('Failed to parse saved courses', e);
+        // Silently handle parse errors - use empty array as fallback
         setSavedCourseIds([]);
       }
     }

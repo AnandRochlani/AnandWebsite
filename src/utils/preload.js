@@ -13,17 +13,33 @@ export const preloadCriticalResources = () => {
 
   // Prefetch routes on idle (non-blocking)
   schedulePrefetch(() => {
-    const routesToPrefetch = ['/courses', '/blog'];
-    routesToPrefetch.forEach(route => {
-      // Only prefetch if not already in cache
-      if (!sessionStorage.getItem(`prefetched_${route}`)) {
-        const link = document.createElement('link');
-        link.rel = 'prefetch';
-        link.href = route;
-        link.as = 'document';
-        document.head.appendChild(link);
-        sessionStorage.setItem(`prefetched_${route}`, 'true');
-      }
-    });
+    try {
+      const routesToPrefetch = ['/courses', '/blog'];
+      routesToPrefetch.forEach(route => {
+        try {
+          // Only prefetch if not already in cache
+          // Check if sessionStorage is available (may not be in private browsing)
+          if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(`prefetched_${route}`)) {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = route;
+            link.as = 'document';
+            document.head.appendChild(link);
+            sessionStorage.setItem(`prefetched_${route}`, 'true');
+          } else if (typeof sessionStorage === 'undefined') {
+            // Fallback: prefetch without sessionStorage check
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = route;
+            link.as = 'document';
+            document.head.appendChild(link);
+          }
+        } catch (e) {
+          // Silently fail for individual routes
+        }
+      });
+    } catch (error) {
+      // Silently fail - prefetching should not break the site
+    }
   });
 };

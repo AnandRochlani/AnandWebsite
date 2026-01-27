@@ -36,15 +36,43 @@ const removeStaticContent = () => {
   }
 };
 
-// Initialize analytics
-initAnalytics();
+// Initialize analytics (with error handling)
+try {
+  initAnalytics();
+} catch (error) {
+  // Analytics errors should not break the site
+}
 
-// Preload critical resources
-preloadCriticalResources();
+// Preload critical resources (with error handling)
+try {
+  preloadCriticalResources();
+} catch (error) {
+  // Preload errors should not break the site
+}
 
 // Remove static content before React renders to prevent duplicate H1 tags
-removeStaticContent();
+try {
+  removeStaticContent();
+} catch (error) {
+  // Static content removal errors should not break the site
+}
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <App />
-);
+// Render React app with error boundary
+try {
+  const rootElement = document.getElementById('root');
+  if (rootElement) {
+    ReactDOM.createRoot(rootElement).render(
+      <App />
+    );
+  } else {
+    // Only log in development
+    if (import.meta.env.DEV) {
+      console.error('Root element not found');
+    }
+  }
+} catch (error) {
+  // Only log in development
+  if (import.meta.env.DEV) {
+    console.error('Failed to render React app:', error);
+  }
+}

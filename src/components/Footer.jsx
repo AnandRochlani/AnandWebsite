@@ -20,9 +20,9 @@ const Footer = () => {
 
   const socialLinks = [
     { icon: Youtube, href: 'https://www.youtube.com/@anandrochlani5226', label: 'YouTube', target: '_blank', rel: 'noopener noreferrer' },
+    { icon: Linkedin, href: 'https://in.linkedin.com/in/anand-rochlani', label: 'LinkedIn', target: '_blank', rel: 'noopener noreferrer' },
     { icon: Github, href: '#', label: 'GitHub' },
     { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
     { icon: Mail, href: '#', label: 'Email' }
   ];
 
