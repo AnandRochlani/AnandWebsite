@@ -43,7 +43,7 @@ const CoursesPage = () => {
           const link = document.createElement('link');
           link.rel = 'preload';
           link.as = 'image';
-          link.href = optimizeImageUrl(course.featuredImage, 500, 60);
+          link.href = optimizeImageUrl(course.featuredImage, 400, 50);
           link.fetchPriority = 'high';
           document.head.appendChild(link);
         }
@@ -162,7 +162,7 @@ const CoursesPage = () => {
 
                           <div className="relative h-48 overflow-hidden">
                             <img
-                              src={optimizeImageUrl(course.featuredImage, 500, 60)}
+                              src={optimizeImageUrl(course.featuredImage, 400, 50)}
                               srcSet={generateImageSrcset(course.featuredImage)}
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                               alt={course.name}
@@ -286,7 +286,7 @@ const CoursesPage = () => {
 
           {/* Courses Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredCourses.map((course, index) => {
+            {filteredCourses.slice(0, visibleCourses).map((course, index) => {
               const isSystemDesign = course.category === 'System Design';
               const cardClassName = isSystemDesign
                 ? "group h-full rounded-xl overflow-hidden bg-gradient-to-br from-blue-900/40 via-purple-900/40 to-slate-900/40 backdrop-blur-sm border border-blue-500/30 hover:border-blue-400/60 shadow-lg hover:shadow-blue-500/20 hover:scale-105 transition-all duration-300"
@@ -303,7 +303,7 @@ const CoursesPage = () => {
                   <div className={cardClassName}>
                     <div className="relative h-48 overflow-hidden">
                       <img
-                        data-lazy={optimizeImageUrl(course.featuredImage, 400, 60)}
+                        data-lazy={optimizeImageUrl(course.featuredImage, 300, 50)}
                         srcSet={generateImageSrcset(course.featuredImage)}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         alt={course.name}
