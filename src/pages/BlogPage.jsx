@@ -31,8 +31,8 @@ const BlogPage = () => {
   return (
       <>
       <SEOHead 
-        title="Tech Blog - Latest Web Development, Design & Data Science Insights"
-        description="Explore our comprehensive collection of articles, tutorials, and insights on web development, UI/UX design, data science, and programming. Stay updated with the latest tech trends, best practices, and industry news from expert developers and designers."
+        title="Tech Blog - Web Dev, Design & Data Science"
+        description="Explore articles and tutorials on web development, design, and data science. Stay updated with latest tech trends and best practices from experts."
         keywords="web development blog, react tutorials, javascript tutorials, programming blog, UI/UX design articles, data science blog, tech tutorials, coding blog, software development articles"
         canonical="https://www.anandrochlani.com/blog"
       />

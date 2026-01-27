@@ -9,8 +9,8 @@ const HomePage = () => {
   return (
     <>
       <SEOHead 
-        title="Empower Your Learning Journey - Expert-Led Online Courses & Tech Blog"
-        description="Discover cutting-edge courses and insightful blog posts to accelerate your learning in web development, design, and data science. Join thousands of students mastering new skills with AnandRochlani."
+        title="Expert Online Courses & Tech Blog | AnandRochlani"
+        description="Master web development, design, and data science with expert-led courses and tech blog posts. Join thousands learning new skills at AnandRochlani."
         keywords="online courses, web development courses, react courses, javascript tutorials, UI/UX design courses, data science courses, programming courses, tech blog, learn coding online"
         canonical="https://www.anandrochlani.com/"
       />

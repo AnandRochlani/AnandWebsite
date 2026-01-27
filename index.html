@@ -7,17 +7,16 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		
 		<!-- Primary Meta Tags -->
-		<title>AnandRochlani - Expert-Led Online Courses & Tech Blog | Web Development, Design & Data Science</title>
-		<meta name="title" content="AnandRochlani - Expert-Led Online Courses & Tech Blog | Web Development, Design & Data Science" />
-		<meta name="description" content="Master new skills with comprehensive courses and insightful blog posts. Learn web development, UI/UX design, and data science from industry experts. Start your learning journey today!" />
+		<title>Expert Online Courses & Tech Blog | AnandRochlani</title>
+		<meta name="title" content="Expert Online Courses & Tech Blog | AnandRochlani" />
+		<meta name="description" content="Master web development, design, and data science with expert-led courses and tech blog posts. Join thousands learning new skills at AnandRochlani." />
 		<meta name="keywords" content="online courses, web development, react, javascript, UI/UX design, data science, machine learning, programming tutorials, tech blog, learn coding" />
 		<meta name="author" content="AnandRochlani" />
 		<meta name="robots" content="index, follow" />
 		<meta name="language" content="English" />
 		<meta name="revisit-after" content="7 days" />
 		
-		<!-- Canonical URL -->
-		<link rel="canonical" href="https://www.anandrochlani.com/" />
+		<!-- Canonical URL - Removed from static HTML, handled by SEOHead component per page -->
 		
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
@@ -46,7 +45,72 @@
 		<link rel="preconnect" href="https://images.unsplash.com" />
 	</head>
 	<body>
-		<div id="root"></div>
+		<noscript>
+			<div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
+				<h1>AnandRochlani - Expert-Led Online Courses & Tech Blog</h1>
+				<p>JavaScript is required to view this website. Please enable JavaScript in your browser settings.</p>
+				<p>Master new skills with comprehensive courses and insightful blog posts. Learn web development, UI/UX design, and data science from industry experts.</p>
+				<nav>
+					<a href="/courses" style="margin: 0 10px;">Courses</a>
+					<a href="/blog" style="margin: 0 10px;">Blog</a>
+				</nav>
+			</div>
+		</noscript>
+		
+		<!-- Initial Static Content for SEO and First Paint -->
+		<div id="root">
+			<header style="display: none;" id="static-header">
+				<nav>
+					<a href="/">AnandRochlani</a>
+					<a href="/courses">Courses</a>
+					<a href="/blog">Blog</a>
+				</nav>
+			</header>
+			
+			<main style="display: none;" id="static-content">
+				<h1>AnandRochlani - Expert-Led Online Courses & Tech Blog</h1>
+				<p>Master new skills with comprehensive courses and insightful blog posts. Learn web development, UI/UX design, and data science from industry experts.</p>
+				
+				<section>
+					<h2>Featured Courses</h2>
+					<p>Explore our collection of expert-led courses in web development, design, and data science. Learn at your own pace with comprehensive curriculum and hands-on projects.</p>
+					<a href="/courses">Browse All Courses</a>
+				</section>
+				
+				<section>
+					<h2>Latest Blog Posts</h2>
+					<p>Stay updated with the latest tech trends, tutorials, and best practices. Explore our collection of articles on web development, design, data science, and more.</p>
+					<a href="/blog">Read All Articles</a>
+				</section>
+				
+				<section>
+					<h2>About AnandRochlani</h2>
+					<p>AnandRochlani is a modern learning platform offering expert-led courses and insightful blog content in web development, design, and data science. Our mission is to empower learners with cutting-edge knowledge and practical skills.</p>
+				</section>
+			</main>
+			
+			<footer style="display: none;" id="static-footer">
+				<p>&copy; 2026 AnandRochlani. All rights reserved.</p>
+				<nav>
+					<a href="/">Home</a>
+					<a href="/courses">Courses</a>
+					<a href="/blog">Blog</a>
+				</nav>
+			</footer>
+		</div>
+		
+		<script>
+			// Hide static content when React loads
+			window.addEventListener('DOMContentLoaded', function() {
+				setTimeout(function() {
+					const staticElements = document.querySelectorAll('#static-header, #static-content, #static-footer');
+					staticElements.forEach(el => {
+						if (el) el.style.display = 'none';
+					});
+				}, 100);
+			});
+		</script>
+		
 		<script type="module" src="/src/main.jsx"></script>
 	</body>
 </html>

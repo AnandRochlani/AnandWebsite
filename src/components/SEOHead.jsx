@@ -13,8 +13,8 @@ const SEOHead = ({
   const location = useLocation();
   const siteUrl = 'https://www.anandrochlani.com';
   const fullUrl = canonical || `${siteUrl}${location.pathname}`;
-  const fullTitle = title ? `${title} | AnandRochlani` : 'AnandRochlani - Expert-Led Online Courses & Tech Blog';
-  const fullDescription = description || 'Master new skills with comprehensive courses and insightful blog posts. Learn web development, UI/UX design, and data science from industry experts.';
+  const fullTitle = title ? `${title} | AnandRochlani` : 'Expert Online Courses & Tech Blog | AnandRochlani';
+  const fullDescription = description || 'Master web development, design, and data science with expert-led courses and tech blog posts. Join thousands learning new skills.';
 
   return (
     <Helmet>

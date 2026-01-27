@@ -9,4 +9,21 @@
 body {
     @apply bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 bg-slate-900 text-white;
     font-family: 'DM Sans', sans-serif;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure root takes full height */
+#root {
+  min-height: 100vh;
+}
+
+/* Hide static content when React is ready */
+#root:has(> :not(#static-header):not(#static-content):not(#static-footer)) {
+  #static-header,
+  #static-content,
+  #static-footer {
+    display: none !important;
+  }
 }

@@ -33,8 +33,8 @@ const CoursesPage = () => {
   return (
       <>
       <SEOHead 
-        title="Expert-Led Online Courses - Web Development, Design & Data Science"
-        description="Browse our comprehensive collection of expert-led courses in web development, design, and data science. Learn React, JavaScript, Node.js, UI/UX design, machine learning, and more. Start your learning journey today with hands-on projects and real-world applications."
+        title="Online Courses - Web Dev & Design"
+        description="Browse expert-led courses in web development, design, and data science. Learn React, JavaScript, Node.js, UI/UX, and machine learning with hands-on projects."
         keywords="web development courses, react courses, javascript courses, node.js courses, UI/UX design courses, data science courses, machine learning courses, programming courses, online coding courses"
         canonical="https://www.anandrochlani.com/courses"
       />
