@@ -70,7 +70,7 @@ const BlogPostDetail = () => {
             className="mb-8"
           >
             <Button
-              onClick={() => navigate('/blog', { replace: false })}
+              onClick={() => navigate('/blog', { replace: true })}
               variant="outline"
               className="bg-white/5 border-white/10 hover:bg-white/10 text-white"
             >
