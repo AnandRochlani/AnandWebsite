@@ -9,8 +9,8 @@ import { preloadCriticalResources } from '@/utils/preload';
 // Remove static content from DOM when React loads to prevent duplicate H1 tags and reduce rendering percentage
 const removeStaticContent = () => {
   // Hide immediately to prevent visual flash and reduce rendering percentage
-  // Include blog content in removal
-  const staticElements = document.querySelectorAll('#static-header, #static-content, #static-footer, #static-blog-content');
+  // Include blog content and blog post content in removal
+  const staticElements = document.querySelectorAll('#static-header, #static-content, #static-footer, #static-blog-content, #static-blog-post-content');
   staticElements.forEach(el => {
     if (el && el.parentNode) {
       el.style.display = 'none'; // Hide first for instant visual removal
