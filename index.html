@@ -45,9 +45,7 @@
 		
 		<!-- HTTP/2 Optimizations: Preload critical resources for faster initial render -->
 		<!-- HTTP/2 server push can be used for these resources (configured on server) -->
-		<link rel="modulepreload" href="/src/main.jsx" />
-		<link rel="preload" as="style" href="/src/static-content.css" />
-		<link rel="preload" as="style" href="/src/index.css" />
+		<!-- Note: Vite automatically handles modulepreload and CSS preloading during build -->
 		
 		<!-- Static content styles (loaded synchronously for first paint) -->
 		<link rel="stylesheet" href="/src/static-content.css" />
