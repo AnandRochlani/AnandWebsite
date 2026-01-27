@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, Users, Star, BookOpen, Trash2 } from 'lucide-react';
 import { useSavedCourses } from '@/context/SavedCoursesContext';
 import SaveButton from '@/components/SaveButton';
 import { Button } from '@/components/ui/button';
+import SEOHead from '@/components/SEOHead';
 
 const SavedCoursesPage = () => {
   const { getSavedCourses, removeSavedCourse } = useSavedCourses();
@@ -26,10 +26,11 @@ const SavedCoursesPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Saved Courses - AnandRochlani</title>
-        <meta name="description" content="View and manage your saved courses." />
-      </Helmet>
+      <SEOHead 
+        title="Saved Courses"
+        description="View and manage your saved courses. Access your personal learning wishlist and continue your learning journey."
+        canonical="https://www.anandrochlani.com/saved-courses"
+      />
 
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

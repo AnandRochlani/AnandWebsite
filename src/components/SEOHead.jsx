@@ -12,7 +12,36 @@ const SEOHead = ({
 }) => {
   const location = useLocation();
   const siteUrl = 'https://www.anandrochlani.com';
-  const fullUrl = canonical || `${siteUrl}${location.pathname}`;
+  
+  // Build canonical URL - always match the current page to prevent SEO errors
+  // Normalize pathname: remove trailing slash except for root
+  let pathname = location.pathname;
+  if (pathname !== '/' && pathname.endsWith('/')) {
+    pathname = pathname.slice(0, -1);
+  }
+  const currentUrl = `${siteUrl}${pathname}`;
+  
+  // Use canonical if provided, but ensure it matches current page
+  // If canonical points to a different page, use current URL instead
+  // This prevents "canonical points to different page" SEO errors
+  let fullUrl;
+  if (canonical) {
+    // Normalize provided canonical for comparison
+    const normalizedCanonical = canonical.replace(/\/$/, '') || canonical;
+    const normalizedCurrent = currentUrl.replace(/\/$/, '') || currentUrl;
+    
+    // If canonical matches current page (allowing for trailing slash differences), use it
+    // Otherwise, use current URL to prevent SEO errors
+    if (normalizedCanonical === normalizedCurrent || canonical === currentUrl) {
+      fullUrl = canonical;
+    } else {
+      // Canonical points to different page - use current URL to fix SEO error
+      fullUrl = currentUrl;
+    }
+  } else {
+    // No canonical provided - use current page URL
+    fullUrl = currentUrl;
+  }
   // Only append brand name if title doesn't already contain it
   const fullTitle = title 
     ? (title.includes('AnandRochlani') ? title : `${title} | AnandRochlani`)
