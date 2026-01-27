@@ -16,6 +16,7 @@ const ProtectedRoute = ({ children }) => {
   }
 
   if (!isAuthenticated) {
+    // Use replace to avoid adding to history stack (reduces redirect overhead)
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 

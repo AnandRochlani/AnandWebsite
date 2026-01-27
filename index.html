@@ -43,99 +43,112 @@
 		<!-- Preconnect for Performance -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://images.unsplash.com" />
+		<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+		<link rel="dns-prefetch" href="https://images.unsplash.com" />
+		
+		<!-- Preload critical resources -->
+		<link rel="modulepreload" href="/src/main.jsx" />
+		<link rel="preload" as="style" href="/src/index.css" />
+		<link rel="preload" as="style" href="/src/static-content.css" />
+		
+		<!-- Static content styles (loaded before React) -->
+		<link rel="stylesheet" href="/src/static-content.css" />
+		
+		<!-- Performance hints -->
+		<meta http-equiv="x-dns-prefetch-control" content="on" />
 	</head>
 	<body>
 		<noscript>
-			<div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
+			<div>
 				<h1>AnandRochlani - Expert-Led Online Courses & Tech Blog</h1>
 				<p>JavaScript is required to view this website. Please enable JavaScript in your browser settings.</p>
 				<p>Master new skills with comprehensive courses and insightful blog posts. Learn web development, UI/UX design, and data science from industry experts.</p>
 				<nav>
-					<a href="/courses" style="margin: 0 10px;">Courses</a>
-					<a href="/blog" style="margin: 0 10px;">Blog</a>
+					<a href="/courses">Courses</a>
+					<a href="/blog">Blog</a>
 				</nav>
 			</div>
 		</noscript>
 		
 		<!-- Initial Static Content for SEO and First Paint - Visible until React loads -->
 		<div id="root">
-			<header id="static-header" style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem;">
-				<nav style="max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
-					<a href="/" style="font-size: 1.25rem; font-weight: bold; color: #a78bfa; text-decoration: none;">AnandRochlani</a>
-					<div style="display: flex; gap: 2rem;">
-						<a href="/" style="color: #e2e8f0; text-decoration: none;">Home</a>
-						<a href="/courses" style="color: #e2e8f0; text-decoration: none;">Courses</a>
-						<a href="/blog" style="color: #e2e8f0; text-decoration: none;">Blog</a>
+			<header id="static-header">
+				<nav>
+					<a href="/">AnandRochlani</a>
+					<div>
+						<a href="/">Home</a>
+						<a href="/courses">Courses</a>
+						<a href="/blog">Blog</a>
 					</div>
 				</nav>
 			</header>
 			
-			<main id="static-content" style="padding-top: 4rem;">
+			<main id="static-content">
 				<!-- Hero Section -->
-				<section style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(to bottom right, #581c87, #1e293b, #831843); padding: 2rem; text-align: center;">
-					<div style="max-width: 1024px; margin: 0 auto;">
-						<h2 style="font-size: 3rem; font-weight: bold; color: white; margin-bottom: 1.5rem; line-height: 1.2;">
+				<section>
+					<div>
+						<h2>
 							Cutting-Edge Courses &<br />
-							<span style="background: linear-gradient(to right, #a78bfa, #ec4899); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">Insightful Blog Posts</span>
+							<span>Insightful Blog Posts</span>
 						</h2>
-						<p style="font-size: 1.25rem; color: #d1d5db; margin-bottom: 2rem; max-width: 768px; margin-left: auto; margin-right: auto;">
+						<p>
 							Discover cutting-edge courses and insightful blog posts to accelerate your growth in web development, design, and data science. Join thousands of students mastering new skills with our expert-led courses and comprehensive tech blog.
 						</p>
-						<div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-							<a href="/blog" style="background: linear-gradient(to right, #a855f7, #ec4899); color: white; padding: 1rem 2rem; border-radius: 0.75rem; text-decoration: none; font-weight: 500;">Explore Blog</a>
-							<a href="/courses" style="background: rgba(255, 255, 255, 0.1); color: white; padding: 1rem 2rem; border-radius: 0.75rem; text-decoration: none; font-weight: 500; border: 1px solid rgba(255, 255, 255, 0.2);">Browse Courses</a>
+						<div>
+							<a href="/blog">Explore Blog</a>
+							<a href="/courses">Browse Courses</a>
 						</div>
 					</div>
 				</section>
 
 				<!-- Features Section -->
-				<section style="padding: 4rem 2rem; background: linear-gradient(to bottom right, #1e293b, #581c87, #1e293b);">
-					<div style="max-width: 1280px; margin: 0 auto;">
-						<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-							<div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 2rem;">
-								<h2 style="font-size: 1.5rem; font-weight: bold; color: white; margin-bottom: 1rem;">Insightful Blog Posts</h2>
-								<p style="color: #d1d5db; margin-bottom: 1rem;">
+				<section>
+					<div>
+						<div>
+							<div>
+								<h2>Insightful Blog Posts</h2>
+								<p>
 									Stay updated with the latest trends, tutorials, and best practices in technology and design. Our insightful blog posts cover cutting-edge topics in web development, UI/UX design, and data science to help you stay ahead in your career.
 								</p>
-								<a href="/blog" style="color: #a78bfa; text-decoration: none; font-weight: 500;">Read Articles →</a>
+								<a href="/blog">Read Articles →</a>
 							</div>
-							<div style="background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 2rem;">
-								<h2 style="font-size: 1.5rem; font-weight: bold; color: white; margin-bottom: 1rem;">Cutting-Edge Courses</h2>
-								<p style="color: #d1d5db; margin-bottom: 1rem;">
+							<div>
+								<h2>Cutting-Edge Courses</h2>
+								<p>
 									Master new skills with comprehensive cutting-edge courses taught by industry professionals. Explore our collection of expert-led courses covering web development, design, and data science with hands-on projects and real-world applications.
 								</p>
-								<a href="/courses" style="color: #ec4899; text-decoration: none; font-weight: 500;">Explore Courses →</a>
+								<a href="/courses">Explore Courses →</a>
 							</div>
 						</div>
 					</div>
 				</section>
 
 				<!-- Additional Content for SEO -->
-				<section style="padding: 4rem 2rem; background: #0f172a;">
-					<div style="max-width: 1024px; margin: 0 auto; text-align: center;">
-						<h2 style="font-size: 2rem; font-weight: bold; color: white; margin-bottom: 2rem;">Why Choose AnandRochlani?</h2>
-						<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; text-align: left; margin-top: 2rem;">
+				<section>
+					<div>
+						<h2>Why Choose AnandRochlani?</h2>
+						<div>
 							<div>
-								<h3 style="font-size: 1.25rem; font-weight: 600; color: white; margin-bottom: 0.75rem;">Cutting-Edge Content</h3>
-								<p style="color: #d1d5db;">
+								<h3>Cutting-Edge Content</h3>
+								<p>
 									Our courses and blog posts feature the latest technologies and industry best practices. Stay ahead with cutting-edge content that keeps you at the forefront of web development, design, and data science.
 								</p>
 							</div>
 							<div>
-								<h3 style="font-size: 1.25rem; font-weight: 600; color: white; margin-bottom: 0.75rem;">Insightful Blog Posts</h3>
-								<p style="color: #d1d5db;">
+								<h3>Insightful Blog Posts</h3>
+								<p>
 									Read our insightful blog posts covering tutorials, case studies, and expert insights. Our blog provides valuable content to help you grow your skills and advance your career in technology.
 								</p>
 							</div>
 							<div>
-								<h3 style="font-size: 1.25rem; font-weight: 600; color: white; margin-bottom: 0.75rem;">Expert-Led Learning</h3>
-								<p style="color: #d1d5db;">
+								<h3>Expert-Led Learning</h3>
+								<p>
 									Learn from industry professionals with years of experience. Our expert-led courses provide practical knowledge and real-world applications to help you master new skills effectively.
 								</p>
 							</div>
 						</div>
-						<div style="margin-top: 3rem; color: #d1d5db; line-height: 1.8;">
-							<p style="margin-bottom: 1rem;">
+						<div>
+							<p>
 								At AnandRochlani, we offer cutting-edge courses and insightful blog posts designed to help you excel in web development, UI/UX design, and data science. Whether you're looking for cutting-edge courses on React, JavaScript, or Node.js, or insightful blog posts about the latest tech trends, we have the resources you need.
 							</p>
 							<p>
@@ -146,26 +159,32 @@
 				</section>
 			</main>
 			
-			<footer id="static-footer" style="background: #0f172a; border-top: 1px solid rgba(255, 255, 255, 0.1); padding: 3rem 2rem;">
-				<div style="max-width: 1280px; margin: 0 auto;">
-					<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+			<footer id="static-footer">
+				<div>
+					<div>
 						<div>
-							<h3 style="font-size: 1.25rem; font-weight: bold; color: white; margin-bottom: 1rem;">AnandRochlani</h3>
-							<p style="color: #9ca3af; font-size: 0.875rem;">
+							<h3>AnandRochlani</h3>
+							<p>
 								Empowering developers and designers with cutting-edge courses and insightful blog content.
 							</p>
 						</div>
 						<div>
-							<h4 style="font-weight: 600; color: white; margin-bottom: 0.75rem;">Quick Links</h4>
-							<nav style="display: flex; flex-direction: column; gap: 0.5rem;">
-								<a href="/" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">Home</a>
-								<a href="/courses" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">Courses</a>
-								<a href="/blog" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">Blog</a>
+							<h4>Quick Links</h4>
+							<nav>
+								<a href="/">Home</a>
+								<a href="/courses">Courses</a>
+								<a href="/blog">Blog</a>
+							</nav>
+						</div>
+						<div>
+							<h4>Connect</h4>
+							<nav>
+								<a href="https://www.youtube.com/@anandrochlani5226" target="_blank" rel="noopener noreferrer">YouTube</a>
 							</nav>
 						</div>
 					</div>
-					<div style="text-align: center; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-						<p style="color: #9ca3af; font-size: 0.875rem;">&copy; 2026 AnandRochlani. All rights reserved. Built with React and TailwindCSS.</p>
+					<div>
+						<p>&copy; 2026 AnandRochlani. All rights reserved. Built with React and TailwindCSS.</p>
 					</div>
 				</div>
 			</footer>

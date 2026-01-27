@@ -17,8 +17,10 @@ const AdminLoginPage = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    // Only redirect if authenticated and not already on admin page
+    // Use replace to avoid adding to history stack (reduces redirect overhead)
     if (isAuthenticated) {
-      navigate('/admin');
+      navigate('/admin', { replace: true });
     }
   }, [isAuthenticated, navigate]);
 

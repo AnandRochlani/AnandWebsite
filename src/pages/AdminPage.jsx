@@ -47,7 +47,8 @@ const AdminPage = () => {
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to logout?")) {
       logout();
-      navigate('/admin/login');
+      // Use replace to avoid adding to history stack (reduces redirect overhead)
+      navigate('/admin/login', { replace: true });
       toast({
         title: "Logged out",
         description: "You have been successfully logged out.",

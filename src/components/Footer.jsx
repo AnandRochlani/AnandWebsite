@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Code2, Github, Twitter, Linkedin, Mail } from 'lucide-react';
+import { Code2, Github, Twitter, Linkedin, Mail, Youtube } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 const Footer = () => {
@@ -19,6 +19,7 @@ const Footer = () => {
   };
 
   const socialLinks = [
+    { icon: Youtube, href: 'https://www.youtube.com/@anandrochlani5226', label: 'YouTube', target: '_blank', rel: 'noopener noreferrer' },
     { icon: Github, href: '#', label: 'GitHub' },
     { icon: Twitter, href: '#', label: 'Twitter' },
     { icon: Linkedin, href: '#', label: 'LinkedIn' },
@@ -77,6 +78,8 @@ const Footer = () => {
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
+                  target={social.target}
+                  rel={social.rel}
                   className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-purple-400 transition-all duration-300 hover:scale-110"
                 >
                   <social.icon className="w-5 h-5" />

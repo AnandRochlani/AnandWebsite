@@ -31,7 +31,8 @@ const Navigation = () => {
     e.preventDefault();
     if (window.confirm("Are you sure you want to logout?")) {
       logout();
-      navigate('/admin/login');
+      // Use replace to avoid adding to history stack (reduces redirect overhead)
+      navigate('/admin/login', { replace: true });
       setMobileMenuOpen(false);
       toast({
         title: "Logged out",

@@ -152,12 +152,8 @@ const BlogPostDetail = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="prose prose-invert prose-lg max-w-none mb-16"
+            className="prose prose-invert prose-lg max-w-none mb-16 text-slate-300 leading-relaxed"
             dangerouslySetInnerHTML={{ __html: post.content }}
-            style={{
-              color: '#d1d5db',
-              lineHeight: '1.8'
-            }}
           />
 
           {/* Related Posts */}

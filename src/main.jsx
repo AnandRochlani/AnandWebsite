@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from '@/App';
 import '@/index.css';
+import '@/static-content.css';
 import { initAnalytics } from '@/utils/analytics';
 import { preloadCriticalResources } from '@/utils/preload';
 

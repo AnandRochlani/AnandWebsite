@@ -1,26 +1,29 @@
 // Preload critical resources for faster initial render
 export const preloadCriticalResources = () => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
-  // Preload critical images
-  const criticalImages = [
-    'https://images.unsplash.com/photo-1504983875-d3b163aba9e6', // Hero image
-  ];
+  // Use requestIdleCallback for non-critical prefetching
+  const schedulePrefetch = (callback) => {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(callback, { timeout: 2000 });
+    } else {
+      setTimeout(callback, 100);
+    }
+  };
 
-  criticalImages.forEach(src => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'image';
-    link.href = src;
-    document.head.appendChild(link);
-  });
-
-  // Prefetch routes
-  const routesToPrefetch = ['/courses', '/blog'];
-  routesToPrefetch.forEach(route => {
-    const link = document.createElement('link');
-    link.rel = 'prefetch';
-    link.href = route;
-    document.head.appendChild(link);
+  // Prefetch routes on idle (non-blocking)
+  schedulePrefetch(() => {
+    const routesToPrefetch = ['/courses', '/blog'];
+    routesToPrefetch.forEach(route => {
+      // Only prefetch if not already in cache
+      if (!sessionStorage.getItem(`prefetched_${route}`)) {
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.href = route;
+        link.as = 'document';
+        document.head.appendChild(link);
+        sessionStorage.setItem(`prefetched_${route}`, 'true');
+      }
+    });
   });
 };

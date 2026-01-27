@@ -14,13 +14,32 @@ export default defineConfig({
     },
   },
   build: {
-    // Optimize for better initial render
+    // Optimize for better initial render and code splitting
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['framer-motion', 'lucide-react'],
+        manualChunks: (id) => {
+          // Separate vendor chunks for better caching
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+              return 'react-vendor';
+            }
+            if (id.includes('framer-motion')) {
+              return 'framer-motion';
+            }
+            if (id.includes('lucide-react')) {
+              return 'lucide-react';
+            }
+            if (id.includes('@radix-ui')) {
+              return 'radix-ui';
+            }
+            // Other node_modules
+            return 'vendor';
+          }
         },
+        // Optimize chunk file names
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
       },
     },
     // Enable minification
@@ -29,13 +48,26 @@ export default defineConfig({
       compress: {
         drop_console: true,
         drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
       },
     },
     // Optimize chunk size
     chunkSizeWarningLimit: 1000,
+    // Enable source maps only in development
+    sourcemap: false,
+    // Optimize CSS
+    cssCodeSplit: true,
+    cssMinify: true,
   },
-  // Pre-render critical paths
+  // Pre-optimize dependencies
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom'],
+    exclude: [],
+  },
+  // Server configuration for development
+  server: {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000',
+    },
   },
 })
