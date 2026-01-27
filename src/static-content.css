@@ -313,3 +313,13 @@ noscript nav a {
   color: #9ca3af;
   font-size: 0.875rem;
 }
+
+/* Static Blog Content - Hidden by default, removed when React loads */
+#static-blog-content {
+  display: none;
+}
+
+/* Static Blog Post Content - Hidden by default, removed when React loads */
+#static-blog-post-content {
+  display: none;
+}
