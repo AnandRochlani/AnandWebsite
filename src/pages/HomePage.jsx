@@ -121,8 +121,8 @@ const HomePage = () => {
               className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-2"
             >
               <motion.div className="w-1.5 h-1.5 rounded-full bg-white" />
-              </div>
-            </div>
+            </motion.div>
+          </motion.div>
         </section>
 
         {/* Features Section */}
@@ -197,7 +197,7 @@ const HomePage = () => {
                   Our platform combines cutting-edge course content with insightful blog posts to create a comprehensive learning experience. Explore our cutting-edge courses and read our insightful blog posts to stay updated with the latest in technology and design. Join thousands of students who are already benefiting from our cutting-edge courses and insightful blog posts.
                 </p>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
       </div>
