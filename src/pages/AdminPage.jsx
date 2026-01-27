@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, FileText, Plus, Trash2, CheckCircle, AlertCircle, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAdmin } from '@/context/AdminContext';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import SEOHead from '@/components/SEOHead';
 
 const AdminPage = () => {
   const { addCourse, addBlogPost } = useAdmin();
@@ -165,9 +165,12 @@ const AdminPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Admin Dashboard - AnandRochlani</title>
-      </Helmet>
+      <SEOHead 
+        title="Admin Dashboard"
+        description="Manage your website content with the admin dashboard. Add new courses and blog posts, update existing content, and control your website from one central location."
+        canonical="https://www.anandrochlani.com/admin"
+        keywords="admin dashboard, content management, add courses, add blog posts, website management"
+      />
 
       <div className="min-h-screen bg-slate-900 pt-24 pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

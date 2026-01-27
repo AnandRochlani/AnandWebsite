@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Shield, Lock, User, ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Helmet } from 'react-helmet';
+import SEOHead from '@/components/SEOHead';
 import { useToast } from '@/components/ui/use-toast';
 
 const AdminLoginPage = () => {
@@ -55,9 +55,12 @@ const AdminLoginPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Admin Login - AnandRochlani</title>
-      </Helmet>
+      <SEOHead 
+        title="Admin Login"
+        description="Secure admin login portal for managing courses and blog posts. Access the admin dashboard to add new content and manage your website."
+        canonical="https://www.anandrochlani.com/admin/login"
+        keywords="admin login, admin dashboard, content management, course management, blog management"
+      />
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center p-4 pt-20">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
