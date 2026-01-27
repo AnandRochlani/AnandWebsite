@@ -63,7 +63,7 @@ const CourseDetail = () => {
       const link = document.createElement('link');
       link.rel = 'preload';
       link.as = 'image';
-      link.href = optimizeImageUrl(course.featuredImage, 1200, 80);
+      link.href = optimizeImageUrl(course.featuredImage, 1000, 60);
       link.fetchPriority = 'high';
       document.head.appendChild(link);
     }
@@ -157,7 +157,7 @@ const CourseDetail = () => {
 
               <div className="relative h-96 rounded-2xl overflow-hidden mb-8 shadow-2xl border border-white/10 group">
                 <img
-                  src={optimizeImageUrl(course.featuredImage, 1200, 80)}
+                  src={optimizeImageUrl(course.featuredImage, 1000, 60)}
                   srcSet={generateImageSrcset(course.featuredImage)}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
                   alt={course.name}
@@ -347,7 +347,7 @@ const CourseDetail = () => {
                         <div className="group rounded-lg overflow-hidden bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/50 transition-all duration-300">
                           <div className="relative h-32 overflow-hidden">
                             <img
-                              src={optimizeImageUrl(relatedCourse.featuredImage, 400, 70)}
+                              src={optimizeImageUrl(relatedCourse.featuredImage, 300, 60)}
                               srcSet={generateImageSrcset(relatedCourse.featuredImage)}
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
                               alt={relatedCourse.name}

@@ -43,7 +43,7 @@ const CoursesPage = () => {
           const link = document.createElement('link');
           link.rel = 'preload';
           link.as = 'image';
-          link.href = optimizeImageUrl(course.featuredImage, 600, 75);
+          link.href = optimizeImageUrl(course.featuredImage, 500, 60);
           link.fetchPriority = 'high';
           document.head.appendChild(link);
         }
@@ -162,7 +162,7 @@ const CoursesPage = () => {
 
                           <div className="relative h-48 overflow-hidden">
                             <img
-                              src={optimizeImageUrl(course.featuredImage, 600, 75)}
+                              src={optimizeImageUrl(course.featuredImage, 500, 60)}
                               srcSet={generateImageSrcset(course.featuredImage)}
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                               alt={course.name}
@@ -303,7 +303,7 @@ const CoursesPage = () => {
                   <div className={cardClassName}>
                     <div className="relative h-48 overflow-hidden">
                       <img
-                        data-lazy={optimizeImageUrl(course.featuredImage, 600, 70)}
+                        data-lazy={optimizeImageUrl(course.featuredImage, 400, 60)}
                         srcSet={generateImageSrcset(course.featuredImage)}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         alt={course.name}

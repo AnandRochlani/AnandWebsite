@@ -126,7 +126,7 @@ const BlogPostDetail = () => {
             className="relative h-96 rounded-2xl overflow-hidden mb-8 shadow-2xl"
           >
             <img
-              src={optimizeImageUrl(post.featuredImage, 1200, 80)}
+              src={optimizeImageUrl(post.featuredImage, 1000, 60)}
               srcSet={generateImageSrcset(post.featuredImage)}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
               alt={post.title}
@@ -235,7 +235,7 @@ const BlogPostDetail = () => {
                     <div className="group rounded-xl overflow-hidden bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
                       <div className="relative h-40 overflow-hidden">
                         <img
-                          src={optimizeImageUrl(relatedPost.featuredImage, 400, 70)}
+                              src={optimizeImageUrl(relatedPost.featuredImage, 300, 60)}
                           srcSet={generateImageSrcset(relatedPost.featuredImage)}
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
                           alt={relatedPost.title}
