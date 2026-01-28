@@ -66,8 +66,22 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
+  const updateBlogOrder = (blogOrders) => {
+    try {
+      // blogOrders is an array of { id, order } objects
+      const orderMap = {};
+      blogOrders.forEach(({ id, order }) => {
+        orderMap[id] = order;
+      });
+      localStorage.setItem('blogOrder', JSON.stringify(orderMap));
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message || 'Failed to update blog order' };
+    }
+  };
+
   return (
-    <AdminContext.Provider value={{ addCourse, addBlogPost }}>
+    <AdminContext.Provider value={{ addCourse, addBlogPost, updateBlogOrder }}>
       {children}
     </AdminContext.Provider>
   );

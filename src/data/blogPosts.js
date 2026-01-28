@@ -666,8 +666,32 @@ const getLocalBlogPosts = () => {
   }
 };
 
-export const blogPosts = [...defaultBlogPosts, ...getLocalBlogPosts()];
+const getBlogOrder = () => {
+  try {
+    const order = localStorage.getItem('blogOrder');
+    return order ? JSON.parse(order) : {};
+  } catch (e) {
+    return {};
+  }
+};
+
+// Apply custom order to blog posts
+const applyBlogOrder = (posts) => {
+  const orderMap = getBlogOrder();
+  if (Object.keys(orderMap).length === 0) {
+    return posts;
+  }
+
+  return posts.map(post => {
+    if (orderMap[post.id] !== undefined) {
+      return { ...post, order: orderMap[post.id] };
+    }
+    return post;
+  });
+};
+
+export const blogPosts = applyBlogOrder([...defaultBlogPosts, ...getLocalBlogPosts()]);
 
 export const getAllBlogPosts = () => {
-  return [...defaultBlogPosts, ...getLocalBlogPosts()];
+  return applyBlogOrder([...defaultBlogPosts, ...getLocalBlogPosts()]);
 };

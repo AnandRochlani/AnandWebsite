@@ -1,19 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, FileText, Plus, Trash2, CheckCircle, AlertCircle, LogOut } from 'lucide-react';
+import { BookOpen, FileText, Plus, Trash2, CheckCircle, AlertCircle, LogOut, ArrowUp, ArrowDown, GripVertical, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { useAdmin } from '@/context/AdminContext';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
+import { getAllBlogPosts } from '@/data/blogPosts';
 
 const AdminPage = () => {
-  const { addCourse, addBlogPost } = useAdmin();
+  const { addCourse, addBlogPost, updateBlogOrder } = useAdmin();
   const { logout } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('course');
+  
+  // Get all System Design blogs for ordering
+  const systemDesignBlogs = useMemo(() => {
+    const allPosts = getAllBlogPosts();
+    return allPosts
+      .filter(post => post.category === 'System Design' && post.series && post.order !== undefined)
+      .sort((a, b) => (a.order || 999) - (b.order || 999));
+  }, []);
+  
+  const [blogOrderList, setBlogOrderList] = useState([]);
+  
+  useEffect(() => {
+    setBlogOrderList(systemDesignBlogs.map(post => ({ id: post.id, title: post.title, order: post.order || 999 })));
+  }, [systemDesignBlogs]);
 
   // Course Form State
   const initialCourseState = {
@@ -163,6 +178,50 @@ const AdminPage = () => {
     setCourseForm({ ...courseForm, modules: newModules });
   };
 
+  // Blog Order Management Functions
+  const moveBlogUp = (index) => {
+    if (index === 0) return;
+    const newOrder = [...blogOrderList];
+    [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
+    // Update order numbers
+    newOrder.forEach((item, idx) => {
+      item.order = idx + 1;
+    });
+    setBlogOrderList(newOrder);
+  };
+
+  const moveBlogDown = (index) => {
+    if (index === blogOrderList.length - 1) return;
+    const newOrder = [...blogOrderList];
+    [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
+    // Update order numbers
+    newOrder.forEach((item, idx) => {
+      item.order = idx + 1;
+    });
+    setBlogOrderList(newOrder);
+  };
+
+  const handleSaveBlogOrder = () => {
+    const result = updateBlogOrder(blogOrderList);
+    if (result.success) {
+      toast({
+        title: "Success!",
+        description: "Blog order updated successfully. Please refresh the page to see changes.",
+        className: "bg-green-600 border-green-700 text-white"
+      });
+      // Reload page to apply changes
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } else {
+      toast({
+        title: "Error",
+        description: result.error,
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <>
       <SEOHead 
@@ -218,12 +277,23 @@ const AdminPage = () => {
               <FileText className="w-5 h-5 mr-2" />
               Add Blog Post
             </button>
+            <button
+              onClick={() => setActiveTab('order')}
+              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                activeTab === 'order'
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <GripVertical className="w-5 h-5 mr-2" />
+              Manage Blog Order
+            </button>
           </div>
 
           {/* Forms Area */}
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
             <AnimatePresence mode="wait">
-              {activeTab === 'course' ? (
+              {activeTab === 'course' && (
                 <motion.form
                   key="course-form"
                   initial={{ opacity: 0, x: -20 }}
@@ -411,7 +481,8 @@ const AdminPage = () => {
                     </Button>
                   </div>
                 </motion.form>
-              ) : (
+              )}
+              {activeTab === 'blog' && (
                 <motion.form
                   key="blog-form"
                   initial={{ opacity: 0, x: -20 }}
@@ -505,6 +576,100 @@ const AdminPage = () => {
                     </Button>
                   </div>
                 </motion.form>
+              )}
+              {activeTab === 'order' && (
+                <motion.div
+                  key="order-form"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  <div className="mb-6">
+                    <h2 className="text-2xl font-bold text-white mb-2">Manage System Design Blog Order</h2>
+                    <p className="text-gray-400">Reorder the System Design tutorial series by moving blogs up or down.</p>
+                  </div>
+
+                  {blogOrderList.length === 0 ? (
+                    <div className="text-center py-12 text-gray-400">
+                      <p>No System Design blogs found with order numbers.</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-3">
+                        {blogOrderList.map((blog, index) => (
+                          <div
+                            key={blog.id}
+                            className="flex items-center gap-4 p-4 rounded-lg bg-black/20 border border-white/10 hover:border-blue-500/50 transition-all"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-blue-400 font-bold text-lg w-8 text-center">
+                                {blog.order}
+                              </span>
+                              <GripVertical className="w-5 h-5 text-gray-500" />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="text-white font-medium line-clamp-1">{blog.title}</h3>
+                            </div>
+                            <div className="flex gap-2">
+                              <button
+                                type="button"
+                                onClick={() => moveBlogUp(index)}
+                                disabled={index === 0}
+                                className={`p-2 rounded-lg transition-all ${
+                                  index === 0
+                                    ? 'bg-white/5 text-gray-600 cursor-not-allowed'
+                                    : 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30'
+                                }`}
+                                title="Move up"
+                              >
+                                <ArrowUp className="w-4 h-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => moveBlogDown(index)}
+                                disabled={index === blogOrderList.length - 1}
+                                className={`p-2 rounded-lg transition-all ${
+                                  index === blogOrderList.length - 1
+                                    ? 'bg-white/5 text-gray-600 cursor-not-allowed'
+                                    : 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30'
+                                }`}
+                                title="Move down"
+                              >
+                                <ArrowDown className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex gap-4 pt-4 border-t border-white/10">
+                        <Button
+                          onClick={handleSaveBlogOrder}
+                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          <Save className="w-4 h-4 mr-2" />
+                          Save Order
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            setBlogOrderList(systemDesignBlogs.map(post => ({ id: post.id, title: post.title, order: post.order || 999 })));
+                            toast({
+                              title: "Reset",
+                              description: "Order reset to original",
+                            });
+                          }}
+                          className="border-white/20 text-white hover:bg-white/10"
+                        >
+                          Reset
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </motion.div>
               )}
             </AnimatePresence>
           </div>
