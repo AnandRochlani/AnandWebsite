@@ -283,6 +283,75 @@ function MyComponent() {
   // System Design Blog Series - Ordered Tutorial
   {
     id: 9,
+    title: "Understanding Latency: A Beginner's Guide to System Design Fundamentals",
+    description: "Learn what latency is, why it matters, and how it impacts your digital experience. A fundamental concept every system designer must understand.",
+    content: `
+      <h2>What is Latency?</h2>
+      <p>In the world of technology, speed is everything. Whether you are scrolling through social media or waiting for a webpage to load, the time you spend waiting is defined by one critical concept: <strong>Latency</strong>.</p>
+      
+      <p>At its simplest, <strong>latency is the amount of time it takes for a page to load or a request to be completed</strong>.</p>
+      
+      <h3>The Restaurant Analogy</h3>
+      <p>Think of ordering food at a restaurant:</p>
+      <ul>
+        <li>You place your order (the request).</li>
+        <li>You wait for the chef to cook (the processing).</li>
+        <li>The food is delivered to your table (the response).</li>
+      </ul>
+      
+      <p>The total time you spend waiting from the moment you order until the food arrives is the "latency". If the food comes out fast, you have <strong>low latency</strong>. If it takes forever, you have <strong>high latency</strong>.</p>
+      
+      <h2>How Latency Works: The Technical Breakdown</h2>
+      <p>To understand latency in a technical sense, let's look at the example of logging into <strong>Facebook.com</strong>.</p>
+      
+      <p>When you type a URL into your browser and hit enter, a three-step journey begins:</p>
+      
+      <ol>
+        <li><strong>Request Travel (T1):</strong> Your request travels from your device to the server.</li>
+        <li><strong>Processing/Computation (T2):</strong> The server processes your request (e.g., verifying your credentials).</li>
+        <li><strong>Response Travel (T3):</strong> The server sends the webpage data back to your device.</li>
+      </ol>
+      
+      <h3>The Latency Formula</h3>
+      <p><strong>Total Latency (Δt) = T1 + T2 + T3</strong></p>
+      
+      <h2>Why is Your Internet Sometimes Slow?</h2>
+      <p>Latency isn't fixed; it fluctuates based on several factors:</p>
+      
+      <h3>Network Strength</h3>
+      <p>If you are in a remote area with low bandwidth, your request and response (T1 and T3) will take much longer. In urban areas with high-speed fiber or 5G, this time is significantly reduced.</p>
+      
+      <h3>Computation Time</h3>
+      <p>This is the time the server takes to "think." If the server's code is inefficient, the user waits longer.</p>
+      
+      <h2>Can We Control Latency?</h2>
+      <p>As developers or system designers, we cannot control a user's internet speed (T1 and T3). However, we <strong>can</strong> control the <strong>Computation Time (T2)</strong>.</p>
+      
+      <p>To reduce T2, developers focus on:</p>
+      <ul>
+        <li><strong>Writing Optimized Code:</strong> Using efficient logic to process data faster.</li>
+        <li><strong>Data Structures and Algorithms (DSA):</strong> Mastering DSA is the key to writing code that minimizes processing time and keeps latency low.</li>
+      </ul>
+      
+      <h2>Conclusion</h2>
+      <p>Latency is the silent factor that determines whether a user enjoys an app or abandons it in frustration. By understanding the sum of network travel and computation time, we can build better, "snappier" systems that keep the digital world flowing smoothly.</p>
+      
+      <p><strong>Watch the full explanation here:</strong> <a href="https://youtu.be/r5vJP_1hX7Q" target="_blank" rel="noopener noreferrer" style="color: #a78bfa; text-decoration: underline;">What Is Latency? | System Design Fundamentals</a></p>
+      
+      <h2>Next Steps</h2>
+      <p>Now that you understand latency, you're ready to dive deeper into system design fundamentals. In the next blog, we'll explore scalable architecture and how to build systems that can handle growth.</p>
+    `,
+    author: "Anand Rochlani",
+    date: "2026-01-28",
+    category: "System Design",
+    readTime: "7 min read",
+    featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
+    featured: false,
+    order: 1,
+    series: "System Design Tutorial"
+  },
+  {
+    id: 16,
     title: "System Design Fundamentals: Introduction to Scalable Architecture",
     description: "Learn the fundamentals of system design and how to build scalable, reliable systems from the ground up.",
     content: `
@@ -312,7 +381,7 @@ function MyComponent() {
     readTime: "8 min read",
     featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
     featured: false,
-    order: 1,
+    order: 2,
     series: "System Design Tutorial"
   },
   {
@@ -351,7 +420,7 @@ function MyComponent() {
     readTime: "10 min read",
     featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
     featured: false,
-    order: 2,
+    order: 3,
     series: "System Design Tutorial"
   },
   {
@@ -390,7 +459,7 @@ function MyComponent() {
     readTime: "12 min read",
     featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
     featured: false,
-    order: 3,
+    order: 4,
     series: "System Design Tutorial"
   },
   {
@@ -430,7 +499,7 @@ function MyComponent() {
     readTime: "15 min read",
     featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
     featured: false,
-    order: 4,
+    order: 5,
     series: "System Design Tutorial"
   },
   {
@@ -474,7 +543,7 @@ function MyComponent() {
     readTime: "18 min read",
     featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
     featured: false,
-    order: 5,
+    order: 6,
     series: "System Design Tutorial"
   },
   {
@@ -520,7 +589,7 @@ function MyComponent() {
     readTime: "20 min read",
     featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
     featured: false,
-    order: 6,
+    order: 7,
     series: "System Design Tutorial"
   },
   {
@@ -583,7 +652,7 @@ function MyComponent() {
     readTime: "25 min read",
     featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
     featured: false,
-    order: 7,
+    order: 8,
     series: "System Design Tutorial"
   }
 ];
