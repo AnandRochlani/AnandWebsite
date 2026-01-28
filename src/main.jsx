@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from '@/App';
 import '@/index.css';
-import '@/static-content.css';
+// static-content.css is loaded via <link> tag in index.html to avoid MIME type errors
 import { initAnalytics } from '@/utils/analytics';
 import { preloadCriticalResources } from '@/utils/preload';
 

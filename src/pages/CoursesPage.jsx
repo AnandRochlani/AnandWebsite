@@ -41,7 +41,7 @@ const CoursesPage = () => {
     if (featuredCourses.length > 0) {
       featuredCourses.slice(0, 2).forEach(course => { // Only preload first 2 to reduce initial load
         if (course.featuredImage) {
-          const optimizedImage = optimizeImageUrl(course.featuredImage, 350, 40);
+          const optimizedImage = optimizeImageUrl(course.featuredImage, 350, 30);
           const existingPreload = document.querySelector(`link[rel="preload"][href="${optimizedImage}"]`);
           if (!existingPreload) {
             const link = document.createElement('link');
@@ -168,7 +168,7 @@ const CoursesPage = () => {
 
                           <div className="relative h-48 overflow-hidden">
                             <img
-                              src={optimizeImageUrl(course.featuredImage, 350, 40)}
+                              src={optimizeImageUrl(course.featuredImage, 350, 30)}
                               srcSet={generateImageSrcset(course.featuredImage)}
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                               alt={course.name}
@@ -309,7 +309,7 @@ const CoursesPage = () => {
                   <div className={cardClassName}>
                     <div className="relative h-48 overflow-hidden">
                       <img
-                        data-lazy={optimizeImageUrl(course.featuredImage, 250, 40)}
+                        data-lazy={optimizeImageUrl(course.featuredImage, 250, 30)}
                         srcSet={generateImageSrcset(course.featuredImage)}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         alt={course.name}

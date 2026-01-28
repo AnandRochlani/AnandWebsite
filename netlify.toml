@@ -21,6 +21,14 @@
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    # Cache HTML at the CDN edge to reduce repeat-visit latency (TTFB).
+    # Keep browser cache short, but allow Netlify edge to serve quickly.
+    Cache-Control = "public, max-age=0, s-maxage=600, stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    Cache-Control = "no-store"
 
 [[headers]]
   for = "/assets/*"

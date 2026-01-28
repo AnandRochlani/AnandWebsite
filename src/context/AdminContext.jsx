@@ -14,9 +14,33 @@ export const useAdmin = () => {
 export const AdminProvider = ({ children }) => {
   const { toast } = useToast();
 
+  const getArray = (key) => {
+    try {
+      return JSON.parse(localStorage.getItem(key) || '[]');
+    } catch (e) {
+      return [];
+    }
+  };
+
+  const setArray = (key, value) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
+  const getMap = (key) => {
+    try {
+      return JSON.parse(localStorage.getItem(key) || '{}');
+    } catch (e) {
+      return {};
+    }
+  };
+
+  const setMap = (key, value) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
   const addCourse = (courseData) => {
     try {
-      const existingCourses = JSON.parse(localStorage.getItem('customCourses') || '[]');
+      const existingCourses = getArray('customCourses');
       // Generate a random ID that doesn't conflict with existing ones (assuming < 1000 static courses)
       const newId = Date.now();
       
@@ -29,7 +53,7 @@ export const AdminProvider = ({ children }) => {
       };
 
       const updatedCourses = [...existingCourses, newCourse];
-      localStorage.setItem('customCourses', JSON.stringify(updatedCourses));
+      setArray('customCourses', updatedCourses);
       
       // Force reload of window to update static imports in other files if strictly necessary, 
       // but for SPA we usually rely on context/state. 
@@ -45,7 +69,7 @@ export const AdminProvider = ({ children }) => {
 
   const addBlogPost = (postData) => {
     try {
-      const existingPosts = JSON.parse(localStorage.getItem('customBlogPosts') || '[]');
+      const existingPosts = getArray('customBlogPosts');
       const newId = Date.now();
 
       const newPost = {
@@ -57,12 +81,116 @@ export const AdminProvider = ({ children }) => {
       };
 
       const updatedPosts = [...existingPosts, newPost];
-      localStorage.setItem('customBlogPosts', JSON.stringify(updatedPosts));
+      setArray('customBlogPosts', updatedPosts);
 
       return { success: true };
     } catch (error) {
       // Silently handle errors - return error message to caller
       return { success: false, error: error.message || 'Failed to add blog post' };
+    }
+  };
+
+  const updateCourse = (courseId, courseData) => {
+    try {
+      const id = typeof courseId === 'string' ? parseInt(courseId) : courseId;
+      const customCourses = getArray('customCourses');
+      const idx = customCourses.findIndex((c) => c.id === id || c.id === courseId);
+
+      if (idx !== -1) {
+        const updated = [...customCourses];
+        updated[idx] = { ...updated[idx], ...courseData, id: customCourses[idx].id };
+        setArray('customCourses', updated);
+        return { success: true };
+      }
+
+      // Default course: store override
+      const overrides = getMap('courseOverrides');
+      overrides[id] = { ...(overrides[id] || {}), ...courseData, id: id };
+      setMap('courseOverrides', overrides);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message || 'Failed to update course' };
+    }
+  };
+
+  const deleteCourse = (courseId) => {
+    try {
+      const id = typeof courseId === 'string' ? parseInt(courseId) : courseId;
+      const customCourses = getArray('customCourses');
+      const idx = customCourses.findIndex((c) => c.id === id || c.id === courseId);
+
+      if (idx !== -1) {
+        const updated = customCourses.filter((c) => c.id !== id && c.id !== courseId);
+        setArray('customCourses', updated);
+      } else {
+        const deletedIds = new Set(getArray('deletedCourseIds'));
+        deletedIds.add(id);
+        setArray('deletedCourseIds', Array.from(deletedIds));
+      }
+
+      // Also remove from saved courses if present
+      const saved = new Set(getArray('savedCourses'));
+      if (saved.has(id) || saved.has(courseId)) {
+        saved.delete(id);
+        saved.delete(courseId);
+        setArray('savedCourses', Array.from(saved));
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message || 'Failed to delete course' };
+    }
+  };
+
+  const updateBlogPost = (postId, postData) => {
+    try {
+      const id = typeof postId === 'string' ? parseInt(postId) : postId;
+      const customPosts = getArray('customBlogPosts');
+      const idx = customPosts.findIndex((p) => p.id === id || p.id === postId);
+
+      if (idx !== -1) {
+        const updated = [...customPosts];
+        updated[idx] = { ...updated[idx], ...postData, id: customPosts[idx].id };
+        // keep readTime roughly updated if content changes
+        if (typeof postData.content === 'string') {
+          updated[idx].readTime = `${Math.ceil(postData.content.length / 1000)} min read`;
+        }
+        setArray('customBlogPosts', updated);
+        return { success: true };
+      }
+
+      // Default post: store override
+      const overrides = getMap('blogOverrides');
+      const nextOverride = { ...(overrides[id] || {}), ...postData, id: id };
+      if (typeof postData.content === 'string') {
+        nextOverride.readTime = `${Math.ceil(postData.content.length / 1000)} min read`;
+      }
+      overrides[id] = nextOverride;
+      setMap('blogOverrides', overrides);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message || 'Failed to update blog post' };
+    }
+  };
+
+  const deleteBlogPost = (postId) => {
+    try {
+      const id = typeof postId === 'string' ? parseInt(postId) : postId;
+      const customPosts = getArray('customBlogPosts');
+      const idx = customPosts.findIndex((p) => p.id === id || p.id === postId);
+
+      if (idx !== -1) {
+        const updated = customPosts.filter((p) => p.id !== id && p.id !== postId);
+        setArray('customBlogPosts', updated);
+      } else {
+        const deletedIds = new Set(getArray('deletedBlogIds'));
+        deletedIds.add(id);
+        setArray('deletedBlogIds', Array.from(deletedIds));
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message || 'Failed to delete blog post' };
     }
   };
 
@@ -73,7 +201,7 @@ export const AdminProvider = ({ children }) => {
       blogOrders.forEach(({ id, order }) => {
         orderMap[id] = order;
       });
-      localStorage.setItem('blogOrder', JSON.stringify(orderMap));
+      setMap('blogOrder', orderMap);
       return { success: true };
     } catch (error) {
       return { success: false, error: error.message || 'Failed to update blog order' };
@@ -81,7 +209,7 @@ export const AdminProvider = ({ children }) => {
   };
 
   return (
-    <AdminContext.Provider value={{ addCourse, addBlogPost, updateBlogOrder }}>
+    <AdminContext.Provider value={{ addCourse, addBlogPost, updateCourse, deleteCourse, updateBlogPost, deleteBlogPost, updateBlogOrder }}>
       {children}
     </AdminContext.Provider>
   );

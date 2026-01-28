@@ -13,7 +13,7 @@ export function cn(...inputs) {
  * @param {number} quality - Image quality (1-100, default: 40 for maximum compression)
  * @returns {string} - Optimized image URL
  */
-export function optimizeImageUrl(url, width = 500, quality = 35) {
+export function optimizeImageUrl(url, width = 400, quality = 30) {
 	if (!url) return url;
 	
 	// If it's an Unsplash URL, use Unsplash Source API for optimization
@@ -26,6 +26,7 @@ export function optimizeImageUrl(url, width = 500, quality = 35) {
 			// Use Unsplash Source API with extremely aggressive optimization
 			// Format: https://images.unsplash.com/photo-{id}?w={width}&q={quality}&fm=webp&fit=crop
 			// Using very small widths and lower quality for maximum compression
+			// Default: 400px width, 30% quality for optimal size/quality balance
 			return `https://images.unsplash.com/photo-${photoId}?w=${width}&q=${quality}&fm=webp&fit=crop`;
 		}
 		// Fallback: try to use existing URL with parameters
@@ -63,25 +64,25 @@ export function generateImageSrcset(url, isHero = false) {
 	// Regular images: smaller range for faster load
 	if (isHero) {
 		// Hero images: mobile (200, 400), tablet (800), desktop (1200, 1600)
-		// Quality increases with size: mobile=35%, tablet=50%, desktop=60-70%
+		// Quality increases with size: mobile=30%, tablet=40%, desktop=50-60%
 		const sizes = [
-			{ w: 200, q: 35 },
-			{ w: 400, q: 40 },
-			{ w: 800, q: 50 },
-			{ w: 1200, q: 60 },
-			{ w: 1600, q: 70 }
+			{ w: 200, q: 30 },
+			{ w: 400, q: 35 },
+			{ w: 800, q: 40 },
+			{ w: 1200, q: 50 },
+			{ w: 1600, q: 60 }
 		];
 		return sizes.map(({ w, q }) => 
 			`https://images.unsplash.com/photo-${photoId}?w=${w}&q=${q}&fm=webp&fit=crop ${w}w`
 		).join(', ');
 	} else {
 		// Regular images: smaller sizes for faster load
-		// Quality: 35% for mobile, 40% for larger
+		// Quality: 30% for mobile, 35% for larger (more aggressive compression)
 		const sizes = [
-			{ w: 200, q: 35 },
-			{ w: 400, q: 40 },
-			{ w: 600, q: 45 },
-			{ w: 800, q: 50 }
+			{ w: 200, q: 30 },
+			{ w: 400, q: 35 },
+			{ w: 600, q: 40 },
+			{ w: 800, q: 45 }
 		];
 		return sizes.map(({ w, q }) => 
 			`https://images.unsplash.com/photo-${photoId}?w=${w}&q=${q}&fm=webp&fit=crop ${w}w`

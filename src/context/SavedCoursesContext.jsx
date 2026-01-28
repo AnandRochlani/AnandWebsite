@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
-import { courses } from '@/data/courses';
+import { getAllCourses } from '@/data/courses';
 
 const SavedCoursesContext = createContext();
 
@@ -64,7 +64,7 @@ export const SavedCoursesProvider = ({ children }) => {
   const isSaved = (courseId) => savedCourseIds.includes(courseId);
 
   const getSavedCourses = () => {
-    return courses.filter(course => savedCourseIds.includes(course.id));
+    return getAllCourses().filter(course => savedCourseIds.includes(course.id));
   };
 
   return (

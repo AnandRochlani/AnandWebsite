@@ -83,7 +83,7 @@ const BlogPage = () => {
   // Preload featured post image for better LCP
   useEffect(() => {
     if (featuredPost?.featuredImage) {
-      const optimizedImage = optimizeImageUrl(featuredPost.featuredImage, 500, 40);
+      const optimizedImage = optimizeImageUrl(featuredPost.featuredImage, 500, 35);
       const existingPreload = document.querySelector(`link[rel="preload"][href="${optimizedImage}"]`);
       if (!existingPreload) {
         const link = document.createElement('link');
@@ -191,7 +191,7 @@ const BlogPage = () => {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="relative h-64 md:h-full overflow-hidden">
                       <img
-                        src={optimizeImageUrl(featuredPost.featuredImage, 500, 40)}
+                        src={optimizeImageUrl(featuredPost.featuredImage, 500, 35)}
                         srcSet={generateImageSrcset(featuredPost.featuredImage)}
                         sizes="(max-width: 768px) 100vw, 50vw"
                         alt={featuredPost.title}
@@ -293,7 +293,7 @@ const BlogPage = () => {
                   <div className="group h-full rounded-xl overflow-hidden bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
                     <div className="relative h-48 overflow-hidden bg-slate-800">
                       <img
-                        data-lazy={optimizeImageUrl(post.featuredImage, 250, 40)}
+                        data-lazy={optimizeImageUrl(post.featuredImage, 250, 30)}
                         srcSet={generateImageSrcset(post.featuredImage)}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         alt={post.title}

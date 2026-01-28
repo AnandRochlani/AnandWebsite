@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, FileText, Plus, Trash2, CheckCircle, AlertCircle, LogOut, ArrowUp, ArrowDown, GripVertical, Save } from 'lucide-react';
+import { BookOpen, FileText, Plus, Trash2, CheckCircle, AlertCircle, LogOut, ArrowUp, ArrowDown, GripVertical, Save, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { useAdmin } from '@/context/AdminContext';
@@ -8,13 +8,17 @@ import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { getAllBlogPosts } from '@/data/blogPosts';
+import { getAllCourses } from '@/data/courses';
 
 const AdminPage = () => {
-  const { addCourse, addBlogPost, updateBlogOrder } = useAdmin();
+  const { addCourse, addBlogPost, updateCourse, deleteCourse, updateBlogPost, deleteBlogPost, updateBlogOrder } = useAdmin();
   const { logout } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('course');
+
+  const [editingCourseId, setEditingCourseId] = useState(null);
+  const [editingBlogId, setEditingBlogId] = useState(null);
   
   // Get all System Design blogs for ordering
   const systemDesignBlogs = useMemo(() => {
@@ -23,6 +27,9 @@ const AdminPage = () => {
       .filter(post => post.category === 'System Design' && post.series && post.order !== undefined)
       .sort((a, b) => (a.order || 999) - (b.order || 999));
   }, []);
+
+  const allCourses = useMemo(() => getAllCourses(), []);
+  const allPosts = useMemo(() => getAllBlogPosts(), []);
   
   const [blogOrderList, setBlogOrderList] = useState([]);
   
@@ -113,18 +120,26 @@ const AdminPage = () => {
     const formattedCourse = {
       ...courseForm,
       studentsEnrolled: parseInt(courseForm.studentsEnrolled),
-      rating: parseFloat(courseForm.rating)
+      rating: parseFloat(courseForm.rating),
+      modules: (courseForm.modules || []).map((m, idx) => ({
+        id: m.id ?? (idx + 1),
+        title: m.title,
+        lessons: isNaN(Number(m.lessons)) ? m.lessons : parseInt(m.lessons),
+        duration: m.duration
+      }))
     };
 
-    const result = addCourse(formattedCourse);
+    const result = editingCourseId ? updateCourse(editingCourseId, formattedCourse) : addCourse(formattedCourse);
     if (result.success) {
       toast({
         title: "Success!",
-        description: "Course added successfully",
+        description: editingCourseId ? "Course updated successfully" : "Course added successfully",
         className: "bg-green-600 border-green-700 text-white"
       });
       setCourseForm(initialCourseState);
+      setEditingCourseId(null);
       setErrors({});
+      setTimeout(() => window.location.reload(), 800);
     } else {
       toast({
         title: "Error",
@@ -142,15 +157,17 @@ const AdminPage = () => {
       return;
     }
 
-    const result = addBlogPost(blogForm);
+    const result = editingBlogId ? updateBlogPost(editingBlogId, blogForm) : addBlogPost(blogForm);
     if (result.success) {
       toast({
         title: "Success!",
-        description: "Blog post added successfully",
+        description: editingBlogId ? "Blog post updated successfully" : "Blog post added successfully",
         className: "bg-green-600 border-green-700 text-white"
       });
       setBlogForm(initialBlogState);
+      setEditingBlogId(null);
       setErrors({});
+      setTimeout(() => window.location.reload(), 800);
     } else {
       toast({
         title: "Error",
@@ -176,6 +193,69 @@ const AdminPage = () => {
   const removeModule = (index) => {
     const newModules = courseForm.modules.filter((_, i) => i !== index);
     setCourseForm({ ...courseForm, modules: newModules });
+  };
+
+  const startEditCourse = (course) => {
+    setActiveTab('course');
+    setEditingBlogId(null);
+    setEditingCourseId(course.id);
+
+    setCourseForm({
+      name: course.name || '',
+      description: course.description || '',
+      instructor: course.instructor || '',
+      duration: course.duration || '',
+      level: course.level || 'Beginner',
+      price: course.price || '',
+      rating: course.rating ?? '',
+      studentsEnrolled: course.studentsEnrolled ?? '',
+      category: course.category || 'Web Development',
+      modules: (course.modules || []).map((m) => ({
+        id: m.id,
+        title: m.title ?? '',
+        lessons: m.lessons ?? '',
+        duration: m.duration ?? ''
+      }))
+    });
+    setErrors({});
+  };
+
+  const startEditBlog = (post) => {
+    setActiveTab('blog');
+    setEditingCourseId(null);
+    setEditingBlogId(post.id);
+
+    setBlogForm({
+      title: post.title || '',
+      description: post.description || '',
+      content: post.content || '',
+      author: post.author || '',
+      date: post.date || '',
+      category: post.category || 'Web Development'
+    });
+    setErrors({});
+  };
+
+  const handleDeleteCourse = (course) => {
+    if (!window.confirm(`Delete course: "${course.name}"?`)) return;
+    const result = deleteCourse(course.id);
+    if (result.success) {
+      toast({ title: "Deleted", description: "Course deleted successfully" });
+      setTimeout(() => window.location.reload(), 600);
+    } else {
+      toast({ title: "Error", description: result.error, variant: "destructive" });
+    }
+  };
+
+  const handleDeleteBlog = (post) => {
+    if (!window.confirm(`Delete blog post: "${post.title}"?`)) return;
+    const result = deleteBlogPost(post.id);
+    if (result.success) {
+      toast({ title: "Deleted", description: "Blog post deleted successfully" });
+      setTimeout(() => window.location.reload(), 600);
+    } else {
+      toast({ title: "Error", description: result.error, variant: "destructive" });
+    }
   };
 
   // Blog Order Management Functions
@@ -362,6 +442,7 @@ const AdminPage = () => {
                         <option value="Web Development">Web Development</option>
                         <option value="Design">Design</option>
                         <option value="Data Science">Data Science</option>
+                        <option value="System Design">System Design</option>
                       </select>
                     </div>
 
@@ -469,18 +550,64 @@ const AdminPage = () => {
 
                   <div className="flex gap-4 pt-4">
                     <Button type="submit" className="flex-1 bg-purple-600 hover:bg-purple-700 text-white">
-                      Create Course
+                      {editingCourseId ? 'Update Course' : 'Create Course'}
                     </Button>
                     <Button 
                       type="button" 
                       variant="outline" 
-                      onClick={() => setCourseForm(initialCourseState)}
+                      onClick={() => {
+                        setCourseForm(initialCourseState);
+                        setEditingCourseId(null);
+                      }}
                       className="border-white/20 text-white hover:bg-white/10"
                     >
-                      Reset
+                      {editingCourseId ? 'Cancel Edit' : 'Reset'}
                     </Button>
                   </div>
                 </motion.form>
+              )}
+              {activeTab === 'course' && (
+                <motion.div
+                  key="course-list"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="mt-10 pt-8 border-t border-white/10"
+                >
+                  <h3 className="text-xl font-bold text-white mb-4">All Courses</h3>
+                  <div className="space-y-3">
+                    {allCourses.map((course) => (
+                      <div
+                        key={course.id}
+                        className="flex items-center justify-between gap-4 p-4 rounded-lg bg-black/20 border border-white/10"
+                      >
+                        <div className="min-w-0">
+                          <p className="text-white font-medium truncate">{course.name}</p>
+                          <p className="text-xs text-gray-400">{course.category} • {course.level}</p>
+                        </div>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => startEditCourse(course)}
+                            className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10"
+                            title="Edit course"
+                          >
+                            <Pencil className="w-4 h-4 text-gray-200" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteCourse(course)}
+                            className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20"
+                            title="Delete course"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-400" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
               )}
               {activeTab === 'blog' && (
                 <motion.form
@@ -537,6 +664,7 @@ const AdminPage = () => {
                       <option value="Web Development">Web Development</option>
                       <option value="Design">Design</option>
                       <option value="Data Science">Data Science</option>
+                      <option value="System Design">System Design</option>
                     </select>
                   </div>
 
@@ -564,18 +692,67 @@ const AdminPage = () => {
 
                   <div className="flex gap-4 pt-4">
                     <Button type="submit" className="flex-1 bg-pink-600 hover:bg-pink-700 text-white">
-                      Publish Post
+                      {editingBlogId ? 'Update Post' : 'Publish Post'}
                     </Button>
                     <Button 
                       type="button" 
                       variant="outline" 
-                      onClick={() => setBlogForm(initialBlogState)}
+                      onClick={() => {
+                        setBlogForm(initialBlogState);
+                        setEditingBlogId(null);
+                      }}
                       className="border-white/20 text-white hover:bg-white/10"
                     >
-                      Reset
+                      {editingBlogId ? 'Cancel Edit' : 'Reset'}
                     </Button>
                   </div>
                 </motion.form>
+              )}
+              {activeTab === 'blog' && (
+                <motion.div
+                  key="blog-list"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="mt-10 pt-8 border-t border-white/10"
+                >
+                  <h3 className="text-xl font-bold text-white mb-4">All Blog Posts</h3>
+                  <div className="space-y-3">
+                    {allPosts
+                      .slice()
+                      .sort((a, b) => new Date(b.date) - new Date(a.date))
+                      .map((post) => (
+                        <div
+                          key={post.id}
+                          className="flex items-center justify-between gap-4 p-4 rounded-lg bg-black/20 border border-white/10"
+                        >
+                          <div className="min-w-0">
+                            <p className="text-white font-medium truncate">{post.title}</p>
+                            <p className="text-xs text-gray-400">{post.category} • {post.date}</p>
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => startEditBlog(post)}
+                              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10"
+                              title="Edit post"
+                            >
+                              <Pencil className="w-4 h-4 text-gray-200" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteBlog(post)}
+                              className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20"
+                              title="Delete post"
+                            >
+                              <Trash2 className="w-4 h-4 text-red-400" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </motion.div>
               )}
               {activeTab === 'order' && (
                 <motion.div

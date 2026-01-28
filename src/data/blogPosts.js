@@ -675,6 +675,33 @@ const getBlogOrder = () => {
   }
 };
 
+const getBlogOverrides = () => {
+  try {
+    const overrides = localStorage.getItem('blogOverrides');
+    return overrides ? JSON.parse(overrides) : {};
+  } catch (e) {
+    return {};
+  }
+};
+
+const getDeletedBlogIds = () => {
+  try {
+    const deleted = localStorage.getItem('deletedBlogIds');
+    return deleted ? JSON.parse(deleted) : [];
+  } catch (e) {
+    return [];
+  }
+};
+
+const applyBlogEdits = (posts) => {
+  const overrides = getBlogOverrides();
+  const deletedIds = new Set(getDeletedBlogIds());
+
+  return posts
+    .filter((post) => !deletedIds.has(post.id))
+    .map((post) => (overrides[post.id] ? { ...post, ...overrides[post.id] } : post));
+};
+
 // Apply custom order to blog posts
 const applyBlogOrder = (posts) => {
   const orderMap = getBlogOrder();
@@ -690,8 +717,8 @@ const applyBlogOrder = (posts) => {
   });
 };
 
-export const blogPosts = applyBlogOrder([...defaultBlogPosts, ...getLocalBlogPosts()]);
+export const blogPosts = applyBlogOrder(applyBlogEdits([...defaultBlogPosts, ...getLocalBlogPosts()]));
 
 export const getAllBlogPosts = () => {
-  return applyBlogOrder([...defaultBlogPosts, ...getLocalBlogPosts()]);
+  return applyBlogOrder(applyBlogEdits([...defaultBlogPosts, ...getLocalBlogPosts()]));
 };
