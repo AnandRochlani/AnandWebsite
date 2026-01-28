@@ -1,12 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, BookOpen, GraduationCap, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen, GraduationCap, Sparkles, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
+import SchemaCode from '@/components/SchemaCode';
+import MembershipSignup from '@/components/MembershipSignup';
+import NewsletterSignup from '@/components/NewsletterSignup';
 import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
 
 const HomePage = () => {
+  const [showMembershipModal, setShowMembershipModal] = useState(false);
   const heroImageUrl = "https://images.unsplash.com/photo-1504983875-d3b163aba9e6";
   // Use 200px for fastest mobile LCP (base image)
   // Desktop will use larger images from srcset (400px, 800px, 1200px, 1600px)
@@ -31,11 +35,27 @@ const HomePage = () => {
   return (
     <>
       <SEOHead 
-        title="Cutting-Edge Courses & Insightful Blog Posts"
-        description="Discover cutting-edge courses and insightful blog posts in web development, design, and data science. Expert-led learning to accelerate your journey."
-        keywords="cutting-edge courses, insightful blog posts, online courses, web development courses, react courses, javascript tutorials, UI/UX design courses, data science courses, programming courses, tech blog, learn coding online"
-        canonical="https://www.anandrochlani.com/"
+        title="Professional Services - Graphic Design, Web Development & More"
+        description="Professional services for graphic design, website design, web development, digital marketing, and mobile app development. Get custom quotes for your business needs."
+        keywords="graphic design services, website design, web development, digital marketing, mobile app development, professional services, custom quotes"
+        canonical="https://www.ritvikwebsite.com/"
       />
+
+      <SchemaCode
+        type="WebSite"
+        name="RitvikWebsite - Professional Services"
+        description="Professional services for graphic design, website design, web development, digital marketing, and mobile app development"
+        url="https://www.ritvikwebsite.com"
+        image="https://www.ritvikwebsite.com/og-image.jpg"
+      />
+
+      {showMembershipModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="max-w-2xl w-full">
+            <MembershipSignup onClose={() => setShowMembershipModal(false)} />
+          </div>
+        </div>
+      )}
 
       <div className="min-h-screen">
         {/* Hero Section */}
@@ -80,21 +100,33 @@ const HomePage = () => {
               </motion.div>
 
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight">
-                Cutting-Edge Courses & 
+                Professional Services & 
                 <span className="block bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-                  Insightful Blog Posts
+                  Expert Solutions
                 </span>
               </h1>
 
               <p className="text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto">
-                Discover cutting-edge courses and insightful blog posts to accelerate your growth in web development, design, and data science. Join thousands of students mastering new skills with our expert-led courses and comprehensive tech blog.
+                Discover our comprehensive range of professional services including graphic design, web development, digital marketing, and mobile app development. Get custom quotes tailored to your business needs.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                <Link to="/blog">
+                <Link to="/services">
                   <Button
                     size="lg"
                     className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300"
+                  >
+                    <GraduationCap className="w-5 h-5 mr-2" />
+                    View Services
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                  </Button>
+                </Link>
+
+                <Link to="/blog">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="group bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
                   >
                     <BookOpen className="w-5 h-5 mr-2" />
                     View Blog
@@ -102,17 +134,15 @@ const HomePage = () => {
                   </Button>
                 </Link>
 
-                <Link to="/courses">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="group bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
-                  >
-                    <GraduationCap className="w-5 h-5 mr-2" />
-                    View Courses
-                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                  </Button>
-                </Link>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() => setShowMembershipModal(true)}
+                  className="group bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border-yellow-500/30 hover:border-yellow-500/50 text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
+                >
+                  <Crown className="w-5 h-5 mr-2" />
+                  Become a Member
+                </Button>
               </div>
             </motion.div>
           </div>
@@ -154,17 +184,17 @@ const HomePage = () => {
                 </div>
               </Link>
 
-              {/* Courses Feature */}
-              <Link to="/courses">
+              {/* Services Feature */}
+              <Link to="/services">
                 <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 backdrop-blur-sm border border-white/10 p-8 hover:border-pink-500/50 transition-all duration-300">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-500/20 to-transparent rounded-full blur-3xl group-hover:scale-150 transition-transform duration-500" />
                   <GraduationCap className="w-12 h-12 text-pink-400 mb-4" />
-                  <h2 className="text-2xl font-bold text-white mb-3">Cutting-Edge Courses</h2>
+                  <h2 className="text-2xl font-bold text-white mb-3">Professional Services</h2>
                   <p className="text-gray-300 mb-4">
-                    Master new skills with comprehensive cutting-edge courses taught by industry professionals. Explore our collection of expert-led courses covering web development, design, and data science with hands-on projects and real-world applications.
+                    Explore our comprehensive range of professional services including graphic design, website design, web development, digital marketing, and mobile app development. Get custom quotes tailored to your business needs.
                   </p>
                   <span className="inline-flex items-center text-pink-400 font-medium group-hover:gap-2 transition-all duration-300">
-                    View All Courses
+                    View All Services
                     <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
                   </span>
                 </div>
@@ -177,36 +207,45 @@ const HomePage = () => {
         <section className="py-16 bg-slate-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl font-bold text-white mb-6">Why Choose AnandRochlani?</h2>
+              <h2 className="text-3xl font-bold text-white mb-6">Why Choose Our Services?</h2>
               <div className="grid md:grid-cols-3 gap-8 text-left mt-8">
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-3">Cutting-Edge Content</h3>
+                  <h3 className="text-xl font-semibold text-white mb-3">Professional Quality</h3>
                   <p className="text-gray-300">
-                    Our courses and blog posts feature the latest technologies and industry best practices. Stay ahead with cutting-edge content that keeps you at the forefront of web development, design, and data science.
+                    Our services are delivered by experienced professionals using the latest tools and technologies. We ensure high-quality results that meet your business objectives.
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-3">Insightful Blog Posts</h3>
+                  <h3 className="text-xl font-semibold text-white mb-3">Custom Solutions</h3>
                   <p className="text-gray-300">
-                    Read our insightful blog posts covering tutorials, case studies, and expert insights. Our blog provides valuable content to help you grow your skills and advance your career in technology.
+                    Every project is tailored to your specific needs. We work closely with you to understand your requirements and deliver solutions that exceed expectations.
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-3">Expert-Led Learning</h3>
+                  <h3 className="text-xl font-semibold text-white mb-3">Competitive Pricing</h3>
                   <p className="text-gray-300">
-                    Learn from industry professionals with years of experience. Our expert-led courses provide practical knowledge and real-world applications to help you master new skills effectively.
+                    Get custom quotes for all our services. We offer competitive pricing with flexible options including membership plans for regular clients.
                   </p>
                 </div>
               </div>
               <div className="mt-12 text-gray-300 space-y-4">
                 <p>
-                  At AnandRochlani, we offer cutting-edge courses and insightful blog posts designed to help you excel in web development, UI/UX design, and data science. Whether you're looking for cutting-edge courses on React, JavaScript, or Node.js, or insightful blog posts about the latest tech trends, we have the resources you need.
+                  We offer comprehensive professional services including graphic design, website design, web development, digital marketing, and mobile app development. Whether you need a custom website, mobile app, or digital marketing campaign, we have the expertise to help your business succeed.
                 </p>
                 <p>
-                  Our platform combines cutting-edge course content with insightful blog posts to create a comprehensive learning experience. Explore our cutting-edge courses and read our insightful blog posts to stay updated with the latest in technology and design. Join thousands of students who are already benefiting from our cutting-edge courses and insightful blog posts.
+                  Our team combines creative design with technical expertise to deliver solutions that drive results. Contact us today for a custom quote tailored to your specific needs and budget.
                 </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Newsletter Signup Section */}
+        <section className="py-16 bg-gradient-to-br from-purple-900/20 to-pink-900/20">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl font-bold text-white mb-4">Stay Updated</h2>
+            <p className="text-gray-300 mb-6">Subscribe to our newsletter for the latest updates and special offers.</p>
+            <NewsletterSignup />
           </div>
         </section>
       </div>

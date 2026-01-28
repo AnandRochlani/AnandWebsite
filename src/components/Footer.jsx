@@ -1,22 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Code2, Github, Twitter, Linkedin, Mail, Youtube } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import NewsletterSignup from '@/components/NewsletterSignup';
 
 const Footer = () => {
-  const [email, setEmail] = useState('');
-  const { toast } = useToast();
-
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (email) {
-      toast({
-        title: "🎉 Successfully subscribed!",
-        description: "You'll receive our latest updates and courses.",
-      });
-      setEmail('');
-    }
-  };
 
   const socialLinks = [
     { icon: Youtube, href: 'https://www.youtube.com/@anandrochlani5226', label: 'YouTube', target: '_blank', rel: 'noopener noreferrer' },
@@ -29,7 +16,7 @@ const Footer = () => {
   const quickLinks = [
     { name: 'Home', path: '/' },
     { name: 'Blog', path: '/blog' },
-    { name: 'Courses', path: '/courses' },
+    { name: 'Services', path: '/services' },
     { name: 'About', path: '#' }
   ];
 
@@ -48,7 +35,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-gray-400 text-sm">
-              Empowering developers and designers with cutting-edge courses and insightful blog content.
+              Professional services for graphic design, web development, digital marketing, and mobile app development.
             </p>
           </div>
 
@@ -91,29 +78,14 @@ const Footer = () => {
           {/* Newsletter */}
           <div>
             <h3 className="text-white font-semibold mb-4">Newsletter</h3>
-            <form onSubmit={handleSubscribe} className="space-y-2">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
-                required
-              />
-              <button
-                type="submit"
-                className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
-              >
-                Subscribe
-              </button>
-            </form>
+            <NewsletterSignup />
           </div>
         </div>
 
         {/* Copyright */}
         <div className="pt-8 border-t border-white/10">
           <p className="text-center text-gray-400 text-sm">
-            © 2026 AnandRochlani. All rights reserved. Built with React and TailwindCSS.
+            © 2026 RitvikWebsite. All rights reserved. Built with React and TailwindCSS.
           </p>
         </div>
       </div>

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Code2, Heart, Shield, LogOut, LogIn } from 'lucide-react';
+import { Menu, X, Code2, Heart, Shield, LogOut, LogIn, ShoppingCart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSavedCourses } from '@/context/SavedCoursesContext';
 import { useAuth } from '@/context/AuthContext';
+import { useCart } from '@/context/CartContext';
 import { useToast } from '@/components/ui/use-toast';
 
 const Navigation = () => {
@@ -12,12 +13,13 @@ const Navigation = () => {
   const navigate = useNavigate();
   const { savedCourseIds } = useSavedCourses();
   const { isAuthenticated, logout } = useAuth();
+  const { getCartItemsCount } = useCart();
   const { toast } = useToast();
 
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Blog', path: '/blog' },
-    { name: 'Courses', path: '/courses' }
+    { name: 'Services', path: '/services' }
   ];
 
   const isActive = (path) => {
@@ -51,7 +53,7 @@ const Navigation = () => {
               <Code2 className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              AnandRochlani
+              RitvikWebsite
             </span>
           </Link>
 
@@ -77,7 +79,7 @@ const Navigation = () => {
               </Link>
             ))}
             
-            {/* Saved Courses Link */}
+            {/* Saved Items Link */}
             <Link
               to="/saved-courses"
               className={`relative flex items-center space-x-1 text-sm font-medium transition-colors duration-300 ${
@@ -86,7 +88,7 @@ const Navigation = () => {
                   : 'text-gray-300 hover:text-white'
               }`}
             >
-              <span>My Courses</span>
+              <span>Saved Items</span>
               {savedCourseIds.length > 0 && (
                 <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-pink-500 rounded-full">
                   {savedCourseIds.length}
@@ -99,6 +101,29 @@ const Navigation = () => {
                 />
               )}
             </Link>
+
+            {/* Cart Link */}
+            {getCartItemsCount() > 0 && (
+              <Link
+                to="/services"
+                className="relative flex items-center space-x-1 text-sm font-medium transition-colors duration-300 text-gray-300 hover:text-white"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // Scroll to quote form or show cart
+                  toast({
+                    title: "Cart Items",
+                    description: `You have ${getCartItemsCount()} item(s) in your cart. Add them when requesting a quote.`,
+                  });
+                }}
+              >
+                <ShoppingCart className="w-5 h-5" />
+                {getCartItemsCount() > 0 && (
+                  <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-purple-500 rounded-full">
+                    {getCartItemsCount()}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {/* Admin Section */}
             {isAuthenticated ? (
@@ -188,7 +213,7 @@ const Navigation = () => {
               >
                 <div className="flex items-center">
                   <Heart className="w-4 h-4 mr-2" />
-                  My Courses
+                  Saved Items
                 </div>
                 {savedCourseIds.length > 0 && (
                   <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-pink-500 rounded-full">

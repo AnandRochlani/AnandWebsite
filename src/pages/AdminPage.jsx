@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, FileText, Plus, Trash2, CheckCircle, AlertCircle, LogOut, ArrowUp, ArrowDown, GripVertical, Save, Pencil } from 'lucide-react';
+import { BookOpen, FileText, Plus, Trash2, CheckCircle, AlertCircle, LogOut, ArrowUp, ArrowDown, GripVertical, Save, Pencil, Settings, Image as ImageIcon, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { useAdmin } from '@/context/AdminContext';
@@ -9,9 +9,27 @@ import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { getAllBlogPosts } from '@/data/blogPosts';
 import { getAllCourses } from '@/data/courses';
+import { getAllServices } from '@/data/services';
 
 const AdminPage = () => {
-  const { addCourse, addBlogPost, updateCourse, deleteCourse, updateBlogPost, deleteBlogPost, updateBlogOrder } = useAdmin();
+  const { 
+    addCourse, 
+    addBlogPost, 
+    updateCourse, 
+    deleteCourse, 
+    updateBlogPost, 
+    deleteBlogPost, 
+    updateBlogOrder,
+    addService,
+    updateService,
+    deleteService,
+    updateSchemaData,
+    getSchemaData,
+    updateImageAltTags,
+    getImageAltTags,
+    getAllImages,
+    addImage
+  } = useAdmin();
   const { logout } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -30,6 +48,7 @@ const AdminPage = () => {
 
   const allCourses = useMemo(() => getAllCourses(), []);
   const allPosts = useMemo(() => getAllBlogPosts(), []);
+  const allServices = useMemo(() => getAllServices(), []);
   
   const [blogOrderList, setBlogOrderList] = useState([]);
   
@@ -63,8 +82,59 @@ const AdminPage = () => {
   };
   const [blogForm, setBlogForm] = useState(initialBlogState);
 
+  // Service Form State
+  const initialServiceState = {
+    name: '',
+    description: '',
+    category: 'Graphic Design',
+    featuredImage: '',
+    features: [''],
+    addOns: [{ name: '', price: '' }],
+    membershipPrice: '',
+    generalPrice: ''
+  };
+  const [serviceForm, setServiceForm] = useState(initialServiceState);
+  const [editingServiceId, setEditingServiceId] = useState(null);
+
+  // Schema Form State
+  const [schemaForm, setSchemaForm] = useState({
+    ratingValue: 4.5,
+    bestRating: 5,
+    worstRating: 1,
+    ratingCount: 100,
+    reviewCount: 85
+  });
+
+  // Image Alt Tags State
+  const [imageAltTags, setImageAltTags] = useState({});
+  const [newImageUrl, setNewImageUrl] = useState('');
+  const [newImageAlt, setNewImageAlt] = useState('');
+
   // Errors State
   const [errors, setErrors] = useState({});
+
+  // Load schema data and image alt tags on mount
+  useEffect(() => {
+    try {
+      const schemaData = getSchemaData();
+      if (schemaData && Object.keys(schemaData).length > 0) {
+        setSchemaForm({
+          ratingValue: schemaData.ratingValue || 4.5,
+          bestRating: schemaData.bestRating || 5,
+          worstRating: schemaData.worstRating || 1,
+          ratingCount: schemaData.ratingCount || 100,
+          reviewCount: schemaData.reviewCount || 85
+        });
+      }
+
+      const altTags = getImageAltTags();
+      if (altTags && Object.keys(altTags).length > 0) {
+        setImageAltTags(altTags);
+      }
+    } catch (error) {
+      console.error('Error loading admin data:', error);
+    }
+  }, [getSchemaData, getImageAltTags]);
 
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to logout?")) {
@@ -302,13 +372,105 @@ const AdminPage = () => {
     }
   };
 
+  // Service handlers
+  const handleServiceSubmit = (e) => {
+    e.preventDefault();
+    const formattedService = {
+      ...serviceForm,
+      addOns: serviceForm.addOns
+        .filter(addOn => addOn.name && addOn.price)
+        .map((addOn, idx) => ({
+          id: idx + 1,
+          name: addOn.name,
+          price: parseFloat(addOn.price) || 0
+        })),
+      features: serviceForm.features.filter(f => f.trim() !== ''),
+      membershipPrice: serviceForm.membershipPrice ? parseFloat(serviceForm.membershipPrice) : null,
+      generalPrice: serviceForm.generalPrice ? parseFloat(serviceForm.generalPrice) : null
+    };
+
+    const result = editingServiceId ? updateService(editingServiceId, formattedService) : addService(formattedService);
+    if (result.success) {
+      toast({
+        title: "Success!",
+        description: editingServiceId ? "Service updated successfully" : "Service added successfully",
+        className: "bg-green-600 border-green-700 text-white"
+      });
+      setServiceForm(initialServiceState);
+      setEditingServiceId(null);
+      setTimeout(() => window.location.reload(), 800);
+    } else {
+      toast({
+        title: "Error",
+        description: result.error,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleSchemaSubmit = (e) => {
+    e.preventDefault();
+    const result = updateSchemaData(schemaForm);
+    if (result.success) {
+      toast({
+        title: "Success!",
+        description: "Schema data updated successfully",
+        className: "bg-green-600 border-green-700 text-white"
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: result.error,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleImageAltSubmit = (e) => {
+    e.preventDefault();
+    const result = updateImageAltTags(imageAltTags);
+    if (result.success) {
+      toast({
+        title: "Success!",
+        description: "Image alt tags updated successfully",
+        className: "bg-green-600 border-green-700 text-white"
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: result.error,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleAddImage = () => {
+    if (!newImageUrl.trim()) {
+      toast({
+        title: "Error",
+        description: "Image URL is required",
+        variant: "destructive"
+      });
+      return;
+    }
+    addImage(newImageUrl, newImageAlt);
+    setImageAltTags({ ...imageAltTags, [newImageUrl]: newImageAlt });
+    setNewImageUrl('');
+    setNewImageAlt('');
+    toast({
+      title: "Success!",
+      description: "Image added successfully",
+      className: "bg-green-600 border-green-700 text-white"
+    });
+  };
+
   return (
     <>
       <SEOHead 
         title="Admin Dashboard"
-        description="Manage your website content with the admin dashboard. Add new courses and blog posts, update existing content, and control your website from one central location."
-        canonical="https://www.anandrochlani.com/admin"
-        keywords="admin dashboard, content management, add courses, add blog posts, website management"
+        description="Manage your website content with the admin dashboard. Add new services, blog posts, manage schema data, and image alt tags from one central location."
+        canonical="https://www.ritvikwebsite.com/admin"
+        keywords="admin dashboard, content management, add services, add blog posts, schema management, image alt tags, website management"
       />
 
       <div className="min-h-screen bg-slate-900 pt-24 pb-16">
@@ -320,7 +482,7 @@ const AdminPage = () => {
           >
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
-              <p className="text-gray-400">Manage your courses and blog posts</p>
+              <p className="text-gray-400">Manage services, blog posts, schema data, and images</p>
             </div>
             
             <Button 
@@ -367,6 +529,39 @@ const AdminPage = () => {
             >
               <GripVertical className="w-5 h-5 mr-2" />
               Manage Blog Order
+            </button>
+            <button
+              onClick={() => setActiveTab('service')}
+              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                activeTab === 'service'
+                  ? 'bg-green-600 text-white shadow-lg shadow-green-500/20'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <Settings className="w-5 h-5 mr-2" />
+              Services
+            </button>
+            <button
+              onClick={() => setActiveTab('schema')}
+              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                activeTab === 'schema'
+                  ? 'bg-yellow-600 text-white shadow-lg shadow-yellow-500/20'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <Star className="w-5 h-5 mr-2" />
+              Schema
+            </button>
+            <button
+              onClick={() => setActiveTab('images')}
+              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                activeTab === 'images'
+                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <ImageIcon className="w-5 h-5 mr-2" />
+              Images
             </button>
           </div>
 
@@ -846,6 +1041,284 @@ const AdminPage = () => {
                       </div>
                     </>
                   )}
+                </motion.div>
+              )}
+              {activeTab === 'service' && (
+                <motion.div
+                  key="service-form"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  <h2 className="text-2xl font-bold text-white mb-4">Manage Services</h2>
+                  <form onSubmit={handleServiceSubmit} className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-300">Service Name</label>
+                        <input
+                          type="text"
+                          value={serviceForm.name}
+                          onChange={(e) => setServiceForm({ ...serviceForm, name: e.target.value })}
+                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-green-500 focus:outline-none"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-300">Category</label>
+                        <select
+                          value={serviceForm.category}
+                          onChange={(e) => setServiceForm({ ...serviceForm, category: e.target.value })}
+                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-green-500 focus:outline-none"
+                        >
+                          <option value="Graphic Design">Graphic Design</option>
+                          <option value="Website Design">Website Design</option>
+                          <option value="Web Development">Web Development</option>
+                          <option value="Digital Marketing">Digital Marketing</option>
+                          <option value="Mobile App Development">Mobile App Development</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-300">Description</label>
+                      <textarea
+                        value={serviceForm.description}
+                        onChange={(e) => setServiceForm({ ...serviceForm, description: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-green-500 focus:outline-none h-24"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-300">Featured Image URL</label>
+                      <input
+                        type="url"
+                        value={serviceForm.featuredImage}
+                        onChange={(e) => setServiceForm({ ...serviceForm, featuredImage: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-green-500 focus:outline-none"
+                      />
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-300">Membership Price (Optional)</label>
+                        <input
+                          type="number"
+                          value={serviceForm.membershipPrice}
+                          onChange={(e) => setServiceForm({ ...serviceForm, membershipPrice: e.target.value })}
+                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-green-500 focus:outline-none"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-300">General Price (Optional)</label>
+                        <input
+                          type="number"
+                          value={serviceForm.generalPrice}
+                          onChange={(e) => setServiceForm({ ...serviceForm, generalPrice: e.target.value })}
+                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-green-500 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
+                      {editingServiceId ? 'Update Service' : 'Add Service'}
+                    </Button>
+                  </form>
+                  <div className="mt-8 pt-8 border-t border-white/10">
+                    <h3 className="text-xl font-bold text-white mb-4">All Services</h3>
+                    <div className="space-y-3">
+                      {allServices.map((service) => (
+                        <div
+                          key={service.id}
+                          className="flex items-center justify-between gap-4 p-4 rounded-lg bg-black/20 border border-white/10"
+                        >
+                          <div className="min-w-0">
+                            <p className="text-white font-medium truncate">{service.name}</p>
+                            <p className="text-xs text-gray-400">{service.category}</p>
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingServiceId(service.id);
+                                setServiceForm({
+                                  name: service.name || '',
+                                  description: service.description || '',
+                                  category: service.category || 'Graphic Design',
+                                  featuredImage: service.featuredImage || '',
+                                  features: service.features || [''],
+                                  addOns: service.addOns || [{ name: '', price: '' }],
+                                  membershipPrice: service.membershipPrice || '',
+                                  generalPrice: service.generalPrice || ''
+                                });
+                              }}
+                              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10"
+                            >
+                              <Pencil className="w-4 h-4 text-gray-200" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (window.confirm(`Delete service: "${service.name}"?`)) {
+                                  deleteService(service.id);
+                                  setTimeout(() => window.location.reload(), 600);
+                                }
+                              }}
+                              className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20"
+                            >
+                              <Trash2 className="w-4 h-4 text-red-400" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+              {activeTab === 'schema' && (
+                <motion.div
+                  key="schema-form"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  <h2 className="text-2xl font-bold text-white mb-4">Manage Schema Data</h2>
+                  <p className="text-gray-400 mb-6">
+                    Update schema rating values that will be used across all pages. These values affect SEO and rich snippets.
+                  </p>
+                  <form onSubmit={handleSchemaSubmit} className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-300">Rating Value</label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="1"
+                          max="5"
+                          value={schemaForm.ratingValue}
+                          onChange={(e) => setSchemaForm({ ...schemaForm, ratingValue: parseFloat(e.target.value) })}
+                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-300">Best Rating</label>
+                        <input
+                          type="number"
+                          value={schemaForm.bestRating}
+                          onChange={(e) => setSchemaForm({ ...schemaForm, bestRating: parseInt(e.target.value) })}
+                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-300">Worst Rating</label>
+                        <input
+                          type="number"
+                          value={schemaForm.worstRating}
+                          onChange={(e) => setSchemaForm({ ...schemaForm, worstRating: parseInt(e.target.value) })}
+                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-300">Rating Count</label>
+                        <input
+                          type="number"
+                          value={schemaForm.ratingCount}
+                          onChange={(e) => setSchemaForm({ ...schemaForm, ratingCount: parseInt(e.target.value) })}
+                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-300">Review Count</label>
+                        <input
+                          type="number"
+                          value={schemaForm.reviewCount}
+                          onChange={(e) => setSchemaForm({ ...schemaForm, reviewCount: parseInt(e.target.value) })}
+                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <Button type="submit" className="w-full bg-yellow-600 hover:bg-yellow-700 text-white">
+                      Save Schema Data
+                    </Button>
+                  </form>
+                </motion.div>
+              )}
+              {activeTab === 'images' && (
+                <motion.div
+                  key="images-form"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  <h2 className="text-2xl font-bold text-white mb-4">Manage Image Alt Tags</h2>
+                  <p className="text-gray-400 mb-6">
+                    Add and manage alt text for images used throughout the website. This improves SEO and accessibility.
+                  </p>
+                  <div className="space-y-4">
+                    <div className="flex gap-2">
+                      <input
+                        type="url"
+                        value={newImageUrl}
+                        onChange={(e) => setNewImageUrl(e.target.value)}
+                        placeholder="Image URL"
+                        className="flex-1 px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                      />
+                      <input
+                        type="text"
+                        value={newImageAlt}
+                        onChange={(e) => setNewImageAlt(e.target.value)}
+                        placeholder="Alt text"
+                        className="flex-1 px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                      />
+                      <Button onClick={handleAddImage} className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                        Add
+                      </Button>
+                    </div>
+                    <form onSubmit={handleImageAltSubmit} className="space-y-4">
+                      <div className="space-y-3 max-h-96 overflow-y-auto">
+                        {Object.entries(imageAltTags).map(([url, alt]) => (
+                          <div key={url} className="flex gap-2 items-center p-3 rounded-lg bg-black/20 border border-white/10">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs text-gray-400 truncate mb-1">{url}</p>
+                              <input
+                                type="text"
+                                value={alt}
+                                onChange={(e) => {
+                                  setImageAltTags({ ...imageAltTags, [url]: e.target.value });
+                                }}
+                                className="w-full px-3 py-1 rounded bg-black/20 border border-white/10 text-white text-sm focus:outline-none focus:border-indigo-500"
+                                placeholder="Alt text"
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newTags = { ...imageAltTags };
+                                delete newTags[url];
+                                setImageAltTags(newTags);
+                              }}
+                              className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20"
+                            >
+                              <Trash2 className="w-4 h-4 text-red-400" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      {Object.keys(imageAltTags).length === 0 && (
+                        <p className="text-gray-400 text-center py-8">No images added yet. Add images using the form above.</p>
+                      )}
+                      <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+                        Save All Alt Tags
+                      </Button>
+                    </form>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

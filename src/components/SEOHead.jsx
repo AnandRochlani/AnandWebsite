@@ -11,7 +11,7 @@ const SEOHead = ({
   keywords
 }) => {
   const location = useLocation();
-  const siteUrl = 'https://www.anandrochlani.com';
+  const siteUrl = 'https://www.ritvikwebsite.com';
   
   // Build canonical URL - always match the current page to prevent SEO errors
   // Normalize pathname: remove trailing slash except for root
@@ -44,8 +44,8 @@ const SEOHead = ({
   }
   // Only append brand name if title doesn't already contain it
   const fullTitle = title 
-    ? (title.includes('AnandRochlani') ? title : `${title} | AnandRochlani`)
-    : 'Expert Online Courses & Tech Blog | AnandRochlani';
+    ? (title.includes('RitvikWebsite') ? title : `${title} | RitvikWebsite`)
+    : 'Professional Services & Solutions | RitvikWebsite';
   const fullDescription = description || 'Master web development, design, and data science with expert-led courses and tech blog posts. Join thousands learning new skills.';
 
   return (
@@ -66,7 +66,7 @@ const SEOHead = ({
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={fullDescription} />
       <meta property="og:image" content={image} />
-      <meta property="og:site_name" content="AnandRochlani" />
+      <meta property="og:site_name" content="RitvikWebsite" />
       <meta property="og:locale" content="en_US" />
       
       {/* Twitter Card */}
@@ -87,10 +87,10 @@ const SEOHead = ({
           "image": image,
           "publisher": {
             "@type": "Organization",
-            "name": "AnandRochlani",
+            "name": "RitvikWebsite",
             "logo": {
               "@type": "ImageObject",
-              "url": "https://www.anandrochlani.com/logo.png"
+              "url": "https://www.ritvikwebsite.com/logo.png"
             }
           }
         })}

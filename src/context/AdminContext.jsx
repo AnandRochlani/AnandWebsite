@@ -208,8 +208,144 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
+  // Service management functions
+  const addService = (serviceData) => {
+    try {
+      const existingServices = getArray('customServices');
+      const newId = Date.now();
+      
+      const newService = {
+        ...serviceData,
+        id: newId,
+        featuredImage: serviceData.featuredImage || `https://images.unsplash.com/photo-${1500000000000 + Math.floor(Math.random() * 1000000)}?auto=format&fit=crop&w=800&q=80`,
+        featured: false,
+        addOns: serviceData.addOns || []
+      };
+
+      const updatedServices = [...existingServices, newService];
+      setArray('customServices', updatedServices);
+      
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message || 'Failed to add service' };
+    }
+  };
+
+  const updateService = (serviceId, serviceData) => {
+    try {
+      const id = typeof serviceId === 'string' ? parseInt(serviceId) : serviceId;
+      const customServices = getArray('customServices');
+      const idx = customServices.findIndex((s) => s.id === id || s.id === serviceId);
+
+      if (idx !== -1) {
+        const updated = [...customServices];
+        updated[idx] = { ...updated[idx], ...serviceData, id: customServices[idx].id };
+        setArray('customServices', updated);
+        return { success: true };
+      }
+
+      const overrides = getMap('serviceOverrides');
+      overrides[id] = { ...(overrides[id] || {}), ...serviceData, id: id };
+      setMap('serviceOverrides', overrides);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message || 'Failed to update service' };
+    }
+  };
+
+  const deleteService = (serviceId) => {
+    try {
+      const id = typeof serviceId === 'string' ? parseInt(serviceId) : serviceId;
+      const customServices = getArray('customServices');
+      const idx = customServices.findIndex((s) => s.id === id || s.id === serviceId);
+
+      if (idx !== -1) {
+        const updated = customServices.filter((s) => s.id !== id && s.id !== serviceId);
+        setArray('customServices', updated);
+      } else {
+        const deletedIds = new Set(getArray('deletedServiceIds'));
+        deletedIds.add(id);
+        setArray('deletedServiceIds', Array.from(deletedIds));
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message || 'Failed to delete service' };
+    }
+  };
+
+  // Schema management functions
+  const updateSchemaData = (schemaData) => {
+    try {
+      setMap('schemaData', schemaData);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message || 'Failed to update schema data' };
+    }
+  };
+
+  const getSchemaData = () => {
+    return getMap('schemaData');
+  };
+
+  // Image alt tag management functions
+  const updateImageAltTags = (imageAltTags) => {
+    try {
+      setMap('imageAltTags', imageAltTags);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message || 'Failed to update image alt tags' };
+    }
+  };
+
+  const getImageAltTags = () => {
+    return getMap('imageAltTags');
+  };
+
+  // Get all images used in the website
+  const getAllImages = () => {
+    try {
+      const images = getMap('allImages');
+      return images;
+    } catch (error) {
+      return {};
+    }
+  };
+
+  const addImage = (imageUrl, altText = '') => {
+    try {
+      const images = getAllImages();
+      images[imageUrl] = {
+        url: imageUrl,
+        alt: altText,
+        lastUpdated: new Date().toISOString()
+      };
+      setMap('allImages', images);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message || 'Failed to add image' };
+    }
+  };
+
   return (
-    <AdminContext.Provider value={{ addCourse, addBlogPost, updateCourse, deleteCourse, updateBlogPost, deleteBlogPost, updateBlogOrder }}>
+    <AdminContext.Provider value={{ 
+      addCourse, 
+      addBlogPost, 
+      updateCourse, 
+      deleteCourse, 
+      updateBlogPost, 
+      deleteBlogPost, 
+      updateBlogOrder,
+      addService,
+      updateService,
+      deleteService,
+      updateSchemaData,
+      getSchemaData,
+      updateImageAltTags,
+      getImageAltTags,
+      getAllImages,
+      addImage
+    }}>
       {children}
     </AdminContext.Provider>
   );
