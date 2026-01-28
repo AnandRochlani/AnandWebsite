@@ -216,7 +216,11 @@ const BlogPage = () => {
                       <h2 className="text-3xl font-bold text-white mb-4 group-hover:text-purple-400 transition-colors duration-300">
                         {featuredPost.title}
                       </h2>
-                      <p className="text-gray-300 mb-6 line-clamp-3">{featuredPost.description}</p>
+                      <div className="mb-6 p-4 rounded-lg bg-gradient-to-br from-purple-500/10 via-pink-500/5 to-purple-500/10 border border-purple-500/20 group-hover:border-purple-500/40 group-hover:from-purple-500/20 group-hover:via-pink-500/10 group-hover:to-purple-500/20 transition-all duration-300">
+                        <p className="text-base text-gray-200 group-hover:text-white line-clamp-3 leading-relaxed font-medium">
+                          {featuredPost.description}
+                        </p>
+                      </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4 text-sm text-gray-400">
                           <span className="flex items-center">
@@ -321,9 +325,11 @@ const BlogPage = () => {
                       {post.series && (
                         <p className="text-xs text-purple-400 mb-2 font-medium">{post.series}</p>
                       )}
-                      <p className="text-gray-400 text-sm mb-4 line-clamp-3">
-                        {post.description}
-                      </p>
+                      <div className="mb-4 p-3 rounded-lg bg-gradient-to-br from-purple-500/5 via-pink-500/3 to-purple-500/5 border border-purple-500/10 group-hover:border-purple-500/30 group-hover:from-purple-500/10 group-hover:via-pink-500/5 group-hover:to-purple-500/10 transition-all duration-300">
+                        <p className="text-sm text-gray-300 group-hover:text-gray-200 line-clamp-3 leading-relaxed font-medium">
+                          {post.description}
+                        </p>
+                      </div>
                       <div className="flex items-center justify-between text-xs text-gray-500">
                         <span className="flex items-center">
                           <Calendar className="w-3 h-3 mr-1" />

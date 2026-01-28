@@ -17,7 +17,7 @@ export default defineConfig({
     // Optimize for better initial render and code splitting
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
+        manualChunks: function(id) {
           // Separate vendor chunks for better caching and smaller initial bundle
           if (id.includes('node_modules')) {
             // Critical: React core (loads first)
@@ -67,14 +67,14 @@ export default defineConfig({
     cssCodeSplit: true,
     cssMinify: true,
     // Target modern browsers for smaller bundles
-    target: 'esnext',
+    target: 'es2020',
   },
   // Pre-optimize dependencies
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom'],
     exclude: [],
     esbuildOptions: {
-      target: 'esnext',
+      target: 'es2020',
     },
   },
   // Server configuration for development
@@ -88,7 +88,7 @@ export default defineConfig({
   },
   // Optimize for faster response times
   esbuild: {
-    target: 'esnext',
+    target: 'es2020',
     format: 'esm',
   },
 })
