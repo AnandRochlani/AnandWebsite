@@ -469,7 +469,7 @@ const AdminPage = () => {
       <SEOHead 
         title="Admin Dashboard"
         description="Manage your website content with the admin dashboard. Add new services, blog posts, manage schema data, and image alt tags from one central location."
-        canonical="https://www.ritvikwebsite.com/admin"
+        canonical="https://www.anandrochlani.com/admin"
         keywords="admin dashboard, content management, add services, add blog posts, schema management, image alt tags, website management"
       />
 

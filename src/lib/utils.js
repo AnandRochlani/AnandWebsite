@@ -1,3 +1,4 @@
+import React from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -88,4 +89,50 @@ export function generateImageSrcset(url, isHero = false) {
 			`https://images.unsplash.com/photo-${photoId}?w=${w}&q=${q}&fm=webp&fit=crop ${w}w`
 		).join(', ');
 	}
+}
+
+/**
+ * Highlight important keywords and phrases in blog descriptions
+ * Makes descriptions more eye-catching by emphasizing key terms
+ * @param {string} text - The description text
+ * @returns {JSX.Element} - React element with highlighted text
+ */
+export function highlightDescription(text) {
+	if (!text) return text;
+	
+	// Combined pattern for all keywords to highlight (case-insensitive)
+	// Order matters: longer phrases first to avoid partial matches
+	const combinedPattern = /\b(System Design|Load Balancing|Best Practices|Learn|Master|Discover|Explore|Understand|Build|Create|Design|Develop|Implement|Optimize|Improve|Latency|Performance|Scalability|Architecture|API|Framework|Algorithm|Database|Cache|CDN|Guide|Tutorial|Fundamentals|Tips|Tricks|Strategies|Patterns|Principles|Beginner|Advanced|Expert|Professional|Complete|Comprehensive|Essential|Critical|Key|Important)\b/gi;
+	
+	// Track which parts are already highlighted to avoid double-highlighting
+	const parts = [];
+	let lastIndex = 0;
+	let keyCounter = 0;
+	
+	const matches = [...text.matchAll(combinedPattern)];
+	
+	if (matches.length === 0) {
+		return text;
+	}
+	
+	matches.forEach(match => {
+		// Add text before match
+		if (match.index > lastIndex) {
+			parts.push(text.substring(lastIndex, match.index));
+		}
+		// Add highlighted match
+		parts.push(
+			<span key={`highlight-${keyCounter++}`} className="font-bold text-purple-300 group-hover:text-purple-200">
+				{match[0]}
+			</span>
+		);
+		lastIndex = match.index + match[0].length;
+	});
+	
+	// Add remaining text
+	if (lastIndex < text.length) {
+		parts.push(text.substring(lastIndex));
+	}
+	
+	return <>{parts}</>;
 }

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, ArrowRight, Filter, Star } from 'lucide-react';
 import { getAllBlogPosts } from '@/data/blogPosts';
 import SEOHead from '@/components/SEOHead';
-import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
+import { optimizeImageUrl, generateImageSrcset, highlightDescription } from '@/lib/utils';
 
 const BlogPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -217,9 +217,9 @@ const BlogPage = () => {
                         {featuredPost.title}
                       </h2>
                       <div className="mb-6 p-4 rounded-lg bg-gradient-to-br from-purple-500/10 via-pink-500/5 to-purple-500/10 border border-purple-500/20 group-hover:border-purple-500/40 group-hover:from-purple-500/20 group-hover:via-pink-500/10 group-hover:to-purple-500/20 transition-all duration-300">
-                        <p className="text-base text-gray-200 group-hover:text-white line-clamp-3 leading-relaxed font-medium">
-                          {featuredPost.description}
-                        </p>
+                      <p className="text-base text-gray-200 group-hover:text-white line-clamp-3 leading-relaxed font-medium">
+                        {highlightDescription(featuredPost.description)}
+                      </p>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4 text-sm text-gray-400">
@@ -327,7 +327,7 @@ const BlogPage = () => {
                       )}
                       <div className="mb-4 p-3 rounded-lg bg-gradient-to-br from-purple-500/5 via-pink-500/3 to-purple-500/5 border border-purple-500/10 group-hover:border-purple-500/30 group-hover:from-purple-500/10 group-hover:via-pink-500/5 group-hover:to-purple-500/10 transition-all duration-300">
                         <p className="text-sm text-gray-300 group-hover:text-gray-200 line-clamp-3 leading-relaxed font-medium">
-                          {post.description}
+                          {highlightDescription(post.description)}
                         </p>
                       </div>
                       <div className="flex items-center justify-between text-xs text-gray-500">

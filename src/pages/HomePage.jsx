@@ -38,15 +38,15 @@ const HomePage = () => {
         title="Professional Services - Graphic Design, Web Development & More"
         description="Professional services for graphic design, website design, web development, digital marketing, and mobile app development. Get custom quotes for your business needs."
         keywords="graphic design services, website design, web development, digital marketing, mobile app development, professional services, custom quotes"
-        canonical="https://www.ritvikwebsite.com/"
+        canonical="https://www.anandrochlani.com/"
       />
 
       <SchemaCode
         type="WebSite"
-        name="RitvikWebsite - Professional Services"
+        name="AnandRochlani - Professional Services"
         description="Professional services for graphic design, website design, web development, digital marketing, and mobile app development"
-        url="https://www.ritvikwebsite.com"
-        image="https://www.ritvikwebsite.com/og-image.jpg"
+        url="https://www.anandrochlani.com"
+        image="https://www.anandrochlani.com/og-image.jpg"
       />
 
       {showMembershipModal && (

@@ -95,7 +95,7 @@ const ServiceDetail = () => {
         description={service.description}
         image={service.featuredImage}
         keywords={`${service.name}, ${service.category}, professional services`}
-        canonical={`https://www.ritvikwebsite.com/services/${service.id}`}
+        canonical={`https://www.anandrochlani.com/services/${service.id}`}
         type="Service"
       />
 
@@ -103,7 +103,7 @@ const ServiceDetail = () => {
         type="Service"
         name={service.name}
         description={service.description}
-        url={`https://www.ritvikwebsite.com/services/${service.id}`}
+        url={`https://www.anandrochlani.com/services/${service.id}`}
         image={service.featuredImage}
         serviceType={service.category}
       />

@@ -109,15 +109,15 @@ const ServicesPage = () => {
         title="Professional Services - Graphic Design, Web Development & More"
         description="Browse our comprehensive range of professional services including graphic design, website design, web development, digital marketing, and mobile app development."
         keywords="graphic design services, website design, web development, digital marketing, mobile app development, poster design, flyer design, SEO services"
-        canonical="https://www.ritvikwebsite.com/services"
+        canonical="https://www.anandrochlani.com/services"
       />
       
       <SchemaCode
         type="Service"
         name="Professional Services"
         description="Comprehensive range of professional services including graphic design, website design, web development, digital marketing, and mobile app development"
-        url="https://www.ritvikwebsite.com/services"
-        image="https://www.ritvikwebsite.com/og-image.jpg"
+        url="https://www.anandrochlani.com/services"
+        image="https://www.anandrochlani.com/og-image.jpg"
       />
 
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 pb-16">

@@ -85,7 +85,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="pt-8 border-t border-white/10">
           <p className="text-center text-gray-400 text-sm">
-            © 2026 RitvikWebsite. All rights reserved. Built with React and TailwindCSS.
+            © 2026 AnandRochlani. All rights reserved. Built with React and TailwindCSS.
           </p>
         </div>
       </div>
