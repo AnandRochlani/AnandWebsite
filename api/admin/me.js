@@ -8,14 +8,15 @@ export default async function handler(req, res) {
 
   const token = getSessionTokenFromRequest(req);
   if (!token) {
-    return res.status(401).json({ authenticated: false });
+    // Return 200 to avoid noisy console 401s; client treats as logged out.
+    return res.status(200).json({ authenticated: false });
   }
 
   try {
     const user = await verifyAdminSession(token);
     return res.status(200).json({ authenticated: true, user });
   } catch (e) {
-    return res.status(401).json({ authenticated: false });
+    return res.status(200).json({ authenticated: false });
   }
 }
 
