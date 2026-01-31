@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { getAllBlogPosts } from '@/data/blogPosts';
 import { getAllCourses } from '@/data/courses';
-import { getAllServices } from '@/data/services';
 
 const AdminPage = () => {
   const { 
@@ -20,9 +19,6 @@ const AdminPage = () => {
     updateBlogPost, 
     deleteBlogPost, 
     updateBlogOrder,
-    addService,
-    updateService,
-    deleteService,
     updateSchemaData,
     getSchemaData,
     updateImageAltTags,
@@ -48,7 +44,6 @@ const AdminPage = () => {
 
   const allCourses = useMemo(() => getAllCourses(), []);
   const allPosts = useMemo(() => getAllBlogPosts(), []);
-  const allServices = useMemo(() => getAllServices(), []);
   
   const [blogOrderList, setBlogOrderList] = useState([]);
   
@@ -81,20 +76,6 @@ const AdminPage = () => {
     category: 'Web Development'
   };
   const [blogForm, setBlogForm] = useState(initialBlogState);
-
-  // Service Form State
-  const initialServiceState = {
-    name: '',
-    description: '',
-    category: 'Graphic Design',
-    featuredImage: '',
-    features: [''],
-    addOns: [{ name: '', price: '' }],
-    membershipPrice: '',
-    generalPrice: ''
-  };
-  const [serviceForm, setServiceForm] = useState(initialServiceState);
-  const [editingServiceId, setEditingServiceId] = useState(null);
 
   // Schema Form State
   const [schemaForm, setSchemaForm] = useState({
@@ -372,42 +353,6 @@ const AdminPage = () => {
     }
   };
 
-  // Service handlers
-  const handleServiceSubmit = (e) => {
-    e.preventDefault();
-    const formattedService = {
-      ...serviceForm,
-      addOns: serviceForm.addOns
-        .filter(addOn => addOn.name && addOn.price)
-        .map((addOn, idx) => ({
-          id: idx + 1,
-          name: addOn.name,
-          price: parseFloat(addOn.price) || 0
-        })),
-      features: serviceForm.features.filter(f => f.trim() !== ''),
-      membershipPrice: serviceForm.membershipPrice ? parseFloat(serviceForm.membershipPrice) : null,
-      generalPrice: serviceForm.generalPrice ? parseFloat(serviceForm.generalPrice) : null
-    };
-
-    const result = editingServiceId ? updateService(editingServiceId, formattedService) : addService(formattedService);
-    if (result.success) {
-      toast({
-        title: "Success!",
-        description: editingServiceId ? "Service updated successfully" : "Service added successfully",
-        className: "bg-green-600 border-green-700 text-white"
-      });
-      setServiceForm(initialServiceState);
-      setEditingServiceId(null);
-      setTimeout(() => window.location.reload(), 800);
-    } else {
-      toast({
-        title: "Error",
-        description: result.error,
-        variant: "destructive"
-      });
-    }
-  };
-
   const handleSchemaSubmit = (e) => {
     e.preventDefault();
     const result = updateSchemaData(schemaForm);
@@ -468,9 +413,9 @@ const AdminPage = () => {
     <>
       <SEOHead 
         title="Admin Dashboard"
-        description="Manage your website content with the admin dashboard. Add new services, blog posts, manage schema data, and image alt tags from one central location."
+        description="Manage your website content with the admin dashboard. Add and edit courses and blog posts, manage blog order, schema data, and image alt tags from one central location."
         canonical="https://www.anandrochlani.com/admin"
-        keywords="admin dashboard, content management, add services, add blog posts, schema management, image alt tags, website management"
+        keywords="admin dashboard, content management, add courses, add blog posts, blog order, schema management, image alt tags, website management"
       />
 
       <div className="min-h-screen bg-slate-900 pt-24 pb-16">
@@ -482,7 +427,7 @@ const AdminPage = () => {
           >
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
-              <p className="text-gray-400">Manage services, blog posts, schema data, and images</p>
+              <p className="text-gray-400">Manage courses, blog posts, schema data, and images</p>
             </div>
             
             <Button 
@@ -529,17 +474,6 @@ const AdminPage = () => {
             >
               <GripVertical className="w-5 h-5 mr-2" />
               Manage Blog Order
-            </button>
-            <button
-              onClick={() => setActiveTab('service')}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
-                activeTab === 'service'
-                  ? 'bg-green-600 text-white shadow-lg shadow-green-500/20'
-                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
-              }`}
-            >
-              <Settings className="w-5 h-5 mr-2" />
-              Services
             </button>
             <button
               onClick={() => setActiveTab('schema')}
@@ -1041,136 +975,6 @@ const AdminPage = () => {
                       </div>
                     </>
                   )}
-                </motion.div>
-              )}
-              {activeTab === 'service' && (
-                <motion.div
-                  key="service-form"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-6"
-                >
-                  <h2 className="text-2xl font-bold text-white mb-4">Manage Services</h2>
-                  <form onSubmit={handleServiceSubmit} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-300">Service Name</label>
-                        <input
-                          type="text"
-                          value={serviceForm.name}
-                          onChange={(e) => setServiceForm({ ...serviceForm, name: e.target.value })}
-                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-green-500 focus:outline-none"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-300">Category</label>
-                        <select
-                          value={serviceForm.category}
-                          onChange={(e) => setServiceForm({ ...serviceForm, category: e.target.value })}
-                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-green-500 focus:outline-none"
-                        >
-                          <option value="Graphic Design">Graphic Design</option>
-                          <option value="Website Design">Website Design</option>
-                          <option value="Web Development">Web Development</option>
-                          <option value="Digital Marketing">Digital Marketing</option>
-                          <option value="Mobile App Development">Mobile App Development</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-300">Description</label>
-                      <textarea
-                        value={serviceForm.description}
-                        onChange={(e) => setServiceForm({ ...serviceForm, description: e.target.value })}
-                        className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-green-500 focus:outline-none h-24"
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-300">Featured Image URL</label>
-                      <input
-                        type="url"
-                        value={serviceForm.featuredImage}
-                        onChange={(e) => setServiceForm({ ...serviceForm, featuredImage: e.target.value })}
-                        className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-green-500 focus:outline-none"
-                      />
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-300">Membership Price (Optional)</label>
-                        <input
-                          type="number"
-                          value={serviceForm.membershipPrice}
-                          onChange={(e) => setServiceForm({ ...serviceForm, membershipPrice: e.target.value })}
-                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-green-500 focus:outline-none"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-300">General Price (Optional)</label>
-                        <input
-                          type="number"
-                          value={serviceForm.generalPrice}
-                          onChange={(e) => setServiceForm({ ...serviceForm, generalPrice: e.target.value })}
-                          className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-green-500 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-                    <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
-                      {editingServiceId ? 'Update Service' : 'Add Service'}
-                    </Button>
-                  </form>
-                  <div className="mt-8 pt-8 border-t border-white/10">
-                    <h3 className="text-xl font-bold text-white mb-4">All Services</h3>
-                    <div className="space-y-3">
-                      {allServices.map((service) => (
-                        <div
-                          key={service.id}
-                          className="flex items-center justify-between gap-4 p-4 rounded-lg bg-black/20 border border-white/10"
-                        >
-                          <div className="min-w-0">
-                            <p className="text-white font-medium truncate">{service.name}</p>
-                            <p className="text-xs text-gray-400">{service.category}</p>
-                          </div>
-                          <div className="flex items-center gap-2 flex-shrink-0">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setEditingServiceId(service.id);
-                                setServiceForm({
-                                  name: service.name || '',
-                                  description: service.description || '',
-                                  category: service.category || 'Graphic Design',
-                                  featuredImage: service.featuredImage || '',
-                                  features: service.features || [''],
-                                  addOns: service.addOns || [{ name: '', price: '' }],
-                                  membershipPrice: service.membershipPrice || '',
-                                  generalPrice: service.generalPrice || ''
-                                });
-                              }}
-                              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10"
-                            >
-                              <Pencil className="w-4 h-4 text-gray-200" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (window.confirm(`Delete service: "${service.name}"?`)) {
-                                  deleteService(service.id);
-                                  setTimeout(() => window.location.reload(), 600);
-                                }
-                              }}
-                              className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20"
-                            >
-                              <Trash2 className="w-4 h-4 text-red-400" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 </motion.div>
               )}
               {activeTab === 'schema' && (

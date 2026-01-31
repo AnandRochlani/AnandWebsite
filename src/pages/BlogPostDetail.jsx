@@ -308,7 +308,7 @@ const BlogPostDetail = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="prose prose-invert prose-lg max-w-none mb-16 text-slate-300 leading-relaxed"
+            className="blog-content prose prose-invert prose-lg max-w-none mb-16"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 

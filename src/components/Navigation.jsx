@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Code2, Heart, Shield, LogOut, LogIn, ShoppingCart } from 'lucide-react';
+import { Menu, X, Code2, Heart, Shield, LogOut, LogIn } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSavedCourses } from '@/context/SavedCoursesContext';
 import { useAuth } from '@/context/AuthContext';
-import { useCart } from '@/context/CartContext';
 import { useToast } from '@/components/ui/use-toast';
 
 const Navigation = () => {
@@ -13,13 +12,12 @@ const Navigation = () => {
   const navigate = useNavigate();
   const { savedCourseIds } = useSavedCourses();
   const { isAuthenticated, logout } = useAuth();
-  const { getCartItemsCount } = useCart();
   const { toast } = useToast();
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'Blog', path: '/blog' },
-    { name: 'Services', path: '/services' }
+    { name: 'Courses', path: '/courses' },
+    { name: 'Blog', path: '/blog' }
   ];
 
   const isActive = (path) => {
@@ -101,29 +99,6 @@ const Navigation = () => {
                 />
               )}
             </Link>
-
-            {/* Cart Link */}
-            {getCartItemsCount() > 0 && (
-              <Link
-                to="/services"
-                className="relative flex items-center space-x-1 text-sm font-medium transition-colors duration-300 text-gray-300 hover:text-white"
-                onClick={(e) => {
-                  e.preventDefault();
-                  // Scroll to quote form or show cart
-                  toast({
-                    title: "Cart Items",
-                    description: `You have ${getCartItemsCount()} item(s) in your cart. Add them when requesting a quote.`,
-                  });
-                }}
-              >
-                <ShoppingCart className="w-5 h-5" />
-                {getCartItemsCount() > 0 && (
-                  <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-purple-500 rounded-full">
-                    {getCartItemsCount()}
-                  </span>
-                )}
-              </Link>
-            )}
 
             {/* Admin Section */}
             {isAuthenticated ? (

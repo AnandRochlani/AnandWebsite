@@ -45,7 +45,7 @@ const SEOHead = ({
   // Only append brand name if title doesn't already contain it
   const fullTitle = title 
     ? (title.includes('AnandRochlani') ? title : `${title} | AnandRochlani`)
-    : 'Professional Services & Solutions | AnandRochlani';
+    : 'Courses & Tech Blog | AnandRochlani';
   const fullDescription = description || 'Master web development, design, and data science with expert-led courses and tech blog posts. Join thousands learning new skills.';
 
   return (

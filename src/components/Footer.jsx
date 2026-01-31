@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Code2, Github, Twitter, Linkedin, Mail, Youtube } from 'lucide-react';
-import NewsletterSignup from '@/components/NewsletterSignup';
 
 const Footer = () => {
 
@@ -15,9 +14,9 @@ const Footer = () => {
 
   const quickLinks = [
     { name: 'Home', path: '/' },
+    { name: 'Courses', path: '/courses' },
     { name: 'Blog', path: '/blog' },
-    { name: 'Services', path: '/services' },
-    { name: 'About', path: '#' }
+    { name: 'Saved Items', path: '/saved-courses' }
   ];
 
   return (
@@ -35,7 +34,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-gray-400 text-sm">
-              Professional services for graphic design, web development, digital marketing, and mobile app development.
+              Courses and blog posts on web development, design, data science, and system design.
             </p>
           </div>
 
@@ -75,11 +74,8 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Newsletter */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Newsletter</h3>
-            <NewsletterSignup />
-          </div>
+          {/* Spacer column (keeps grid balanced) */}
+          <div />
         </div>
 
         {/* Copyright */}
