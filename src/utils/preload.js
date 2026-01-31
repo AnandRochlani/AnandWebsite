@@ -14,34 +14,40 @@ export const preloadCriticalResources = () => {
   // Prefetch routes on idle (non-blocking)
   schedulePrefetch(() => {
     try {
-      // Dynamically get blog posts and prefetch their routes
+      // Prefetch key routes (keep lightweight to avoid redirects with slugs)
       let blogPostRoutes = ['/courses', '/blog'];
       
       // Try to get blog posts from localStorage (includes custom posts)
       try {
         const localPosts = localStorage.getItem('customBlogPosts');
-        const defaultPosts = [
-          { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, 
-          { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }
-        ];
-        
-        let allPostIds = defaultPosts.map(p => p.id);
+        let slugs = [];
         if (localPosts) {
           try {
             const customPosts = JSON.parse(localPosts);
-            const customIds = customPosts.map(p => p.id);
-            allPostIds = [...allPostIds, ...customIds];
+            slugs = customPosts
+              .map(p => p.slug || p.title || p.id)
+              .filter(Boolean)
+              .slice(0, 3)
+              .map(v => String(v)
+                .toLowerCase()
+                .trim()
+                .replace(/[’']/g, '')
+                .replace(/[–—]/g, '-')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+                .replace(/-+/g, '-')
+              );
           } catch (e) {
             // If parsing fails, use default posts only
           }
         }
         
-        // Prefetch first 3 blog post routes (most likely to be visited)
-        const topPosts = allPostIds.slice(0, 3);
-        blogPostRoutes = [...blogPostRoutes, ...topPosts.map(id => `/blog/${id}`)];
+        // Prefetch a few custom post slugs if available
+        if (slugs.length > 0) {
+          blogPostRoutes = [...blogPostRoutes, ...slugs.map(s => `/blog/${s}`)];
+        }
       } catch (e) {
-        // If localStorage access fails, just prefetch first blog post
-        blogPostRoutes.push('/blog/1');
+        // If localStorage access fails, just prefetch blog list
       }
       
       blogPostRoutes.forEach(route => {

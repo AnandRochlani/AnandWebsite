@@ -43,7 +43,7 @@ function App() {
                   <Route path="/services" element={<Navigate to="/courses" replace />} />
                   <Route path="/services/:id" element={<Navigate to="/courses" replace />} />
                   <Route path="/blog" element={<BlogPage />} />
-                  <Route path="/blog/:id" element={<BlogPostDetail />} />
+                  <Route path="/blog/:slug" element={<BlogPostDetail />} />
                   <Route path="/saved-courses" element={<SavedCoursesPage />} />
                   <Route path="/admin/login" element={<AdminLoginPage />} />
                   <Route 

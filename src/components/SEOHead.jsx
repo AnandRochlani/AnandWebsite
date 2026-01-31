@@ -8,7 +8,11 @@ const SEOHead = ({
   image = 'https://www.anandrochlani.com/og-image.jpg',
   type = 'website',
   canonical,
-  keywords
+  keywords,
+  // Article-specific (optional)
+  authorName,
+  publishedTime,
+  modifiedTime
 }) => {
   const location = useLocation();
   const siteUrl = 'https://www.anandrochlani.com';
@@ -47,6 +51,7 @@ const SEOHead = ({
     ? (title.includes('AnandRochlani') ? title : `${title} | AnandRochlani`)
     : 'Courses & Tech Blog | AnandRochlani';
   const fullDescription = description || 'Master web development, design, and data science with expert-led courses and tech blog posts. Join thousands learning new skills.';
+  const isArticle = type === 'article';
 
   return (
     <Helmet>
@@ -78,22 +83,53 @@ const SEOHead = ({
       
       {/* Schema.org Structured Data */}
       <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": type === 'article' ? 'Article' : 'WebSite',
-          "name": fullTitle,
-          "description": fullDescription,
-          "url": fullUrl,
-          "image": image,
-          "publisher": {
-            "@type": "Organization",
-            "name": "AnandRochlani",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://www.anandrochlani.com/logo.png"
-            }
-          }
-        })}
+        {JSON.stringify(
+          isArticle
+            ? {
+                "@context": "https://schema.org",
+                "@type": "Article",
+                "mainEntityOfPage": {
+                  "@type": "WebPage",
+                  "@id": fullUrl
+                },
+                "headline": fullTitle,
+                "description": fullDescription,
+                "image": image,
+                ...(publishedTime ? { "datePublished": publishedTime } : {}),
+                ...(modifiedTime ? { "dateModified": modifiedTime } : {}),
+                ...(authorName
+                  ? {
+                      "author": {
+                        "@type": "Person",
+                        "name": authorName
+                      }
+                    }
+                  : {}),
+                "publisher": {
+                  "@type": "Organization",
+                  "name": "AnandRochlani",
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://www.anandrochlani.com/logo.png"
+                  }
+                }
+              }
+            : {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "name": fullTitle,
+                "description": fullDescription,
+                "url": fullUrl,
+                "publisher": {
+                  "@type": "Organization",
+                  "name": "AnandRochlani",
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://www.anandrochlani.com/logo.png"
+                  }
+                }
+              }
+        )}
       </script>
     </Helmet>
   );

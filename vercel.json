@@ -9,6 +9,13 @@
       "destination": "/index.html"
     }
   ],
+  "redirects": [
+    {
+      "source": "/blog/17",
+      "destination": "/blog/throughput-explained-a-beginners-guide-to-system-design-scale-2026",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

@@ -781,8 +781,48 @@ const applyBlogOrder = (posts) => {
   });
 };
 
-export const blogPosts = applyBlogOrder(applyBlogEdits([...defaultBlogPosts, ...getLocalBlogPosts()]));
+const slugify = (value) => {
+  if (!value) return '';
+  return String(value)
+    .toLowerCase()
+    .trim()
+    // normalize unicode apostrophes/dashes
+    .replace(/[’']/g, '')
+    .replace(/[–—]/g, '-')
+    // collapse non-alphanumerics into hyphens
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-+/g, '-');
+};
+
+const withSlugs = (posts) => {
+  const seen = new Set();
+  return posts.map((post) => {
+    const base =
+      slugify(post.slug) ||
+      slugify(post.title) ||
+      (post.id !== undefined ? `post-${post.id}` : 'post');
+
+    let slug = base || (post.id !== undefined ? `post-${post.id}` : 'post');
+
+    if (seen.has(slug)) {
+      // ensure uniqueness (stable)
+      if (post.id !== undefined && post.id !== null) {
+        slug = `${slug}-${post.id}`;
+      } else {
+        let i = 2;
+        while (seen.has(`${slug}-${i}`)) i += 1;
+        slug = `${slug}-${i}`;
+      }
+    }
+
+    seen.add(slug);
+    return { ...post, slug };
+  });
+};
+
+export const blogPosts = withSlugs(applyBlogOrder(applyBlogEdits([...defaultBlogPosts, ...getLocalBlogPosts()])));
 
 export const getAllBlogPosts = () => {
-  return applyBlogOrder(applyBlogEdits([...defaultBlogPosts, ...getLocalBlogPosts()]));
+  return withSlugs(applyBlogOrder(applyBlogEdits([...defaultBlogPosts, ...getLocalBlogPosts()])));
 };
