@@ -2,11 +2,11 @@ import { useToast } from "./use-toast"
 import { Toast } from "./toast"
 
 export function Toaster() {
-  const { toasts } = useToast()
+  const { toasts, dismiss } = useToast()
 
   return (
     <div
-      className="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"
+      className="fixed bottom-0 right-0 z-[100] flex max-h-screen w-full flex-col gap-3 p-4 sm:max-w-[420px]"
     >
       {toasts.map((toast) => (
         <Toast
@@ -14,6 +14,8 @@ export function Toaster() {
           title={toast.title}
           description={toast.description}
           variant={toast.variant}
+          className={toast.className}
+          onClose={() => dismiss(toast.id)}
         />
       ))}
     </div>

@@ -3,10 +3,11 @@ import { cn } from "../../lib/utils"
 
 const Toast = React.forwardRef(({ className, variant = "default", title, description, onClose, ...props }, ref) => {
   const variants = {
-    default: "bg-white border-gray-200",
-    success: "bg-green-50 border-green-200",
-    error: "bg-red-50 border-red-200",
-    warning: "bg-yellow-50 border-yellow-200",
+    default: "bg-slate-900/90 text-white border-white/10 backdrop-blur",
+    success: "bg-emerald-600/20 text-white border-emerald-500/30 backdrop-blur",
+    error: "bg-red-600/20 text-white border-red-500/30 backdrop-blur",
+    destructive: "bg-red-600/20 text-white border-red-500/30 backdrop-blur",
+    warning: "bg-yellow-600/20 text-white border-yellow-500/30 backdrop-blur",
   }
 
   return (
@@ -14,19 +15,19 @@ const Toast = React.forwardRef(({ className, variant = "default", title, descrip
       ref={ref}
       className={cn(
         "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all",
-        variants[variant],
+        variants[variant] || variants.default,
         className
       )}
       {...props}
     >
       <div className="grid gap-1">
-        {title && <div className="text-sm font-semibold">{title}</div>}
-        {description && <div className="text-sm opacity-90">{description}</div>}
+        {title && <div className="text-sm font-semibold leading-snug">{title}</div>}
+        {description && <div className="text-sm opacity-90 leading-snug">{description}</div>}
       </div>
       {onClose && (
         <button
           onClick={onClose}
-          className="absolute right-2 top-2 rounded-md p-1 text-gray-400 opacity-0 transition-opacity hover:text-gray-600 group-hover:opacity-100"
+          className="absolute right-2 top-2 rounded-md p-1 text-white/70 opacity-0 transition-opacity hover:text-white group-hover:opacity-100"
         >
           <span className="sr-only">Close</span>
           <svg

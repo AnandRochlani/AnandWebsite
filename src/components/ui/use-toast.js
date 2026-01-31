@@ -18,16 +18,24 @@ function notify() {
   listeners.forEach(listener => listener())
 }
 
-export function toast({ title, description, variant = 'default' }) {
+export function dismissToast(id) {
+  if (toasts.has(id)) {
+    toasts.delete(id)
+    notify()
+  }
+}
+
+export function toast({ title, description, variant = 'default', className, duration = 5000 }) {
   const id = ++toastCount
-  const newToast = { id, title, description, variant }
+  const newToast = { id, title, description, variant, className }
   toasts.set(id, newToast)
   notify()
   
-  setTimeout(() => {
-    toasts.delete(id)
-    notify()
-  }, 5000)
+  if (duration !== Infinity) {
+    setTimeout(() => {
+      dismissToast(id)
+    }, Number(duration) || 5000)
+  }
   
   return id
 }
@@ -45,5 +53,6 @@ export function useToast() {
   return {
     toast,
     toasts: toastList,
+    dismiss: dismissToast,
   }
 }
