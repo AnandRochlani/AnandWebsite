@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Code2, Heart, Shield, LogOut, LogIn } from 'lucide-react';
+import { Menu, X, Code2, Heart, Shield, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSavedCourses } from '@/context/SavedCoursesContext';
 import { useAuth } from '@/context/AuthContext';
@@ -101,7 +101,7 @@ const Navigation = () => {
             </Link>
 
             {/* Admin Section */}
-            {isAuthenticated ? (
+            {isAuthenticated && (
               <div className="flex items-center space-x-4">
                 <Link
                   to="/admin"
@@ -122,18 +122,6 @@ const Navigation = () => {
                   <span>Logout</span>
                 </button>
               </div>
-            ) : (
-              <Link
-                to="/admin/login"
-                className={`flex items-center space-x-1 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                  isActive('/admin/login')
-                    ? 'bg-blue-600/20 text-blue-400 border border-blue-500/50'
-                    : 'text-blue-400 hover:bg-blue-600/10 border border-transparent hover:border-blue-500/30'
-                }`}
-              >
-                <Shield className="w-4 h-4" />
-                <span>Admin Login</span>
-              </Link>
             )}
           </div>
 
@@ -199,7 +187,7 @@ const Navigation = () => {
 
               {/* Mobile Admin Section */}
               <div className="pt-2 border-t border-white/10 mt-2">
-                {isAuthenticated ? (
+                {isAuthenticated && (
                   <>
                     <Link
                       to="/admin"
@@ -221,19 +209,6 @@ const Navigation = () => {
                       Logout
                     </button>
                   </>
-                ) : (
-                  <Link
-                    to="/admin/login"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
-                      isActive('/admin/login')
-                        ? 'bg-blue-600/20 text-blue-400'
-                        : 'text-blue-400 hover:bg-blue-600/10'
-                    }`}
-                  >
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Admin Login
-                  </Link>
                 )}
               </div>
             </div>

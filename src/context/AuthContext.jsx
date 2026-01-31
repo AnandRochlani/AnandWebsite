@@ -19,50 +19,66 @@ export const AuthProvider = ({ children }) => {
     checkAuthOnMount();
   }, []);
 
-  const checkAuthOnMount = () => {
+  const checkAuthOnMount = async () => {
     try {
-      const session = localStorage.getItem('adminSession');
-      if (session) {
-        const parsedSession = JSON.parse(session);
-        // Simple session validation
-        if (parsedSession && parsedSession.username) {
-          setIsAuthenticated(true);
-          setUser(parsedSession);
-        }
+      const res = await fetch('/api/admin/me', { method: 'GET', credentials: 'include' });
+      if (!res.ok) {
+        setIsAuthenticated(false);
+        setUser(null);
+        return;
+      }
+      const data = await res.json();
+      if (data?.authenticated && data?.user?.username) {
+        setIsAuthenticated(true);
+        setUser({ username: data.user.username });
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
       }
     } catch (error) {
-      // Silently handle auth check errors
-      try {
-        localStorage.removeItem('adminSession');
-      } catch (e) {
-        // localStorage may not be available
-      }
+      // If API is unavailable (e.g. running plain Vite dev without Vercel),
+      // treat as logged out.
+      setIsAuthenticated(false);
+      setUser(null);
     } finally {
       setLoading(false);
     }
   };
 
   const login = (username, password) => {
-    return new Promise((resolve, reject) => {
-      // Simulate API call delay
-      setTimeout(() => {
-        if (username === 'admin' && password === 'admin123') {
-          const sessionData = { username, timestamp: Date.now() };
-          localStorage.setItem('adminSession', JSON.stringify(sessionData));
-          setIsAuthenticated(true);
-          setUser(sessionData);
-          resolve({ success: true });
-        } else {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ username, password }),
+        });
+
+        if (!res.ok) {
           reject(new Error('Invalid credentials'));
+          return;
         }
-      }, 800);
+
+        const data = await res.json();
+        setIsAuthenticated(true);
+        setUser({ username: data?.user?.username || username });
+        resolve({ success: true });
+      } catch (e) {
+        reject(new Error('Login failed'));
+      }
     });
   };
 
-  const logout = () => {
-    localStorage.removeItem('adminSession');
-    setIsAuthenticated(false);
-    setUser(null);
+  const logout = async () => {
+    try {
+      await fetch('/api/admin/logout', { method: 'POST', credentials: 'include' });
+    } catch (e) {
+      // ignore
+    } finally {
+      setIsAuthenticated(false);
+      setUser(null);
+    }
   };
 
   return (
