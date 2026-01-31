@@ -1,4 +1,11 @@
 import { ensureSchemaAndSeed, toBlogPostDto } from '../_db.js';
+import { blogPosts as staticBlogPosts } from '../../src/data/blogPosts.js';
+
+function sanitizeErrorMessage(message) {
+  if (!message) return 'Server error';
+  // Avoid leaking credentials if a URL shows up in error text
+  return String(message).replace(/postgres(ql)?:\/\/[^@\s]+@/gi, 'postgres://***@');
+}
 
 export default async function handler(req, res) {
   try {
@@ -42,7 +49,31 @@ export default async function handler(req, res) {
 
     res.status(200).json({ posts: rows.map(toBlogPostDto) });
   } catch (e) {
-    res.status(500).json({ error: e?.message || 'Server error' });
+    // Fallback to static content if DB isn't configured yet (prevents site outage).
+    try {
+      const slug = req?.query?.slug;
+      const id = req?.query?.id;
+
+      if (slug || id) {
+        const value = slug ? String(slug) : String(id);
+        const isNumeric = !slug && /^[0-9]+$/.test(value);
+        const post = isNumeric
+          ? staticBlogPosts.find((p) => Number(p.id) === Number(value))
+          : staticBlogPosts.find((p) => p.slug === value);
+
+        if (!post) {
+          res.status(404).json({ error: 'Blog post not found' });
+          return;
+        }
+
+        res.status(200).json({ post, warning: sanitizeErrorMessage(e?.message) });
+        return;
+      }
+
+      res.status(200).json({ posts: staticBlogPosts, warning: sanitizeErrorMessage(e?.message) });
+    } catch (e2) {
+      res.status(500).json({ error: sanitizeErrorMessage(e?.message) });
+    }
   }
 }
 

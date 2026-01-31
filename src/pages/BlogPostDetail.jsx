@@ -42,34 +42,6 @@ const BlogPostDetail = () => {
     };
   }, [slug]);
 
-  // Redirect numeric/legacy URLs to canonical slug URL
-  if (post && slug && post.slug && slug !== post.slug) {
-    return <Navigate to={`/blog/${post.slug}`} replace />;
-  }
-
-  if (!post && !loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">Post Not Found</h1>
-          <Link to="/blog">
-            <Button className="bg-gradient-to-r from-purple-500 to-pink-500">
-              View All Articles
-            </Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-  
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 flex items-center justify-center">
-        <div className="text-center text-gray-300">Loading...</div>
-      </div>
-    );
-  }
-
   // Memoize related posts to prevent recalculation
   const relatedPosts = useMemo(() => {
     if (!post) return [];
@@ -164,6 +136,37 @@ const BlogPostDetail = () => {
       description: "🚧 This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
     });
   };
+
+  // Redirect numeric/legacy URLs to canonical slug URL
+  const shouldRedirect = Boolean(post && slug && post.slug && slug !== post.slug);
+  const isNotFound = !loading && !post;
+
+  if (shouldRedirect) {
+    return <Navigate to={`/blog/${post.slug}`} replace />;
+  }
+
+  if (isNotFound) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-white mb-4">Post Not Found</h1>
+          <Link to="/blog">
+            <Button className="bg-gradient-to-r from-purple-500 to-pink-500">
+              View All Articles
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading || !post) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 flex items-center justify-center">
+        <div className="text-center text-gray-300">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <>

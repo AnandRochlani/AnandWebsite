@@ -1,4 +1,10 @@
 import { ensureSchemaAndSeed, toCourseDto } from '../_db.js';
+import { defaultCourses as staticCourses } from '../../src/data/courses.js';
+
+function sanitizeErrorMessage(message) {
+  if (!message) return 'Server error';
+  return String(message).replace(/postgres(ql)?:\/\/[^@\s]+@/gi, 'postgres://***@');
+}
 
 export default async function handler(req, res) {
   try {
@@ -24,7 +30,22 @@ export default async function handler(req, res) {
     const rows = await sql`SELECT * FROM courses ORDER BY featured DESC, id ASC;`;
     res.status(200).json({ courses: rows.map(toCourseDto) });
   } catch (e) {
-    res.status(500).json({ error: e?.message || 'Server error' });
+    // Fallback to static content if DB isn't configured yet (prevents site outage).
+    try {
+      const id = req?.query?.id;
+      if (id) {
+        const course = staticCourses.find((c) => Number(c.id) === Number(id)) || null;
+        if (!course) {
+          res.status(404).json({ error: 'Course not found' });
+          return;
+        }
+        res.status(200).json({ course, warning: sanitizeErrorMessage(e?.message) });
+        return;
+      }
+      res.status(200).json({ courses: staticCourses, warning: sanitizeErrorMessage(e?.message) });
+    } catch (e2) {
+      res.status(500).json({ error: sanitizeErrorMessage(e?.message) });
+    }
   }
 }
 
