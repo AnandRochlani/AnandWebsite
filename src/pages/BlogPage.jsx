@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, ArrowRight, Filter, Star } from 'lucide-react';
-import { getAllBlogPosts } from '@/data/blogPosts';
+import { fetchBlogPosts } from '@/data/dbApi';
 import SEOHead from '@/components/SEOHead';
 import { optimizeImageUrl, generateImageSrcset, highlightDescription } from '@/lib/utils';
 
@@ -10,10 +10,22 @@ const BlogPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('date');
   const [visiblePosts, setVisiblePosts] = useState(4); // Initially show only 4 posts to reduce initial load
+  const [allBlogPosts, setAllBlogPosts] = useState([]);
   const observerRef = useRef(null);
 
-  // Memoize blog posts to prevent unnecessary recalculations
-  const allBlogPosts = useMemo(() => getAllBlogPosts(), []);
+  useEffect(() => {
+    let mounted = true;
+    fetchBlogPosts()
+      .then((posts) => {
+        if (mounted) setAllBlogPosts(Array.isArray(posts) ? posts : []);
+      })
+      .catch(() => {
+        if (mounted) setAllBlogPosts([]);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // Memoize categories to prevent recalculation on every render
   const categories = useMemo(() => ['All', ...new Set(allBlogPosts.map(post => post.category))], [allBlogPosts]);
@@ -171,12 +183,12 @@ const BlogPage = () => {
               className="mb-12"
             >
               <Link 
-                to={`/blog/${featuredPost.id}`}
+                to={`/blog/${featuredPost.slug || featuredPost.id}`}
                 onMouseEnter={() => {
                   // Prefetch featured post detail route on hover
                   const link = document.createElement('link');
                   link.rel = 'prefetch';
-                  link.href = `/blog/${featuredPost.id}`;
+                  link.href = `/blog/${featuredPost.slug || featuredPost.id}`;
                   link.as = 'document';
                   document.head.appendChild(link);
                 }}

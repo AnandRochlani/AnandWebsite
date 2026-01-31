@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
-import { getAllCourses } from '@/data/courses';
+import { fetchCourses } from '@/data/dbApi';
 
 const SavedCoursesContext = createContext();
 
@@ -14,6 +14,7 @@ export const useSavedCourses = () => {
 
 export const SavedCoursesProvider = ({ children }) => {
   const [savedCourseIds, setSavedCourseIds] = useState([]);
+  const [allCourses, setAllCourses] = useState([]);
   const { toast } = useToast();
 
   // Initialize from localStorage
@@ -33,6 +34,21 @@ export const SavedCoursesProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('savedCourses', JSON.stringify(savedCourseIds));
   }, [savedCourseIds]);
+
+  // Load courses from DB
+  useEffect(() => {
+    let mounted = true;
+    fetchCourses()
+      .then((courses) => {
+        if (mounted) setAllCourses(Array.isArray(courses) ? courses : []);
+      })
+      .catch(() => {
+        if (mounted) setAllCourses([]);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const addSavedCourse = (courseId) => {
     if (!savedCourseIds.includes(courseId)) {
@@ -64,7 +80,7 @@ export const SavedCoursesProvider = ({ children }) => {
   const isSaved = (courseId) => savedCourseIds.includes(courseId);
 
   const getSavedCourses = () => {
-    return getAllCourses().filter(course => savedCourseIds.includes(course.id));
+    return (allCourses || []).filter(course => savedCourseIds.includes(course.id));
   };
 
   return (

@@ -1,8 +1,8 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, Users, Star, ArrowLeft, BookOpen, CheckCircle, PlayCircle, ExternalLink, Award, Sparkles } from 'lucide-react';
-import { getAllCourses } from '@/data/courses';
+import { fetchCourseById } from '@/data/dbApi';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import SaveButton from '@/components/SaveButton';
@@ -13,15 +13,33 @@ const CourseDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [course, setCourse] = useState(null);
+  const [loading, setLoading] = useState(true);
   
-  // Memoize courses lookup to prevent unnecessary recalculations
-  const allCourses = useMemo(() => getAllCourses(), []);
-  const course = useMemo(() => {
-    if (!id) return null;
-    return allCourses.find(c => c.id === parseInt(id));
-  }, [allCourses, id]);
+  useEffect(() => {
+    let mounted = true;
+    const run = async () => {
+      try {
+        setLoading(true);
+        if (!id) {
+          if (mounted) setCourse(null);
+          return;
+        }
+        const result = await fetchCourseById(id);
+        if (mounted) setCourse(result);
+      } catch (e) {
+        if (mounted) setCourse(null);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    run();
+    return () => {
+      mounted = false;
+    };
+  }, [id]);
 
-  if (!course) {
+  if (!course && !loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 flex items-center justify-center">
         <div className="text-center">
@@ -32,6 +50,14 @@ const CourseDetail = () => {
             </Button>
           </Link>
         </div>
+      </div>
+    );
+  }
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 flex items-center justify-center">
+        <div className="text-center text-gray-300">Loading...</div>
       </div>
     );
   }
@@ -47,13 +73,8 @@ const CourseDetail = () => {
     }
   };
 
-  // Memoize related courses to prevent recalculation
-  const relatedCourses = useMemo(() => {
-    if (!course) return [];
-    return allCourses
-      .filter(c => c.category === course.category && c.id !== course.id)
-      .slice(0, 3);
-  }, [allCourses, course]);
+  // With DB-backed catalog currently containing a single course, related list is empty.
+  const relatedCourses = useMemo(() => [], []);
     
   const isSystemDesign = useMemo(() => course?.category === 'System Design', [course]);
 

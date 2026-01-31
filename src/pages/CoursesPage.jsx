@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, Users, TrendingUp, Search, Filter, Star, BookOpen, Crown, ExternalLink } from 'lucide-react';
-import { getAllCourses } from '@/data/courses';
+import { fetchCourses } from '@/data/dbApi';
 import SaveButton from '@/components/SaveButton';
 import SEOHead from '@/components/SEOHead';
 import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
@@ -12,9 +12,21 @@ const CoursesPage = () => {
   const [selectedLevel, setSelectedLevel] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [visibleCourses, setVisibleCourses] = useState(4); // Initially show only 4 courses to reduce initial load
+  const [allCourses, setAllCourses] = useState([]);
 
-  // Memoize courses to prevent unnecessary recalculations
-  const allCourses = useMemo(() => getAllCourses(), []);
+  useEffect(() => {
+    let mounted = true;
+    fetchCourses()
+      .then((courses) => {
+        if (mounted) setAllCourses(Array.isArray(courses) ? courses : []);
+      })
+      .catch(() => {
+        if (mounted) setAllCourses([]);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // Memoize categories and levels to prevent recalculation on every render
   const categories = useMemo(() => ['All', ...new Set(allCourses.map(course => course.category))], [allCourses]);

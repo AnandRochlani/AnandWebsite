@@ -7,18 +7,10 @@ import { useAdmin } from '@/context/AdminContext';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
-import { getAllBlogPosts } from '@/data/blogPosts';
-import { getAllCourses } from '@/data/courses';
+import { fetchCourses, fetchBlogPosts, adminCreateOrUpdateCourse, adminDeleteCourse, adminCreateOrUpdateBlogPost, adminDeleteBlogPost, adminUpdateBlogOrder } from '@/data/dbApi';
 
 const AdminPage = () => {
   const { 
-    addCourse, 
-    addBlogPost, 
-    updateCourse, 
-    deleteCourse, 
-    updateBlogPost, 
-    deleteBlogPost, 
-    updateBlogOrder,
     updateSchemaData,
     getSchemaData,
     updateImageAltTags,
@@ -34,16 +26,71 @@ const AdminPage = () => {
   const [editingCourseId, setEditingCourseId] = useState(null);
   const [editingBlogId, setEditingBlogId] = useState(null);
   
-  // Get all System Design blogs for ordering
-  const systemDesignBlogs = useMemo(() => {
-    const allPosts = getAllBlogPosts();
-    return allPosts
-      .filter(post => post.category === 'System Design' && post.series && post.order !== undefined)
-      .sort((a, b) => (a.order || 999) - (b.order || 999));
+  const [allCourses, setAllCourses] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
+  const [dataLoading, setDataLoading] = useState(true);
+  
+  useEffect(() => {
+    let mounted = true;
+    const run = async () => {
+      try {
+        setDataLoading(true);
+        const [courses, posts] = await Promise.all([fetchCourses(), fetchBlogPosts()]);
+        if (!mounted) return;
+        setAllCourses(Array.isArray(courses) ? courses : []);
+        setAllPosts(Array.isArray(posts) ? posts : []);
+      } catch (e) {
+        if (!mounted) return;
+        setAllCourses([]);
+        setAllPosts([]);
+      } finally {
+        if (mounted) setDataLoading(false);
+      }
+    };
+    run();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  const allCourses = useMemo(() => getAllCourses(), []);
-  const allPosts = useMemo(() => getAllBlogPosts(), []);
+  // One-time migration: if production previously stored blog order in localStorage,
+  // push it into DB the first time the admin loads after DB rollout.
+  useEffect(() => {
+    const migrate = async () => {
+      try {
+        if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
+        if (localStorage.getItem('blogOrderMigratedToDb') === '1') return;
+        const raw = localStorage.getItem('blogOrder');
+        if (!raw) return;
+        const map = JSON.parse(raw);
+        if (!map || typeof map !== 'object') return;
+        const entries = Object.entries(map);
+        if (entries.length === 0) return;
+
+        const list = entries
+          .map(([id, order]) => ({ id: Number(id), order: Number(order) }))
+          .filter((x) => Number.isFinite(x.id) && Number.isFinite(x.order));
+
+        if (list.length === 0) return;
+
+        await adminUpdateBlogOrder(list);
+        localStorage.setItem('blogOrderMigratedToDb', '1');
+      } catch (e) {
+        // ignore migration errors
+      }
+    };
+
+    if (!dataLoading) {
+      migrate();
+    }
+  }, [dataLoading]);
+
+  // Get all System Design blogs for ordering
+  const systemDesignBlogs = useMemo(() => {
+    return (allPosts || [])
+      .filter(post => post.category === 'System Design' && post.series && post.order !== undefined)
+      .sort((a, b) => (a.order || 999) - (b.order || 999));
+  }, [allPosts]);
   
   const [blogOrderList, setBlogOrderList] = useState([]);
   
@@ -164,7 +211,7 @@ const AdminPage = () => {
     return newErrors;
   };
 
-  const handleCourseSubmit = (e) => {
+  const handleCourseSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateCourse();
     if (Object.keys(validationErrors).length > 0) {
@@ -186,8 +233,11 @@ const AdminPage = () => {
       }))
     };
 
-    const result = editingCourseId ? updateCourse(editingCourseId, formattedCourse) : addCourse(formattedCourse);
-    if (result.success) {
+    try {
+      await adminCreateOrUpdateCourse({
+        id: editingCourseId,
+        payload: formattedCourse,
+      });
       toast({
         title: "Success!",
         description: editingCourseId ? "Course updated successfully" : "Course added successfully",
@@ -197,16 +247,16 @@ const AdminPage = () => {
       setEditingCourseId(null);
       setErrors({});
       setTimeout(() => window.location.reload(), 800);
-    } else {
+    } catch (error) {
       toast({
         title: "Error",
-        description: result.error,
+        description: error?.message || 'Failed to save course',
         variant: "destructive"
       });
     }
   };
 
-  const handleBlogSubmit = (e) => {
+  const handleBlogSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateBlog();
     if (Object.keys(validationErrors).length > 0) {
@@ -214,8 +264,11 @@ const AdminPage = () => {
       return;
     }
 
-    const result = editingBlogId ? updateBlogPost(editingBlogId, blogForm) : addBlogPost(blogForm);
-    if (result.success) {
+    try {
+      await adminCreateOrUpdateBlogPost({
+        id: editingBlogId,
+        payload: blogForm,
+      });
       toast({
         title: "Success!",
         description: editingBlogId ? "Blog post updated successfully" : "Blog post added successfully",
@@ -225,10 +278,10 @@ const AdminPage = () => {
       setEditingBlogId(null);
       setErrors({});
       setTimeout(() => window.location.reload(), 800);
-    } else {
+    } catch (error) {
       toast({
         title: "Error",
-        description: result.error,
+        description: error?.message || 'Failed to save blog post',
         variant: "destructive"
       });
     }
@@ -295,25 +348,25 @@ const AdminPage = () => {
     setErrors({});
   };
 
-  const handleDeleteCourse = (course) => {
+  const handleDeleteCourse = async (course) => {
     if (!window.confirm(`Delete course: "${course.name}"?`)) return;
-    const result = deleteCourse(course.id);
-    if (result.success) {
+    try {
+      await adminDeleteCourse(course.id);
       toast({ title: "Deleted", description: "Course deleted successfully" });
       setTimeout(() => window.location.reload(), 600);
-    } else {
-      toast({ title: "Error", description: result.error, variant: "destructive" });
+    } catch (error) {
+      toast({ title: "Error", description: error?.message || 'Failed to delete course', variant: "destructive" });
     }
   };
 
-  const handleDeleteBlog = (post) => {
+  const handleDeleteBlog = async (post) => {
     if (!window.confirm(`Delete blog post: "${post.title}"?`)) return;
-    const result = deleteBlogPost(post.id);
-    if (result.success) {
+    try {
+      await adminDeleteBlogPost(post.id);
       toast({ title: "Deleted", description: "Blog post deleted successfully" });
       setTimeout(() => window.location.reload(), 600);
-    } else {
-      toast({ title: "Error", description: result.error, variant: "destructive" });
+    } catch (error) {
+      toast({ title: "Error", description: error?.message || 'Failed to delete blog post', variant: "destructive" });
     }
   };
 
@@ -340,22 +393,22 @@ const AdminPage = () => {
     setBlogOrderList(newOrder);
   };
 
-  const handleSaveBlogOrder = () => {
-    const result = updateBlogOrder(blogOrderList);
-    if (result.success) {
+  const handleSaveBlogOrder = async () => {
+    try {
+      await adminUpdateBlogOrder(blogOrderList);
       toast({
         title: "Success!",
-        description: "Blog order updated successfully. Please refresh the page to see changes.",
+        description: "Blog order updated successfully. Refreshing…",
         className: "bg-green-600 border-green-700 text-white"
       });
       // Reload page to apply changes
       setTimeout(() => {
         window.location.reload();
       }, 1500);
-    } else {
+    } catch (error) {
       toast({
         title: "Error",
-        description: result.error,
+        description: error?.message || 'Failed to update blog order',
         variant: "destructive"
       });
     }

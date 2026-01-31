@@ -1,8 +1,8 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { useParams, Link, useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, ArrowLeft, Share2, Facebook, Twitter, Linkedin, ChevronLeft, ChevronRight } from 'lucide-react';
-import { getAllBlogPosts } from '@/data/blogPosts';
+import { fetchBlogPostBySlugOrId, fetchBlogPosts } from '@/data/dbApi';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import SEOHead from '@/components/SEOHead';
@@ -12,24 +12,42 @@ const BlogPostDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [post, setPost] = useState(null);
+  const [allBlogPosts, setAllBlogPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   
-  // Memoize blog posts lookup to prevent unnecessary recalculations
-  const allBlogPosts = useMemo(() => getAllBlogPosts(), []);
-  const post = useMemo(() => {
-    if (!slug) return null;
-    const maybeId = Number(slug);
-    if (!Number.isNaN(maybeId) && Number.isInteger(maybeId)) {
-      return allBlogPosts.find(p => p.id === maybeId);
-    }
-    return allBlogPosts.find(p => p.slug === slug);
-  }, [allBlogPosts, slug]);
+  useEffect(() => {
+    let mounted = true;
+    const run = async () => {
+      try {
+        setLoading(true);
+        const [p, list] = await Promise.all([
+          fetchBlogPostBySlugOrId(slug),
+          fetchBlogPosts(),
+        ]);
+        if (!mounted) return;
+        setPost(p);
+        setAllBlogPosts(Array.isArray(list) ? list : []);
+      } catch (e) {
+        if (!mounted) return;
+        setPost(null);
+        setAllBlogPosts([]);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    run();
+    return () => {
+      mounted = false;
+    };
+  }, [slug]);
 
   // Redirect numeric/legacy URLs to canonical slug URL
   if (post && slug && post.slug && slug !== post.slug) {
     return <Navigate to={`/blog/${post.slug}`} replace />;
   }
 
-  if (!post) {
+  if (!post && !loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 flex items-center justify-center">
         <div className="text-center">
@@ -40,6 +58,14 @@ const BlogPostDetail = () => {
             </Button>
           </Link>
         </div>
+      </div>
+    );
+  }
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 flex items-center justify-center">
+        <div className="text-center text-gray-300">Loading...</div>
       </div>
     );
   }
