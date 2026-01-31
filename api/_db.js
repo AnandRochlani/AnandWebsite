@@ -4,7 +4,7 @@ import { defaultCourses } from '../src/data/courses.js';
 import { blogPosts as seededBlogPosts } from '../src/data/blogPosts.js';
 
 function getDatabaseUrl() {
-  const url =
+  let url =
     process.env.DATABASE_URL ||
     process.env.POSTGRES_URL ||
     process.env.POSTGRES_URL_NON_POOLING ||
@@ -15,6 +15,34 @@ function getDatabaseUrl() {
       'Missing database connection string. Set DATABASE_URL (recommended) or POSTGRES_URL in Vercel env vars.'
     );
   }
+
+  url = String(url).trim();
+
+  // Allow common copy/paste mistake: `psql 'postgresql://...'`
+  // Vercel env var must be ONLY the URL.
+  if (/^psql\b/i.test(url)) {
+    url = url.replace(/^psql\b/i, '').trim();
+  }
+
+  // Strip surrounding quotes if present
+  const first = url[0];
+  const last = url[url.length - 1];
+  if ((first === '"' && last === '"') || (first === "'" && last === "'")) {
+    url = url.slice(1, -1).trim();
+  }
+
+  try {
+    // Validate URL format early for clearer errors
+    // eslint-disable-next-line no-new
+    new URL(url);
+  } catch (e) {
+    throw new Error(
+      `Database connection string provided to neon() is not a valid URL. ` +
+        `Set DATABASE_URL to only the URL, e.g. ` +
+        `postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require`
+    );
+  }
+
   return url;
 }
 
@@ -157,6 +185,23 @@ export async function seedIfEmpty(sql) {
       `;
     }
   }
+
+  // Ensure sequences are aligned even after explicit-id seeding.
+  // Without this, subsequent inserts can reuse an existing id and violate the pkey.
+  await sql`
+    SELECT setval(
+      pg_get_serial_sequence('courses', 'id'),
+      COALESCE((SELECT MAX(id) FROM courses), 0),
+      true
+    );
+  `;
+  await sql`
+    SELECT setval(
+      pg_get_serial_sequence('blog_posts', 'id'),
+      COALESCE((SELECT MAX(id) FROM blog_posts), 0),
+      true
+    );
+  `;
 }
 
 export async function ensureSchemaAndSeed() {
