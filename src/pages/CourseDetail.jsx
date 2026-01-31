@@ -166,7 +166,7 @@ const CourseDetail = () => {
                   srcSet={generateImageSrcset(course.featuredImage)}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
                   alt={course.name}
-                  fetchPriority="high"
+                  fetchpriority="high"
                   loading="eager"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />

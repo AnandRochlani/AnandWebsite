@@ -245,7 +245,7 @@ const BlogPostDetail = () => {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
               alt={post.title}
               loading="eager"
-              fetchPriority="high"
+              fetchpriority="high"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />

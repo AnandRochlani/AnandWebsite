@@ -172,7 +172,7 @@ const CoursesPage = () => {
                               srcSet={generateImageSrcset(course.featuredImage)}
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                               alt={course.name}
-                              fetchPriority={index < 3 ? "high" : "auto"}
+                              fetchpriority={index < 3 ? "high" : "auto"}
                               loading={index < 3 ? "eager" : "lazy"}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             />

@@ -195,7 +195,7 @@ const BlogPage = () => {
                         srcSet={generateImageSrcset(featuredPost.featuredImage)}
                         sizes="(max-width: 768px) 100vw, 50vw"
                         alt={featuredPost.title}
-                        fetchPriority="high"
+                        fetchpriority="high"
                         loading="eager"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />

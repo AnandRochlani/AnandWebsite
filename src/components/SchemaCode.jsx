@@ -1,5 +1,4 @@
-import React from 'react';
-import { Helmet } from 'react-helmet';
+import React, { useEffect, useMemo } from 'react';
 
 const SchemaCode = ({ 
   type = 'Service',
@@ -17,27 +16,7 @@ const SchemaCode = ({
   availability = 'https://schema.org/InStock',
   serviceType = null
 }) => {
-  // Get schema values from localStorage (backend editable)
-  const getSchemaValue = (key, defaultValue) => {
-    try {
-      const schemaData = localStorage.getItem('schemaData');
-      if (schemaData) {
-        const data = JSON.parse(schemaData);
-        return data[key] !== undefined ? data[key] : defaultValue;
-      }
-    } catch (e) {
-      // Ignore errors
-    }
-    return defaultValue;
-  };
-
-  const finalRatingValue = getSchemaValue('ratingValue', ratingValue);
-  const finalBestRating = getSchemaValue('bestRating', bestRating);
-  const finalWorstRating = getSchemaValue('worstRating', worstRating);
-  const finalRatingCount = getSchemaValue('ratingCount', ratingCount);
-  const finalReviewCount = getSchemaValue('reviewCount', reviewCount);
-
-  const getSchema = () => {
+  const baseSchemaJson = useMemo(() => {
     const baseSchema = {
       "@context": "https://schema.org",
       "@type": type,
@@ -46,18 +25,6 @@ const SchemaCode = ({
       "url": url,
       "image": image
     };
-
-    // Add aggregate rating if rating data is available
-    if (finalRatingValue && finalRatingCount) {
-      baseSchema.aggregateRating = {
-        "@type": "AggregateRating",
-        "ratingValue": parseFloat(finalRatingValue),
-        "bestRating": parseFloat(finalBestRating),
-        "worstRating": parseFloat(finalWorstRating),
-        "ratingCount": parseInt(finalRatingCount),
-        "reviewCount": parseInt(finalReviewCount)
-      };
-    }
 
     // Add offer if price is available
     if (price) {
@@ -74,18 +41,63 @@ const SchemaCode = ({
       baseSchema.serviceType = serviceType;
     }
 
-    return baseSchema;
-  };
+    return JSON.stringify(baseSchema);
+  }, [availability, description, image, name, price, priceCurrency, serviceType, type, url]);
 
-  const schema = getSchema();
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
 
-  return (
-    <Helmet>
-      <script type="application/ld+json">
-        {JSON.stringify(schema, null, 2)}
-      </script>
-    </Helmet>
-  );
+    // Optional: allow overrides from localStorage
+    let finalRatingValue = ratingValue;
+    let finalBestRating = bestRating;
+    let finalWorstRating = worstRating;
+    let finalRatingCount = ratingCount;
+    let finalReviewCount = reviewCount;
+
+    try {
+      const schemaData = localStorage.getItem('schemaData');
+      if (schemaData) {
+        const data = JSON.parse(schemaData);
+        if (data.ratingValue !== undefined) finalRatingValue = data.ratingValue;
+        if (data.bestRating !== undefined) finalBestRating = data.bestRating;
+        if (data.worstRating !== undefined) finalWorstRating = data.worstRating;
+        if (data.ratingCount !== undefined) finalRatingCount = data.ratingCount;
+        if (data.reviewCount !== undefined) finalReviewCount = data.reviewCount;
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    let schema;
+    try {
+      schema = JSON.parse(baseSchemaJson);
+    } catch (e) {
+      schema = {};
+    }
+
+    if (finalRatingValue && finalRatingCount) {
+      schema.aggregateRating = {
+        "@type": "AggregateRating",
+        "ratingValue": parseFloat(finalRatingValue),
+        "bestRating": parseFloat(finalBestRating),
+        "worstRating": parseFloat(finalWorstRating),
+        "ratingCount": parseInt(finalRatingCount),
+        "reviewCount": parseInt(finalReviewCount)
+      };
+    }
+
+    const id = 'schemacode-jsonld';
+    let el = document.getElementById(id);
+    if (!el) {
+      el = document.createElement('script');
+      el.id = id;
+      el.type = 'application/ld+json';
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify(schema);
+  }, [baseSchemaJson, bestRating, ratingCount, ratingValue, reviewCount, worstRating]);
+
+  return null;
 };
 
 export default SchemaCode;

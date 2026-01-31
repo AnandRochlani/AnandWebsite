@@ -48,7 +48,7 @@ const HomePage = () => {
               srcSet={generateImageSrcset(heroImageUrl, true)}
               sizes="100vw"
               alt="Learning Background"
-              fetchPriority="high"
+              fetchpriority="high"
               loading="eager"
               decoding="async"
               className="w-full h-full object-cover"
