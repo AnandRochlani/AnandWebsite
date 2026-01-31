@@ -424,6 +424,70 @@ function MyComponent() {
     series: "System Design Tutorial"
   },
   {
+    id: 17,
+    title: "Throughput Explained: A Beginner’s Guide to System Design Scale (2026)",
+    description: "Understand throughput (RPS), why it matters for scaling, and how vertical vs horizontal scaling and load balancers help systems handle massive traffic.",
+    content: `
+      <h2>Throughput Explained (and why it matters)</h2>
+      <p>Building an application that works for ten users is easy. Building one that works for ten million is where the real challenge begins. If you're starting your journey into backend engineering or system architecture, one of the most important metrics you need to understand is <strong>throughput</strong>.</p>
+
+      <h2>What is Throughput?</h2>
+      <p><strong>Throughput</strong> is the total number of requests your system can successfully serve as a whole within a given timeframe. It is commonly measured in <strong>Requests Per Second (RPS)</strong>.</p>
+      <p>Think of a highway: throughput isn’t about how fast one car travels (that’s latency). It’s about how many cars can pass a specific point every second.</p>
+
+      <h2>Why Throughput Matters: The Story of Facebook</h2>
+      <p>Throughput becomes critical as traffic grows. Consider a simplified Facebook journey:</p>
+      <ol>
+        <li><strong>The launch:</strong> When Facebook first launched for students, it might have received ~500 RPS. A single server handling 5,000 RPS would be enough.</li>
+        <li><strong>The expansion:</strong> When traffic grows to 10,000 RPS, that original server becomes a bottleneck and can crash under load.</li>
+        <li><strong>Global scale:</strong> Modern platforms handle massive traffic. Without planning for throughput, systems are unstable and frequently offline.</li>
+      </ol>
+
+      <h2>How to Increase Throughput: Vertical vs Horizontal Scaling</h2>
+      <p>When your incoming traffic exceeds your current throughput capacity, you have two primary options:</p>
+
+      <h3>1) Vertical Scaling (Scale Up)</h3>
+      <p>Vertical scaling means improving the hardware of your existing machine: more RAM, faster CPU, better storage.</p>
+      <ul>
+        <li><strong>Pros:</strong> Simple to understand and implement.</li>
+        <li><strong>Cons:</strong> Expensive and has a hard ceiling (you can’t scale one machine forever).</li>
+      </ul>
+
+      <h3>2) Horizontal Scaling (Scale Out)</h3>
+      <p>Horizontal scaling means adding more machines and distributing traffic across them.</p>
+      <ul>
+        <li><strong>Example:</strong> Instead of one server handling 100,000 requests, use 20 servers handling 5,000 requests each.</li>
+        <li><strong>Benefit:</strong> This is the standard for modern system design—more cost‑effective and can scale almost infinitely.</li>
+      </ul>
+
+      <h2>Managing Throughput with Load Balancers</h2>
+      <p>Once you scale horizontally, you need a way to decide which server gets which request. That’s where a <strong>load balancer</strong> comes in. It distributes incoming requests across your servers so no single machine is overwhelmed, keeping throughput high and your system stable.</p>
+
+      <h2>Conclusion: Design for the Future</h2>
+      <p>The key lesson in system design is that you aren’t just designing for today—you’re designing for growth. When companies launch in one city, they often build with global scale in mind.</p>
+
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li><strong>Throughput</strong> = how many requests your system can serve in a given time (often in <strong>RPS</strong>).</li>
+        <li><strong>Vertical scaling</strong> = better hardware (simple but expensive/limited).</li>
+        <li><strong>Horizontal scaling</strong> = more machines (efficient and scalable).</li>
+      </ul>
+
+      <p><strong>Watch the full explanation here:</strong> <a href="https://www.youtube.com/watch?v=RhV7Y_7wlzk" target="_blank" rel="noopener noreferrer">Throughput Explained | System Design Fundamentals</a></p>
+
+      <h2>Next Steps</h2>
+      <p>Ready to go deeper? In the next blog we’ll dive into <strong>Load Balancers</strong> and how they keep high‑traffic systems running smoothly.</p>
+    `,
+    author: "Anand Rochlani",
+    date: "2026-01-31",
+    category: "System Design",
+    readTime: "9 min read",
+    featuredImage: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2",
+    featured: false,
+    order: 4,
+    series: "System Design Tutorial"
+  },
+  {
     id: 11,
     title: "Load Balancing: Distributing Traffic Across Servers",
     description: "Learn about load balancing algorithms and how to distribute incoming requests efficiently across multiple servers.",
@@ -459,7 +523,7 @@ function MyComponent() {
     readTime: "12 min read",
     featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
     featured: false,
-    order: 4,
+    order: 5,
     series: "System Design Tutorial"
   },
   {
@@ -499,7 +563,7 @@ function MyComponent() {
     readTime: "15 min read",
     featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
     featured: false,
-    order: 5,
+    order: 6,
     series: "System Design Tutorial"
   },
   {
@@ -543,7 +607,7 @@ function MyComponent() {
     readTime: "18 min read",
     featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
     featured: false,
-    order: 6,
+    order: 7,
     series: "System Design Tutorial"
   },
   {
@@ -589,7 +653,7 @@ function MyComponent() {
     readTime: "20 min read",
     featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
     featured: false,
-    order: 7,
+    order: 8,
     series: "System Design Tutorial"
   },
   {
@@ -652,7 +716,7 @@ function MyComponent() {
     readTime: "25 min read",
     featuredImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
     featured: false,
-    order: 8,
+    order: 9,
     series: "System Design Tutorial"
   }
 ];
