@@ -29,7 +29,7 @@ export const defaultCourses = [
     ],
     featured: true,
     isExternal: true,
-    externalUrl: "https://www.udemy.com/course/system-design-fundamental/"
+    externalUrl: "https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73"
   }
 ];
 

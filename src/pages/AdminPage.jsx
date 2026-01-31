@@ -62,6 +62,8 @@ const AdminPage = () => {
     rating: '',
     studentsEnrolled: '',
     category: 'Web Development',
+    isExternal: false,
+    externalUrl: '',
     modules: [{ title: '', lessons: '', duration: '' }]
   };
   const [courseForm, setCourseForm] = useState(initialCourseState);
@@ -143,8 +145,10 @@ const AdminPage = () => {
     }
 
     if (!courseForm.studentsEnrolled) newErrors.studentsEnrolled = 'Student count is required';
-    else if (isNaN(courseForm.studentsEnrolled)) {
-      newErrors.studentsEnrolled = 'Student count must be a number';
+
+    if (courseForm.isExternal) {
+      if (!courseForm.externalUrl) newErrors.externalUrl = 'Udemy link is required';
+      else if (!/^https?:\/\//i.test(courseForm.externalUrl)) newErrors.externalUrl = 'Udemy link must start with http(s)://';
     }
 
     return newErrors;
@@ -170,7 +174,9 @@ const AdminPage = () => {
 
     const formattedCourse = {
       ...courseForm,
-      studentsEnrolled: parseInt(courseForm.studentsEnrolled),
+      studentsEnrolled: isNaN(Number(courseForm.studentsEnrolled))
+        ? courseForm.studentsEnrolled
+        : parseInt(courseForm.studentsEnrolled),
       rating: parseFloat(courseForm.rating),
       modules: (courseForm.modules || []).map((m, idx) => ({
         id: m.id ?? (idx + 1),
@@ -261,6 +267,8 @@ const AdminPage = () => {
       rating: course.rating ?? '',
       studentsEnrolled: course.studentsEnrolled ?? '',
       category: course.category || 'Web Development',
+      isExternal: Boolean(course.isExternal),
+      externalUrl: course.externalUrl || '',
       modules: (course.modules || []).map((m) => ({
         id: m.id,
         title: m.title ?? '',
@@ -558,6 +566,7 @@ const AdminPage = () => {
                         <option value="Beginner">Beginner</option>
                         <option value="Intermediate">Intermediate</option>
                         <option value="Advanced">Advanced</option>
+                        <option value="Beginner to Advanced">Beginner to Advanced</option>
                       </select>
                     </div>
 
@@ -615,12 +624,51 @@ const AdminPage = () => {
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-300">Student Count</label>
                       <input
-                        type="number"
+                        type="text"
                         value={courseForm.studentsEnrolled}
                         onChange={(e) => setCourseForm({ ...courseForm, studentsEnrolled: e.target.value })}
                         className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                        placeholder='e.g. 50000 or "50K+"'
                       />
                       {errors.studentsEnrolled && <span className="text-red-400 text-sm flex items-center"><AlertCircle className="w-3 h-3 mr-1"/>{errors.studentsEnrolled}</span>}
+                    </div>
+
+                    {/* External Course Link (Udemy) */}
+                    <div className="md:col-span-2 space-y-3 rounded-lg bg-black/20 border border-white/10 p-4">
+                      <label className="flex items-center gap-2 text-sm font-medium text-gray-300">
+                        <input
+                          type="checkbox"
+                          checked={Boolean(courseForm.isExternal)}
+                          onChange={(e) =>
+                            setCourseForm({
+                              ...courseForm,
+                              isExternal: e.target.checked,
+                              externalUrl: e.target.checked ? courseForm.externalUrl : '',
+                            })
+                          }
+                          className="h-4 w-4 accent-purple-500"
+                        />
+                        External course (Udemy)
+                      </label>
+
+                      {courseForm.isExternal && (
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-300">Udemy Link</label>
+                          <input
+                            type="url"
+                            value={courseForm.externalUrl}
+                            onChange={(e) => setCourseForm({ ...courseForm, externalUrl: e.target.value })}
+                            className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                            placeholder="https://www.udemy.com/course/system-design-fundamental/?referralCode=..."
+                          />
+                          {errors.externalUrl && (
+                            <span className="text-red-400 text-sm flex items-center">
+                              <AlertCircle className="w-3 h-3 mr-1" />
+                              {errors.externalUrl}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
 
