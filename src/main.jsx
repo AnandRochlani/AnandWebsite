@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from '@/App';
-import '@/index.css';
-// static-content.css is loaded via <link> tag in index.html to avoid MIME type errors
+// index.css + static-content.css load via <link> in index.html (same pattern avoids Vite dev MIME errors on CSS-as-module)
 import { initAnalytics } from '@/utils/analytics';
 import { preloadCriticalResources } from '@/utils/preload';
 

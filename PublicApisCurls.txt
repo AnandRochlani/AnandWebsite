@@ -1,0 +1,1125 @@
+Request :
+curl -X 'GET' \
+  'http://127.0.0.1:8000/companies?page=8&limit=20' \
+  -H 'accept: application/json'
+
+Response :
+{
+  "data": [
+    {
+      "id": 18,
+      "name": "Twilio",
+      "career_url": "https://boards.greenhouse.io/twilio",
+      "scraper_type": "auto",
+      "created_at": "2026-04-01T17:54:27.036668Z"
+    },
+    {
+      "id": 15,
+      "name": "Brex",
+      "career_url": "https://boards.greenhouse.io/brex",
+      "scraper_type": "auto",
+      "created_at": "2026-04-01T17:44:14.378922Z"
+    },
+    {
+      "id": 13,
+      "name": "Asana",
+      "career_url": "https://boards.greenhouse.io/asana",
+      "scraper_type": "auto",
+      "created_at": "2026-04-01T17:41:22.529010Z"
+    },
+    {
+      "id": 11,
+      "name": "Reddit",
+      "career_url": "https://boards.greenhouse.io/reddit",
+      "scraper_type": "auto",
+      "created_at": "2026-04-01T17:36:58.619517Z"
+    },
+    {
+      "id": 10,
+      "name": "Figma",
+      "career_url": "https://boards.greenhouse.io/figma",
+      "scraper_type": "auto",
+      "created_at": "2026-04-01T17:33:43.805732Z"
+    },
+    {
+      "id": 9,
+      "name": "Dropbox",
+      "career_url": "https://boards.greenhouse.io/dropbox",
+      "scraper_type": "auto",
+      "created_at": "2026-04-01T17:31:56.677754Z"
+    },
+    {
+      "id": 7,
+      "name": "Robinhood",
+      "career_url": "https://boards.greenhouse.io/robinhood",
+      "scraper_type": "auto",
+      "created_at": "2026-04-01T17:29:15.025121Z"
+    },
+    {
+      "id": 6,
+      "name": "Coinbase",
+      "career_url": "https://boards.greenhouse.io/coinbase",
+      "scraper_type": "auto",
+      "created_at": "2026-04-01T17:25:34.558375Z"
+    },
+    {
+      "id": 4,
+      "name": "Discord",
+      "career_url": "https://boards.greenhouse.io/discord",
+      "scraper_type": "auto",
+      "created_at": "2026-04-01T17:24:12.796415Z"
+    },
+    {
+      "id": 1,
+      "name": "Stripe",
+      "career_url": "https://boards.greenhouse.io/stripe",
+      "scraper_type": "auto",
+      "created_at": "2026-04-01T16:46:16.169805Z"
+    }
+  ],
+  "total": 150,
+  "page": 8,
+  "limit": 20
+}
+
+
+Request :
+curl -X 'GET' \
+  'http://127.0.0.1:8000/companies/18' \
+  -H 'accept: application/json'
+  
+Response :
+{
+  "id": 18,
+  "name": "Twilio",
+  "career_url": "https://boards.greenhouse.io/twilio",
+  "scraper_type": "auto",
+  "created_at": "2026-04-01T17:54:27.036668Z"
+}
+
+
+Request :
+curl -X 'GET' \
+  'http://127.0.0.1:8000/companies/18/jobs?q=Software&page=1&limit=20' \
+  -H 'accept: application/json'
+// We can add additional filters in request params [location, discription(q), min_exp, max_exp, skills, page, limit]
+
+{
+  "data": [
+    {
+      "id": 2224,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Strategic Account Executive 4",
+      "location": "Remote - Canada",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7598849",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "rest"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-01T17:55:44.230510Z",
+      "is_active": true
+    },
+    {
+      "id": 2222,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Software Engineer (L1)",
+      "location": "Remote - US",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7681338",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": null,
+      "skills": [
+        "agile",
+        "ai",
+        "api",
+        "aws",
+        "azure",
+        "go",
+        "rest"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:11.847342Z",
+      "is_active": true
+    },
+    {
+      "id": 2217,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Software Engineer Intern (June start, Remote-Ireland)",
+      "location": "Remote - Ireland",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7585589",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": null,
+      "skills": [
+        "agile",
+        "ai",
+        "api",
+        "c++",
+        "go",
+        "java",
+        "javascript",
+        "php",
+        "python",
+        "rest",
+        "spark"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:11.893355Z",
+      "is_active": true
+    },
+    {
+      "id": 2243,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Machine Learning Engineer",
+      "location": "Remote - US",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7702644",
+      "job_type": null,
+      "min_experience": 5,
+      "max_experience": null,
+      "skills": [
+        "agile",
+        "ai",
+        "api",
+        "aws",
+        "azure",
+        "ci/cd",
+        "docker",
+        "gcp",
+        "git",
+        "go",
+        "java",
+        "kafka",
+        "kubernetes",
+        "machine learning",
+        "ml",
+        "python",
+        "rest",
+        "spark",
+        "sql"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.060134Z",
+      "is_active": true
+    },
+    {
+      "id": 2245,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Senior Software Engineer",
+      "location": "Remote - United Kingdom",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7662058",
+      "job_type": null,
+      "min_experience": 5,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "aws",
+        "graphql",
+        "java",
+        "rest"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.098171Z",
+      "is_active": true
+    },
+    {
+      "id": 2228,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Senior Software Engineer",
+      "location": "Remote - Spain",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7535345",
+      "job_type": null,
+      "min_experience": 5,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "aws",
+        "go",
+        "java",
+        "kubernetes",
+        "python",
+        "rest"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.187012Z",
+      "is_active": true
+    },
+    {
+      "id": 2233,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Senior Software Engineer",
+      "location": "Remote - US",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7595407",
+      "job_type": null,
+      "min_experience": 6,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "c++",
+        "go",
+        "java",
+        "javascript",
+        "rest"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.205194Z",
+      "is_active": true
+    },
+    {
+      "id": 2235,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Software Engineer, (L2) Audiences & Journeys",
+      "location": "Remote - US",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7602727",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "aws",
+        "ci/cd",
+        "git",
+        "go",
+        "java",
+        "kubernetes",
+        "python",
+        "rest"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.244786Z",
+      "is_active": true
+    },
+    {
+      "id": 2227,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Software Engineer (L2)",
+      "location": "Remote - Estonia",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7699251",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": null,
+      "skills": [
+        "agile",
+        "ai",
+        "api",
+        "aws",
+        "azure",
+        "docker",
+        "git",
+        "go",
+        "java",
+        "kubernetes",
+        "rest",
+        "scrum"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.291679Z",
+      "is_active": true
+    },
+    {
+      "id": 2269,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Cloud Software Engineer",
+      "location": "Remote - Ireland",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7484699",
+      "job_type": null,
+      "min_experience": 2,
+      "max_experience": null,
+      "skills": [
+        "agile",
+        "ai",
+        "api",
+        "aws",
+        "ci/cd",
+        "java",
+        "python",
+        "rest",
+        "terraform"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.312251Z",
+      "is_active": true
+    },
+    {
+      "id": 2258,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Senior Software Engineer",
+      "location": "Remote - Ireland",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7747554",
+      "job_type": null,
+      "min_experience": 5,
+      "max_experience": null,
+      "skills": [
+        "agile",
+        "ai",
+        "api",
+        "aws",
+        "azure",
+        "ci/cd",
+        "gcp",
+        "git",
+        "go",
+        "java",
+        "kafka",
+        "rest",
+        "rust",
+        "sql"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.412651Z",
+      "is_active": true
+    },
+    {
+      "id": 2237,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Software Engineer L3 Phone Numbers",
+      "location": "Remote - US",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7724877",
+      "job_type": null,
+      "min_experience": 3,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "aws",
+        "go",
+        "kubernetes",
+        "ml",
+        "react",
+        "rest"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.449991Z",
+      "is_active": true
+    },
+    {
+      "id": 2249,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Senior Software Engineer (L3)",
+      "location": "Remote - US",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7738955",
+      "job_type": null,
+      "min_experience": 5,
+      "max_experience": null,
+      "skills": [
+        "agile",
+        "ai",
+        "api",
+        "aws",
+        "ci/cd",
+        "git",
+        "go",
+        "graphql",
+        "java",
+        "javascript",
+        "node",
+        "nodejs",
+        "react",
+        "rest",
+        "rust",
+        "scrum",
+        "typescript"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.469634Z",
+      "is_active": true
+    },
+    {
+      "id": 2273,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Security Compliance & Regulatory Affairs Analyst",
+      "location": "Remote - Canada",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7599044",
+      "job_type": null,
+      "min_experience": 8,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "aws",
+        "gcp",
+        "ml",
+        "rest"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.531300Z",
+      "is_active": true
+    },
+    {
+      "id": 2254,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "New Business Account Executive",
+      "location": "Remote - Japan",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7515753",
+      "job_type": null,
+      "min_experience": 5,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "git",
+        "go",
+        "rest"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.665738Z",
+      "is_active": true
+    },
+    {
+      "id": 2255,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Senior Software Engineer- Video Signalling",
+      "location": "Remote - Ireland",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7394811",
+      "job_type": null,
+      "min_experience": 5,
+      "max_experience": null,
+      "skills": [
+        "agile",
+        "ai",
+        "api",
+        "aws",
+        "azure",
+        "c++",
+        "go",
+        "java",
+        "ml",
+        "rest",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.725568Z",
+      "is_active": true
+    },
+    {
+      "id": 2266,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Senior Solutions Engineer 3",
+      "location": "Remote - Australia; Remote - Japan; Remote - Singapore",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7511486",
+      "job_type": null,
+      "min_experience": 5,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "azure",
+        "c#",
+        "git",
+        "go",
+        "java",
+        "javascript",
+        "ml",
+        "node",
+        "php",
+        "python",
+        "react",
+        "rest",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.765827Z",
+      "is_active": true
+    },
+    {
+      "id": 2250,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Technical Support Engineer",
+      "location": "Remote - Ireland",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7592249",
+      "job_type": null,
+      "min_experience": 2,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "rest"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.849499Z",
+      "is_active": true
+    },
+    {
+      "id": 2263,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Senior Account Executive",
+      "location": "Remote - US",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7609261",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "rest"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:02:12.898977Z",
+      "is_active": true
+    },
+    {
+      "id": 2205,
+      "company_id": 18,
+      "company_name": "Twilio",
+      "title": "Senior Product Engineer (Backend)",
+      "location": "Remote - US",
+      "apply_url": "https://job-boards.greenhouse.io/twilio/jobs/7472456",
+      "job_type": null,
+      "min_experience": 6,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "rest",
+        "typescript"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-01T17:55:22.104817Z",
+      "is_active": true
+    }
+  ],
+  "total": 56,
+  "page": 1,
+  "limit": 20
+}
+
+
+Request :
+curl -X 'GET' \
+  'http://127.0.0.1:8000/jobs?page=1&limit=20' \
+  -H 'accept: application/json'
+// We can add additional filters in request params [location, discription(q), min_exp, max_exp, skills, page, limit]
+
+Response :
+{
+  "data": [
+    {
+      "id": 4999,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Strategic Account Executive, Bengaluru",
+      "location": "Bengaluru, Karnataka, India",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7519528003",
+      "job_type": null,
+      "min_experience": 8,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "ios",
+        "ml",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.604915Z",
+      "is_active": true
+    },
+    {
+      "id": 5006,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Enterprise Solutions Engineer, Netherlands",
+      "location": "Remote, Netherlands",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7528372003",
+      "job_type": null,
+      "min_experience": 2,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "aws",
+        "azure",
+        "ci/cd",
+        "gcp",
+        "go",
+        "graphql",
+        "ios",
+        "ml",
+        "rest",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.737395Z",
+      "is_active": true
+    },
+    {
+      "id": 4994,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Member of Technical Staff,  AI Platform & Architecture (Infrastructure)",
+      "location": "San Francisco, California, United States",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7452534003",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "ios",
+        "ml",
+        "python",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.512833Z",
+      "is_active": true
+    },
+    {
+      "id": 4998,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Strategic Account Executive, Germany",
+      "location": "Remote, Germany",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7518428003",
+      "job_type": null,
+      "min_experience": 8,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "ios",
+        "ml",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.585652Z",
+      "is_active": true
+    },
+    {
+      "id": 5002,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Backend and System Engineer (nodeJS or Golang)",
+      "location": "New York, New York, United States",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/6250410003",
+      "job_type": null,
+      "min_experience": 8,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "aws",
+        "azure",
+        "gcp",
+        "go",
+        "golang",
+        "ios",
+        "kubernetes",
+        "ml",
+        "node",
+        "rust",
+        "terraform"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.663152Z",
+      "is_active": true
+    },
+    {
+      "id": 5005,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Senior Engineer, Performance Testing and Automation Monitoring",
+      "location": "Bengaluru, Karnataka, India",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7583227003",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": 8,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "ios",
+        "ml",
+        "rails",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.719463Z",
+      "is_active": true
+    },
+    {
+      "id": 4990,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Senior Engineer (CI/CD) - Client platform",
+      "location": "Bengaluru, Karnataka, India",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7548940003",
+      "job_type": null,
+      "min_experience": 8,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "ci/cd",
+        "git",
+        "go",
+        "ios",
+        "java",
+        "javascript",
+        "ml",
+        "rails",
+        "rust",
+        "typescript"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.432344Z",
+      "is_active": true
+    },
+    {
+      "id": 4993,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Member of Technical Staff, AI Agent Development Lead",
+      "location": "San Francisco, California, United States",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7452542003",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "ios",
+        "machine learning",
+        "ml",
+        "python",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.493960Z",
+      "is_active": true
+    },
+    {
+      "id": 4996,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Channel Sales Manager, Australia",
+      "location": "Remote, Australia",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7612662003",
+      "job_type": null,
+      "min_experience": 8,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "aws",
+        "go",
+        "ios",
+        "ml",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.550323Z",
+      "is_active": true
+    },
+    {
+      "id": 4997,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Senior Engineering Manager, Postman Insights",
+      "location": "San Francisco, California, United States",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/6565889003",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "ios",
+        "ml",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.568459Z",
+      "is_active": true
+    },
+    {
+      "id": 5000,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Enterprise Solutions Engineer, Italy",
+      "location": "Remote, Italy",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7528350003",
+      "job_type": null,
+      "min_experience": 8,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "ci/cd",
+        "git",
+        "go",
+        "ios",
+        "java",
+        "javascript",
+        "ml",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.625324Z",
+      "is_active": true
+    },
+    {
+      "id": 5001,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Member of Technical Staff, AI Reliability & Monitoring Engineering Lead",
+      "location": "San Francisco, California, United States",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7452546003",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "ios",
+        "ml",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.644337Z",
+      "is_active": true
+    },
+    {
+      "id": 5003,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Strategic Solutions Engineering, Netherlands/Sweden/Denmark",
+      "location": "Remote, Denmark",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7528077003",
+      "job_type": null,
+      "min_experience": 5,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "aws",
+        "azure",
+        "ci/cd",
+        "gcp",
+        "go",
+        "graphql",
+        "ios",
+        "ml",
+        "rest",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.681838Z",
+      "is_active": true
+    },
+    {
+      "id": 5004,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Senior Engineer (Job #SB-0613)",
+      "location": "San Francisco, California, United States",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7684108003",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "aws",
+        "azure",
+        "docker",
+        "gcp",
+        "git",
+        "go",
+        "ios",
+        "kubernetes",
+        "ml",
+        "python",
+        "rest",
+        "rust",
+        "terraform"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.700882Z",
+      "is_active": true
+    },
+    {
+      "id": 4988,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Channel Sales Manager, Bangalore",
+      "location": "Bengaluru, Karnataka, India",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7612671003",
+      "job_type": null,
+      "min_experience": 8,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "aws",
+        "go",
+        "ios",
+        "ml",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.386966Z",
+      "is_active": true
+    },
+    {
+      "id": 4989,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Manager, Enterprise Sales, Bengaluru",
+      "location": "Bengaluru, Karnataka, India",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7544568003",
+      "job_type": null,
+      "min_experience": 8,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "ios",
+        "ml",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.413392Z",
+      "is_active": true
+    },
+    {
+      "id": 4991,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Enterprise Solutions Engineer",
+      "location": "San Francisco, California, United States",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7529392003",
+      "job_type": null,
+      "min_experience": 8,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "ci/cd",
+        "git",
+        "go",
+        "ios",
+        "java",
+        "javascript",
+        "ml",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.451321Z",
+      "is_active": true
+    },
+    {
+      "id": 4992,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Strategic Account Director, Bengaluru",
+      "location": "Bengaluru, Karnataka, India",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7518522003",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "ios",
+        "ml",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.474205Z",
+      "is_active": true
+    },
+    {
+      "id": 4995,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Enterprise Solutions Engineer, Israel",
+      "location": "Tel Aviv District, Israel",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/7676842003",
+      "job_type": null,
+      "min_experience": 2,
+      "max_experience": null,
+      "skills": [
+        "ai",
+        "api",
+        "aws",
+        "azure",
+        "ci/cd",
+        "gcp",
+        "go",
+        "graphql",
+        "ios",
+        "ml",
+        "rest",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.531631Z",
+      "is_active": true
+    },
+    {
+      "id": 5007,
+      "company_id": 42,
+      "company_name": "Postman",
+      "title": "Mid Market Account Executive",
+      "location": "Austin, Texas, United States; Boston, Massachusetts; New York, New York, United States; San Francisco, California, United States",
+      "apply_url": "https://job-boards.greenhouse.io/postman/jobs/6521250003",
+      "job_type": null,
+      "min_experience": null,
+      "max_experience": 5,
+      "skills": [
+        "ai",
+        "api",
+        "go",
+        "ios",
+        "ml",
+        "rest",
+        "rust"
+      ],
+      "posted_date": null,
+      "scraped_date": "2026-04-04T02:04:17.756189Z",
+      "is_active": true
+    }
+  ],
+  "total": 4619,
+  "page": 1,
+  "limit": 20
+}

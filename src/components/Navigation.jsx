@@ -17,7 +17,8 @@ const Navigation = () => {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Courses', path: '/courses' },
-    { name: 'Blog', path: '/blog' }
+    { name: 'Blog', path: '/blog' },
+    { name: 'Jobs', path: '/jobs' },
   ];
 
   const isActive = (path) => {

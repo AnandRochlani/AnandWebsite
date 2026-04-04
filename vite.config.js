@@ -5,6 +5,8 @@ import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
+const JOBS_API_TARGET = 'https://job-aggregator-d0el.onrender.com'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -79,11 +81,23 @@ export default defineConfig({
   },
   // Server configuration for development
   server: {
-    headers: {
-      'Cache-Control': 'public, max-age=31536000',
-    },
+    // Do not set long-lived Cache-Control in dev — browsers cache /src/* as immutable and
+    // reloads can serve stale JS/CSS and trigger MIME / module load failures.
     fs: {
       strict: false,
+    },
+    // Same-origin /api/public/jobs → Render (production uses Vercel serverless proxy).
+    proxy: {
+      '/api/public/jobs': {
+        target: JOBS_API_TARGET,
+        changeOrigin: true,
+        rewrite: (p) => p.replace(/^\/api\/public\/jobs/, '/jobs'),
+      },
+      '/api/public/companies': {
+        target: JOBS_API_TARGET,
+        changeOrigin: true,
+        rewrite: (p) => p.replace(/^\/api\/public\/companies/, '/companies'),
+      },
     },
   },
   // Optimize for faster response times
