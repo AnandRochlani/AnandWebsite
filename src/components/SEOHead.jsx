@@ -52,9 +52,9 @@ const SEOHead = ({
   }
   // Only append brand name if title doesn't already contain it
   const fullTitle = title 
-    ? (title.includes('AnandRochlani') ? title : `${title} | AnandRochlani`)
-    : 'Courses & Tech Blog | AnandRochlani';
-  const fullDescription = description || 'Master web development, design, and data science with expert-led courses and tech blog posts. Join thousands learning new skills.';
+    ? (title.includes('AnandRochlani') || title.includes('Anand Rochlani') ? title : `${title} | Anand Rochlani`)
+    : 'System Design, DSA & LLD Courses | Anand Rochlani';
+  const fullDescription = description || 'Master system design (HLD), data structures & algorithms, and low-level design with practical courses and tutorials by Anand Rochlani.';
   const isArticle = type === 'article';
 
   const schemaJson = useMemo(() => {

@@ -30,10 +30,10 @@ const HomePage = () => {
 
   return (
     <>
-      <SEOHead 
-        title="Courses & Tech Blog"
-        description="Explore courses and blog posts on web development, design, data science, and system design. Learn faster with curated content and practical projects."
-        keywords="online courses, web development, react, javascript, UI/UX design, data science, system design, programming tutorials, tech blog"
+      <SEOHead
+        title="System Design, DSA & LLD Courses"
+        description="Master system design (HLD), data structures & algorithms, and low-level design with practical courses and tutorials by Anand Rochlani. Interview-ready skills for FAANG and top tech companies."
+        keywords="system design course, data structures and algorithms, HLD interview preparation, LLD design patterns, dsa course udemy, system design fundamentals 2026, coding interview prep, Anand Rochlani"
         canonical="https://www.anandrochlani.com/"
       />
 
@@ -80,14 +80,14 @@ const HomePage = () => {
               </motion.div>
 
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight">
-                Courses & 
+                System Design, DSA &
                 <span className="block bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-                  Tech Blog
+                  Software Engineering
                 </span>
               </h1>
 
               <p className="text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto">
-                Explore courses and blog posts on web development, design, data science, and system design—written for real-world learning and interview prep.
+                Practical courses and in-depth tutorials on HLD, data structures & algorithms, and low-level design — built for developers cracking interviews at top tech companies.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -143,9 +143,9 @@ const HomePage = () => {
                 <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10 p-8 hover:border-purple-500/50 transition-all duration-300">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-transparent rounded-full blur-3xl group-hover:scale-150 transition-transform duration-500" />
                   <BookOpen className="w-12 h-12 text-purple-400 mb-4" />
-                  <h2 className="text-2xl font-bold text-white mb-3">Insightful Blog Posts</h2>
+                  <h2 className="text-2xl font-bold text-white mb-3">In-Depth Tutorials</h2>
                   <p className="text-gray-300 mb-4">
-                    Stay updated with the latest trends, tutorials, and best practices in technology and design. Our insightful blog posts cover cutting-edge topics in web development, UI/UX design, and data science to help you stay ahead in your career.
+                    Practical tutorials on system design patterns, DSA problem-solving, and software engineering concepts. Each post helps you build real understanding for interviews and production systems.
                   </p>
                   <span className="inline-flex items-center text-purple-400 font-medium group-hover:gap-2 transition-all duration-300">
                     View Blog Posts
@@ -159,9 +159,9 @@ const HomePage = () => {
                 <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 backdrop-blur-sm border border-white/10 p-8 hover:border-pink-500/50 transition-all duration-300">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-500/20 to-transparent rounded-full blur-3xl group-hover:scale-150 transition-transform duration-500" />
                   <GraduationCap className="w-12 h-12 text-pink-400 mb-4" />
-                  <h2 className="text-2xl font-bold text-white mb-3">Curated Courses</h2>
+                  <h2 className="text-2xl font-bold text-white mb-3">Interview-Ready Courses</h2>
                   <p className="text-gray-300 mb-4">
-                    Learn with structured courses across Web Development, Design, Data Science, and System Design—built to help you ship projects and level up fast.
+                    Structured courses on system design (HLD), data structures & algorithms, and low-level design — from fundamentals to interview mastery on Udemy.
                   </p>
                   <span className="inline-flex items-center text-pink-400 font-medium group-hover:gap-2 transition-all duration-300">
                     View Courses

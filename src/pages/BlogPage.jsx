@@ -150,10 +150,10 @@ const BlogPage = () => {
 
   return (
       <>
-      <SEOHead 
-        title="Tech Blog - Web Dev, Design & Data Science"
-        description="Explore articles and tutorials on web development, design, and data science. Stay updated with latest tech trends and best practices from experts."
-        keywords="web development blog, react tutorials, javascript tutorials, programming blog, UI/UX design articles, data science blog, tech tutorials, coding blog, software development articles"
+      <SEOHead
+        title="System Design & DSA Tutorials | Tech Blog"
+        description="In-depth tutorials on system design, data structures & algorithms, and software engineering. Learn HLD patterns, DSA problem-solving, and interview preparation by Anand Rochlani."
+        keywords="system design tutorial, dsa tutorial, system design blog, data structures blog, HLD interview questions, coding interview blog, software engineering tutorials, Anand Rochlani blog"
         canonical="https://www.anandrochlani.com/blog"
       />
 
