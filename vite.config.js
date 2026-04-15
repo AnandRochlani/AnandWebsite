@@ -19,29 +19,9 @@ export default defineConfig({
     // Optimize for better initial render and code splitting
     rollupOptions: {
       output: {
-        manualChunks: function(id) {
-          // Separate vendor chunks for better caching and smaller initial bundle
-          if (id.includes('node_modules')) {
-            // Critical: React core (loads first)
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-              return 'react-vendor';
-            }
-            // Defer: Animation library (can load later)
-            if (id.includes('framer-motion')) {
-              return 'framer-motion';
-            }
-            // Defer: Icons (can load later)
-            if (id.includes('lucide-react')) {
-              return 'lucide-react';
-            }
-            // Defer: UI components (can load later)
-            if (id.includes('@radix-ui')) {
-              return 'radix-ui';
-            }
-            // Other node_modules
-            return 'vendor';
-          }
-        },
+        // NOTE: Avoid custom manualChunks here.
+        // The previous split created a circular dependency between chunks
+        // (e.g. `vendor` <-> `react-vendor`) which can break at runtime on Vercel.
         // Optimize chunk file names
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
