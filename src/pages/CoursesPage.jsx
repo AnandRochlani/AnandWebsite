@@ -32,8 +32,13 @@ const CoursesPage = () => {
   const categories = useMemo(() => ['All', ...new Set(allCourses.map(course => course.category))], [allCourses]);
   const levels = useMemo(() => ['All', 'Beginner', 'Intermediate', 'Advanced'], []);
 
+  // Memoize featured courses to prevent recalculation
+  const featuredCourses = useMemo(() => allCourses.filter(course => course.featured), [allCourses]);
+
   const filteredCourses = useMemo(() => {
+    const featuredIds = new Set(featuredCourses.map(c => c.id));
     return allCourses.filter(course => {
+      if (featuredIds.has(course.id)) return false;
       const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
       const matchesLevel = selectedLevel === 'All' || course.level.includes(selectedLevel);
       const matchesSearch = course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -41,10 +46,7 @@ const CoursesPage = () => {
                            course.instructor.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesLevel && matchesSearch;
     });
-  }, [selectedCategory, selectedLevel, searchQuery, allCourses]);
-
-  // Memoize featured courses to prevent recalculation
-  const featuredCourses = useMemo(() => allCourses.filter(course => course.featured), [allCourses]);
+  }, [selectedCategory, selectedLevel, searchQuery, allCourses, featuredCourses]);
   
   const observerRef = useRef(null);
 
@@ -104,10 +106,10 @@ const CoursesPage = () => {
 
   return (
       <>
-      <SEOHead 
-        title="Online Courses - Web Dev & Design"
-        description="Browse expert-led courses in web development, design, and data science. Learn React, JavaScript, Node.js, UI/UX, and machine learning with hands-on projects."
-        keywords="web development courses, react courses, javascript courses, node.js courses, UI/UX design courses, data science courses, machine learning courses, programming courses, online coding courses"
+      <SEOHead
+        title="System Design, DSA & LLD Courses"
+        description="Master system design HLD, data structures & algorithms, and low-level design. Interview-ready courses by Anand Rochlani on Udemy. From beginner to advanced."
+        keywords="system design course udemy, dsa course, HLD interview preparation, LLD design patterns, data structures and algorithms course, system design fundamentals, coding interview courses, Anand Rochlani courses"
         canonical="https://www.anandrochlani.com/courses"
       />
 
@@ -121,10 +123,10 @@ const CoursesPage = () => {
             className="text-center mb-12"
           >
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">
-              Explore <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Courses</span>
+              System Design, DSA & <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">LLD Courses</span>
             </h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Master new skills with comprehensive courses taught by industry experts
+              Practical courses to help you crack coding interviews at FAANG and top tech companies
             </p>
           </motion.div>
 

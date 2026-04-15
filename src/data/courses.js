@@ -30,11 +30,76 @@ export const defaultCourses = [
     featured: true,
     isExternal: true,
     externalUrl: "https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73"
+  },
+  {
+    id: 10,
+    name: "Data Structures & Algorithms: Complete DSA Course (2026)",
+    description: "Master arrays, trees, graphs, dynamic programming, and sorting algorithms. Build a strong foundation for coding interviews at top tech companies with hands-on problem solving.",
+    instructor: "Anand Rochlani",
+    instructorBio: "Software engineer and educator specializing in DSA, system design, and interview preparation for top tech companies.",
+    level: "Beginner to Advanced",
+    duration: "Self-paced (Udemy)",
+    price: "Udemy",
+    category: "Data Structures & Algorithms",
+    rating: 4.7,
+    studentsEnrolled: "10K+",
+    featuredImage: "https://images.unsplash.com/photo-1509228468518-180dd4864904",
+    modules: [
+      { id: 1, title: "Arrays & Strings", lessons: 8, duration: "2 hours" },
+      { id: 2, title: "Linked Lists & Stacks", lessons: 6, duration: "1.5 hours" },
+      { id: 3, title: "Trees & Binary Search Trees", lessons: 8, duration: "2.5 hours" },
+      { id: 4, title: "Graphs & Traversals", lessons: 7, duration: "2 hours" },
+      { id: 5, title: "Dynamic Programming", lessons: 10, duration: "3 hours" },
+      { id: 6, title: "Sorting & Searching Algorithms", lessons: 6, duration: "1.5 hours" },
+      { id: 7, title: "Interview Problem Patterns", lessons: 12, duration: "3.5 hours" }
+    ],
+    learningOutcomes: [
+      "Solve coding interview problems using proven patterns and techniques",
+      "Master arrays, strings, linked lists, trees, graphs, and hash maps",
+      "Understand and implement dynamic programming solutions",
+      "Analyze time and space complexity of algorithms (Big O)",
+      "Prepare effectively for coding rounds at FAANG and top tech companies"
+    ],
+    featured: true,
+    isExternal: true,
+    externalUrl: "https://www.udemy.com/course/data-structures-algorithms-anand-rochlani/"
+  },
+  {
+    id: 11,
+    name: "Low Level Design: OOP & Design Patterns for Interviews",
+    description: "Learn object-oriented design, SOLID principles, and design patterns to ace machine coding rounds and LLD interviews. Build real systems from scratch.",
+    instructor: "Anand Rochlani",
+    instructorBio: "Software engineer and educator focused on practical design skills for coding interviews and production systems.",
+    level: "Intermediate to Advanced",
+    duration: "Coming Soon",
+    price: "Coming Soon",
+    category: "Low Level Design",
+    rating: 0,
+    studentsEnrolled: "Coming Soon",
+    featuredImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
+    modules: [
+      { id: 1, title: "OOP Fundamentals & SOLID Principles", lessons: 6, duration: "2 hours" },
+      { id: 2, title: "Creational Design Patterns", lessons: 5, duration: "1.5 hours" },
+      { id: 3, title: "Structural Design Patterns", lessons: 5, duration: "1.5 hours" },
+      { id: 4, title: "Behavioral Design Patterns", lessons: 6, duration: "2 hours" },
+      { id: 5, title: "LLD Case Studies", lessons: 10, duration: "3 hours" },
+      { id: 6, title: "Machine Coding Round Prep", lessons: 8, duration: "2.5 hours" }
+    ],
+    learningOutcomes: [
+      "Design clean, maintainable object-oriented systems",
+      "Apply SOLID principles and design patterns in real code",
+      "Solve LLD interview problems: parking lot, elevator, chess, etc.",
+      "Ace machine coding rounds with structured approach",
+      "Bridge the gap between DSA and system design thinking"
+    ],
+    featured: true,
+    isExternal: false,
+    comingSoon: true
   }
 ];
 
 // Migration: enforce "only System Design" catalog in localStorage.
-const COURSE_CATALOG_VERSION = '3';
+const COURSE_CATALOG_VERSION = '4';
 const migrateCourseCatalog = () => {
   try {
     if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
@@ -47,7 +112,8 @@ const migrateCourseCatalog = () => {
       // Keep only course 9 in saved list (if present)
       try {
         const saved = JSON.parse(localStorage.getItem('savedCourses') || '[]');
-        const filtered = Array.isArray(saved) ? saved.filter((id) => Number(id) === 9) : [];
+        const validIds = new Set([9, 10, 11]);
+      const filtered = Array.isArray(saved) ? saved.filter((id) => validIds.has(Number(id))) : [];
         localStorage.setItem('savedCourses', JSON.stringify(filtered));
       } catch (e) {
         localStorage.setItem('savedCourses', '[]');

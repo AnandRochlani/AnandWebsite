@@ -40,12 +40,17 @@ const CourseDetail = () => {
   }, [id]);
 
   const handleEnroll = () => {
-    if (course.isExternal && course.externalUrl) {
+    if (course.comingSoon) {
+      toast({
+        title: "Coming Soon",
+        description: "This course is currently being developed. Stay tuned for the launch!",
+      });
+    } else if (course.isExternal && course.externalUrl) {
       window.open(course.externalUrl, '_blank');
     } else {
       toast({
         title: "Enrollment Feature",
-        description: "🚧 This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
+        description: "This feature is coming soon. Check back later!",
       });
     }
   };
@@ -99,11 +104,11 @@ const CourseDetail = () => {
 
   return (
     <>
-      <SEOHead 
-        title={`${course.name} - ${course.category} Course | Beginner to Advanced`}
-        description={`${course.description} Learn ${course.name} with ${course.instructor}. ${course.level} level ${course.category.toLowerCase()} course. ${course.duration} of content. ${course.rating} star rating. Master web development, React, Context API, and more. Enroll now!`}
+      <SEOHead
+        title={`${course.name} | ${course.category} Course by Anand Rochlani`}
+        description={`${course.description} ${course.level} ${course.category.toLowerCase()} course by ${course.instructor}. ${course.rating > 0 ? `${course.rating} star rating.` : ''} Enroll now on Udemy.`}
         image={course.featuredImage}
-        keywords={`${course.name}, ${course.category}, ${course.level} course, ${course.instructor}, online course, learn ${course.category.toLowerCase()}, web development, context api, beginner to advanced, react course, web development course, lessons 3, lessons 4`}
+        keywords={`${course.name}, ${course.category} course, ${course.instructor}, ${course.category.toLowerCase()} interview preparation, ${course.level} course, coding interview prep`}
         canonical={`https://www.anandrochlani.com/courses/${course.id}`}
         type="Course"
       />
@@ -217,7 +222,9 @@ const CourseDetail = () => {
                   onClick={handleEnroll}
                   className={`w-full py-6 text-lg rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 mb-4 text-white ${isSystemDesign ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'}`}
                 >
-                  {course.isExternal ? (
+                  {course.comingSoon ? (
+                    "Notify Me When Available"
+                  ) : course.isExternal ? (
                     <span className="flex items-center">
                       Enroll on Udemy <ExternalLink className="w-5 h-5 ml-2" />
                     </span>
