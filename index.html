@@ -52,9 +52,9 @@
 		
 		<!-- Hero image styles moved to static-content.css to avoid inline styles -->
 		
-		<!-- Preload critical CSS for faster FCP -->
-		<link rel="preload" as="style" href="/src/index.css" />
+		<!-- Preload critical CSS for faster FCP (load app CSS via <link> only — not import in main.jsx, to avoid module/MIME issues in dev) -->
 		<link rel="preload" as="style" href="/src/static-content.css" />
+		<link rel="preload" as="style" href="/src/index.css" />
 		
 		<!-- HTTP/2 Optimizations: Preload critical resources for faster initial render -->
 		<!-- HTTP/2 server push can be used for these resources (configured on server) -->
@@ -62,8 +62,6 @@
 		
 		<!-- Static content styles (loaded synchronously for first paint) -->
 		<link rel="stylesheet" href="/src/static-content.css" />
-		
-		<!-- Main CSS (loaded synchronously - needed for React) -->
 		<link rel="stylesheet" href="/src/index.css" />
 		
 		<!-- Note: Hero image is lazy-loaded since gradient is the LCP element -->

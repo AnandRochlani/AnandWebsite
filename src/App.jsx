@@ -18,6 +18,8 @@ const CourseDetail = lazy(() => import('@/pages/CourseDetail'));
 const SavedCoursesPage = lazy(() => import('@/pages/SavedCoursesPage'));
 const AdminPage = lazy(() => import('@/pages/AdminPage'));
 const AdminLoginPage = lazy(() => import('@/pages/AdminLoginPage'));
+const JobsPage = lazy(() => import('@/pages/JobsPage'));
+const JobDetailPage = lazy(() => import('@/pages/JobDetailPage'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -44,6 +46,8 @@ function App() {
                   <Route path="/services/:id" element={<Navigate to="/courses" replace />} />
                   <Route path="/blog" element={<BlogPage />} />
                   <Route path="/blog/:slug" element={<BlogPostDetail />} />
+                  <Route path="/jobs" element={<JobsPage />} />
+                  <Route path="/jobs/:id" element={<JobDetailPage />} />
                   <Route path="/saved-courses" element={<SavedCoursesPage />} />
                   <Route path="/admin/login" element={<AdminLoginPage />} />
                   <Route 
