@@ -21,6 +21,9 @@ const AdminLoginPage = lazy(() => import('@/pages/AdminLoginPage'));
 const JobsPage = lazy(() => import('@/pages/JobsPage'));
 const JobDetailPage = lazy(() => import('@/pages/JobDetailPage'));
 
+// Baba Glass House ERP — self-contained sub-application mounted at /baba
+const BabaApp = lazy(() => import('@/baba/BabaApp'));
+
 // Loading fallback component
 const PageLoader = () => (
   <div className="min-h-screen bg-slate-900 flex items-center justify-center">
@@ -28,41 +31,59 @@ const PageLoader = () => (
   </div>
 );
 
+// The main marketing site (navigation + footer chrome around its routes).
+function SiteLayout() {
+  return (
+    <div className="min-h-screen bg-slate-900">
+      <Navigation />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/courses" element={<CoursesPage />} />
+          <Route path="/courses/:id" element={<CourseDetail />} />
+          {/* Legacy Services URLs (redirect to courses) */}
+          <Route path="/services" element={<Navigate to="/courses" replace />} />
+          <Route path="/services/:id" element={<Navigate to="/courses" replace />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostDetail />} />
+          <Route path="/jobs" element={<JobsPage />} />
+          <Route path="/jobs/:id" element={<JobDetailPage />} />
+          <Route path="/saved-courses" element={<SavedCoursesPage />} />
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Suspense>
+      <Footer />
+      <Toaster />
+    </div>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <AdminProvider>
           <SavedCoursesProvider>
-            <div className="min-h-screen bg-slate-900">
-              <Navigation />
-              <Suspense fallback={<PageLoader />}>
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/courses" element={<CoursesPage />} />
-                  <Route path="/courses/:id" element={<CourseDetail />} />
-                  {/* Legacy Services URLs (redirect to courses) */}
-                  <Route path="/services" element={<Navigate to="/courses" replace />} />
-                  <Route path="/services/:id" element={<Navigate to="/courses" replace />} />
-                  <Route path="/blog" element={<BlogPage />} />
-                  <Route path="/blog/:slug" element={<BlogPostDetail />} />
-                  <Route path="/jobs" element={<JobsPage />} />
-                  <Route path="/jobs/:id" element={<JobDetailPage />} />
-                  <Route path="/saved-courses" element={<SavedCoursesPage />} />
-                  <Route path="/admin/login" element={<AdminLoginPage />} />
-                  <Route 
-                    path="/admin" 
-                    element={
-                      <ProtectedRoute>
-                        <AdminPage />
-                      </ProtectedRoute>
-                    } 
-                  />
-                </Routes>
-              </Suspense>
-              <Footer />
-              <Toaster />
-            </div>
+            <Routes>
+              {/* Baba Glass House ERP renders full-screen without the site chrome */}
+              <Route
+                path="/baba/*"
+                element={
+                  <Suspense fallback={<PageLoader />}>
+                    <BabaApp />
+                  </Suspense>
+                }
+              />
+              <Route path="/*" element={<SiteLayout />} />
+            </Routes>
           </SavedCoursesProvider>
         </AdminProvider>
       </AuthProvider>
