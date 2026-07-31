@@ -14,8 +14,10 @@ At the end of this release the crawlable cluster contains:
 - 1 focused course landing page
 - 1 author and editorial-trust page
 
-The eight generic template posts remain available but are removed from the blog index,
-sitemap, and prerendered crawl surface and receive `noindex` on direct visits.
+The eight generic template posts remain retained in the database, but they are removed from
+the blog index, sitemap, and public crawl surface. Their old direct routes now return 404, so
+they cannot dilute the System Design topic cluster and can still be recovered by an
+administrator if needed.
 
 ## Business goal and funnel
 
