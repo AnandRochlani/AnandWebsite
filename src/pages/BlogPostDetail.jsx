@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useLayoutEffect, useState, useRef } from 'react';
 import { useParams, Link, useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, ArrowLeft, Share2, Facebook, Twitter, Linkedin, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import SEOHead from '@/components/SEOHead';
 import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
+import { isIndexablePost } from '@/lib/contentTaxonomy';
 
 const articleMetaDescription = (post) => {
   const description = String(post?.description || '').replace(/\s+/g, ' ').trim();
@@ -87,6 +88,41 @@ const BlogPostDetail = () => {
         return new Date(b.date) - new Date(a.date);
       });
   }, [allBlogPosts, post]);
+
+  // The series list is a fixed-height scroll container. On a 25-part series a reader
+  // opening Part 9 would otherwise see Parts 1-6 and have to hunt for their position,
+  // which reads as the sidebar not tracking the article. Scroll the active item into
+  // view inside the container only — never scroll the page itself.
+  const seriesListRef = useRef(null);
+  useLayoutEffect(() => {
+    const container = seriesListRef.current;
+    if (!container || !post) return;
+
+    // Runs as a layout effect so the first attempt happens after the DOM is in place
+    // but before paint — the reader never sees the list jump. The timed retries cover
+    // the case where the panel has not been given its height yet (max-h is in vh
+    // units, so clientHeight is 0 until layout settles); capped so a sidebar that
+    // stays collapsed cannot retry forever.
+    let cancelled = false;
+    let attempts = 0;
+    const place = () => {
+      if (cancelled) return;
+      const active = container.querySelector('[data-series-active="true"]');
+      if (active && container.clientHeight) {
+        const target = Math.max(
+          0,
+          active.offsetTop - container.clientHeight / 2 + active.clientHeight / 2
+        );
+        container.scrollTop = target;
+        if (Math.abs(container.scrollTop - target) < 2) return;
+      }
+      if (attempts++ < 20) setTimeout(place, 50);
+    };
+    place();
+    return () => {
+      cancelled = true;
+    };
+  }, [post, sidebarPosts]);
 
   // Get previous and next posts for ordered series (System Design)
   const { previousPost, nextPost } = useMemo(() => {
@@ -200,7 +236,7 @@ const BlogPostDetail = () => {
         authorName={post.author}
         publishedTime={post.date}
         modifiedTime={post.updatedAt || post.updated_at || post.date}
-        noindex={post.category !== 'System Design'}
+        noindex={!isIndexablePost(post)}
       />
 
       <div className="min-h-screen bg-white pt-24 pb-16">
@@ -220,13 +256,15 @@ const BlogPostDetail = () => {
                       {post.series ? 'Continue the series' : `${post.category} Articles`}
                     </h3>
                     {post.series && <p className="mb-4 text-sm text-slate-500">{post.series}</p>}
-                    <div className="space-y-2 max-h-[60vh] lg:max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
+                    <div ref={seriesListRef} className="space-y-2 max-h-[60vh] lg:max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
                       {sidebarPosts.map((sidebarPost) => {
                         const isActive = sidebarPost.id === post.id;
                         return (
                           <Link
                             key={sidebarPost.id}
                             to={`/blog/${sidebarPost.slug || sidebarPost.id}`}
+                            data-series-active={isActive ? 'true' : undefined}
+                            aria-current={isActive ? 'page' : undefined}
                             className={`block p-3 rounded-lg transition-all duration-300 border-l-4 ${
                               isActive
                                 ? 'bg-brand-soft border-l-brand'

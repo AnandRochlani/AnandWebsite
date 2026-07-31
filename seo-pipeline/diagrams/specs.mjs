@@ -675,6 +675,97 @@ export const SPECS = [
     verdict:
       'The trap is concluding "index everything". Eight indexes turn one insert into nine writes — index for the queries you actually run, then confirm with EXPLAIN.',
   },
+
+  /* ------------------------------------------ coding interview patterns */
+  {
+    id: 'leetcode-pattern-recognition',
+    eyebrow: 'CODING INTERVIEW',
+    series: 'Coding Interview Patterns',
+    slug: 'leetcode-patterns-coding-interview-guide',
+    type: 'steps',
+    title: 'From problem statement to pattern, in five moves',
+    kicker: 'The signal in the question decides the pattern. Recognition is the skill being scored.',
+    alt: 'Five step method for coding interviews: clarify constraints, work a small example by hand, state the brute force and why it times out, name the pattern that removes the repeated work, then code it and state time and space complexity.',
+    caption: 'Candidates rarely fail because they cannot code. They fail by jumping to a remembered answer without showing the reasoning that produced it.',
+    steps: [
+      { underline: true, note: 'constraints hint', label: 'Clarify — input size, ranges, duplicates, sorted?', sub: 'n = 10⁵ rules out O(n²). n = 20 is quietly inviting exponential. Two minutes here prevents a wrong solution.' },
+      { label: 'Work a small example by hand, out loud', sub: 'The structure usually reveals itself on the smallest interesting case — not in your head.' },
+      { label: 'State the brute force AND why it times out', sub: '"Two nested loops, O(n²). At n = 100,000 that is 10¹⁰ operations." Skipping this reads as memorisation.' },
+      { note: 'name it!', label: 'Name the pattern the signal triggers', sub: '"Sorted array, find a pair summing to a target — two pointers." Naming it is the moment the interviewer relaxes.' },
+      { label: 'Code it talking, then state time AND space', sub: 'Then test: empty input, one element, all duplicates, target not present.' },
+    ],
+  },
+  {
+    id: 'google-interview-scoring',
+    eyebrow: 'CODING INTERVIEW',
+    series: 'Coding Interview Patterns',
+    slug: 'google-coding-interview-questions-preparation-guide',
+    type: 'compare',
+    title: 'What Google scores, and what candidates prepare for',
+    kicker: 'The mismatch that sinks well-prepared candidates.',
+    alt: 'Comparison of how candidates typically prepare for Google interviews against what Google actually scores. Candidates grind the standard top seventy-five list and memorise optimal solutions in silence. Google scores General Cognitive Ability while you talk, uses harder and stranger problems including interactive ones, and asks follow-up variations that expose memorised answers.',
+    caption: 'A silent candidate who reaches the optimal answer can score below one who does not finish but reasons clearly out loud. The thinking is the artefact being assessed.',
+    left: {
+      title: 'What most candidates do',
+      sub: 'prepare for the wrong exam',
+      rows: [
+        'Grind the standard top-75 list',
+        'Memorise the optimal solution for each',
+        'Jump straight to the optimal answer',
+        'Code in silence, explain at the end',
+        'Treat the behavioural round as a formality',
+      ],
+    },
+    right: {
+      title: 'What Google actually scores',
+      sub: 'GCA · RRK · Leadership · Googleyness',
+      rows: [
+        'Harder, stranger problems — several are Premium',
+        'A large design bucket: implement-a-class questions',
+        'Interactive problems that query a hidden world',
+        'GCA: your reasoning, scored WHILE you talk',
+        'Intellectual humility — "I was wrong, here is what I did"',
+      ],
+    },
+    verdict:
+      'Memorising a fixed list backfires: the follow-up variation exposes it, and it gives you nothing to say in the first five minutes — which is exactly where GCA is scored.',
+  },
+  {
+    id: 'sliding-window-mechanics',
+    eyebrow: 'CODING INTERVIEW',
+    series: 'Coding Interview Patterns',
+    slug: 'sliding-window-pattern-explained-leetcode',
+    type: 'steps',
+    title: 'The dynamic window, one step at a time',
+    kicker: 'Expand right, shrink left, record. Each pointer only ever moves forward.',
+    alt: 'Four step sliding window loop: expand the right edge and add the entering element to the running state, check whether the window still satisfies the constraint, shrink from the left while it is invalid by removing elements from the state, and record the best answer. Because each pointer only moves forward, the total work is O of n rather than O of n squared.',
+    caption: 'The nested loop recomputes almost identical counts for overlapping substrings. The window carries its state instead, updating it by one addition and at most one removal per step.',
+    steps: [
+      { label: 'EXPAND — move right, add the entering element', sub: 'One element enters the window. Update the running sum, the character count, or the set of what is inside.' },
+      { label: 'CHECK — is the window still valid?', sub: 'Sum ≥ target? At most K distinct characters? The constraint from the problem statement, evaluated in O(1).' },
+      { note: 'while, not if', label: 'SHRINK — move left while invalid, removing state', sub: 'Decrement the leaving element. Delete it from the map at zero, or your distinct-count is silently wrong.' },
+      { underline: true, note: 'the trap', label: 'RECORD — but where depends on the question', sub: 'Minimising a window: record INSIDE the shrink loop. Maximising: record AFTER validity is restored — and a single if often replaces the while.' },
+      { label: 'Why it is O(n), said out loud', sub: 'Both pointers only move forward and neither can move more than n times, so the total is at most 2n moves — despite the nested loop.' },
+    ],
+  },
+  {
+    id: 'two-pointers-shapes',
+    eyebrow: 'CODING INTERVIEW',
+    series: 'Coding Interview Patterns',
+    slug: 'two-pointers-pattern-explained-leetcode',
+    type: 'steps',
+    title: 'Three shapes of two pointers',
+    kicker: 'Same idea — move indices instead of nesting loops. Pick the shape from the question.',
+    alt: 'The three two-pointer shapes. Converging: pointers start at opposite ends of a sorted array and move toward each other, used for pair and triplet sums, palindromes and Container With Most Water. Fast and slow: both start at the left with one moving faster, used for in-place rewriting, linked list cycles and finding the middle. Parallel: one pointer walks each of two sequences, used for merging and subsequence checks. All three replace a nested loop and run in O of n time with O of 1 extra space.',
+    caption: 'These are alternatives, not stages. The question tells you which one: both ends meaningful means converging, in-place rewriting or cycles means fast and slow, two inputs means parallel.',
+    steps: [
+      { underline: true, label: 'CONVERGING — left → ← right', sub: 'Sorted input. Pair with Target Sum, Valid Palindrome, Container With Most Water, 3Sum. Each comparison rules out a whole row of the nested loop\u2019s search space.' },
+      { label: 'FAST & SLOW — both start left, one moves faster', sub: 'In-place writes (Remove Duplicates, Move Zeroes) and linked list cycles. The gap changes by one each step, so a cycle guarantees a meeting.' },
+      { label: 'PARALLEL — one pointer per sequence', sub: 'Merging two sorted arrays, checking whether one string is a subsequence of another, comparing versions.' },
+      { note: 'this gets scored', label: 'Choosing the move: state the invariant', sub: '"The answer lies between left and right." Sum too large means arr[right] cannot pair with anything remaining, so discard it. For Container With Most Water the invariant differs — always move the SHORTER wall.' },
+      { note: 'common trap', label: 'Do not sort reflexively', sub: 'Two Sum on an unsorted array wants indices, so a hash map is O(n) and sorting destroys the indices. Sort when the answer is values, not positions.' },
+    ],
+  },
 ];
 
 export const BY_SLUG = new Map(SPECS.map((s) => [s.slug, s]));

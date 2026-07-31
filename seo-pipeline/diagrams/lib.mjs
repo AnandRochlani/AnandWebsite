@@ -45,7 +45,9 @@ const FONT =
 const HAND = "Noteworthy, 'Bradley Hand', 'Segoe Print', 'Comic Sans MS', cursive";
 
 const FOOTER_H = 26;
-const ATTRIBUTION = 'anandrochlani.com  ·  System Design Tutorial';
+const ATTRIBUTION_BASE = 'anandrochlani.com';
+const DEFAULT_SERIES = 'System Design Tutorial';
+const DEFAULT_EYEBROW = 'SYSTEM DESIGN';
 
 const r = (n) => Math.round(n * 100) / 100;
 
@@ -258,7 +260,7 @@ ${body}
  * Page chrome: kicker, bold title, short indigo underline bar, optional subtitle.
  * Mirrors the lesson-slide header from the LLD decks.
  */
-function header(title, subtitle, width, pad, kicker = 'SYSTEM DESIGN') {
+function header(title, subtitle, width, pad, kicker = DEFAULT_EYEBROW) {
   const parts = [];
   let y = pad + 11;
   parts.push(
@@ -285,14 +287,18 @@ function header(title, subtitle, width, pad, kicker = 'SYSTEM DESIGN') {
   return { markup: parts.join(''), nextY: y + 22 };
 }
 
-/** Thin indigo footer band with a diagonal notch, carrying attribution. */
-function footer(width, height) {
+/**
+ * Thin indigo footer band with a diagonal notch, carrying attribution.
+ * `series` names the cluster the diagram belongs to, so a shared or hot-linked
+ * copy still says which series it came from.
+ */
+function footer(width, height, series = DEFAULT_SERIES) {
   const top = height - FOOTER_H;
   const notchX = width * 0.18;
   return (
     `<rect x="0" y="${r(top)}" width="${width}" height="${FOOTER_H}" fill="${C.brand}"/>` +
     `<polygon points="${r(notchX)},${r(top)} ${r(notchX + 30)},${r(top)} ${r(notchX + 15)},${r(top + 13)}" fill="${C.paper}"/>` +
-    `<text x="${r(width - 18)}" y="${r(top + 17)}" font-family="${FONT}" font-size="10.5" fill="#E6E5FF" text-anchor="end">${esc(ATTRIBUTION)}</text>`
+    `<text x="${r(width - 18)}" y="${r(top + 17)}" font-family="${FONT}" font-size="10.5" fill="#E6E5FF" text-anchor="end">${esc(`${ATTRIBUTION_BASE}  ·  ${series}`)}</text>`
   );
 }
 
@@ -378,7 +384,7 @@ export function layoutFlow(spec) {
     contentW + pad * 2 + (rightAnn ? 150 : 0) + (lastColStamped ? 46 : 0),
   );
 
-  const head = header(spec.title, spec.kicker, width, pad);
+  const head = header(spec.title, spec.kicker, width, pad, spec.eyebrow || DEFAULT_EYEBROW);
   const topY = head.nextY + (cols.some((c) => c.label) ? 20 : 0);
 
   const maxNodes = Math.max(...cols.map((c) => c.nodes.length));
@@ -503,7 +509,7 @@ export function layoutFlow(spec) {
   }
 
   const height = topY + bandH + annBelow + pad + FOOTER_H;
-  parts.push(footer(width, height));
+  parts.push(footer(width, height, spec.series || DEFAULT_SERIES));
 
   return svgDoc({ width, height, title: spec.title, desc: spec.alt, body: parts.join('') });
 }
@@ -513,7 +519,7 @@ export function layoutFlow(spec) {
 export function layoutRing(spec) {
   const pad = 26;
   const width = spec.width || 720;
-  const head = header(spec.title, spec.kicker, width, pad);
+  const head = header(spec.title, spec.kicker, width, pad, spec.eyebrow || DEFAULT_EYEBROW);
   const R = spec.radius || 128;
   const cx = width / 2;
   const cy = head.nextY + R + 34;
@@ -572,7 +578,7 @@ export function layoutRing(spec) {
     height = ly + 6;
   }
   height += FOOTER_H;
-  parts.push(footer(width, height));
+  parts.push(footer(width, height, spec.series || DEFAULT_SERIES));
 
   return svgDoc({ width, height, title: spec.title, desc: spec.alt, body: parts.join('') });
 }
@@ -582,7 +588,7 @@ export function layoutRing(spec) {
 export function layoutCompare(spec) {
   const pad = 26;
   const width = spec.width || 820;
-  const head = header(spec.title, spec.kicker, width, pad);
+  const head = header(spec.title, spec.kicker, width, pad, spec.eyebrow || DEFAULT_EYEBROW);
   const gap = 22;
   const panelW = (width - pad * 2 - gap) / 2;
   const top = head.nextY;
@@ -634,7 +640,7 @@ export function layoutCompare(spec) {
     height = vy + vh + pad;
   }
   height += FOOTER_H;
-  parts.push(footer(width, height));
+  parts.push(footer(width, height, spec.series || DEFAULT_SERIES));
 
   return svgDoc({ width, height, title: spec.title, desc: spec.alt, body: parts.join('') });
 }
@@ -644,7 +650,7 @@ export function layoutCompare(spec) {
 export function layoutSteps(spec) {
   const pad = 26;
   const width = spec.width || 760;
-  const head = header(spec.title, spec.kicker, width, pad);
+  const head = header(spec.title, spec.kicker, width, pad, spec.eyebrow || DEFAULT_EYEBROW);
   const dot = 30;
   const textX = pad + dot + 18;
   const textW = width - textX - pad - (spec.steps.some((s) => s.note) ? 130 : 0);
@@ -678,7 +684,12 @@ export function layoutSteps(spec) {
       );
     }
     if (step.note) {
-      parts.push(handwrite(step.note, { x: width - pad - 118, y: y + 16, size: 14 }));
+      // Anchored to the right margin, not the left of the gutter: a longer note
+      // then grows inward (visible, reviewable) instead of off the canvas edge,
+      // where SVG silently crops it. Keep notes to ~16 characters regardless.
+      parts.push(
+        handwrite(step.note, { x: width - pad, y: y + 16, size: 14, anchor: 'end' })
+      );
     }
     if (step.underline) {
       parts.push(markerUnderline(textX, y + 18, Math.min(textW, textWidth(labelLines[0], 13.5, true)), `${spec.id}-u${i}`));
@@ -695,7 +706,7 @@ export function layoutSteps(spec) {
   }
 
   const height = y + 4 + FOOTER_H;
-  parts.push(footer(width, height));
+  parts.push(footer(width, height, spec.series || DEFAULT_SERIES));
 
   return svgDoc({ width, height, title: spec.title, desc: spec.alt, body: parts.join('') });
 }
@@ -705,7 +716,7 @@ export function layoutSteps(spec) {
 export function layoutTriangle(spec) {
   const pad = 26;
   const width = spec.width || 720;
-  const head = header(spec.title, spec.kicker, width, pad);
+  const head = header(spec.title, spec.kicker, width, pad, spec.eyebrow || DEFAULT_EYEBROW);
   const size = 250;
   const cx = width / 2;
   const top = head.nextY + 34;
@@ -766,7 +777,7 @@ export function layoutTriangle(spec) {
   }
 
   const height = top + size + 76 + FOOTER_H;
-  parts.push(footer(width, height));
+  parts.push(footer(width, height, spec.series || DEFAULT_SERIES));
 
   return svgDoc({ width, height, title: spec.title, desc: spec.alt, body: parts.join('') });
 }

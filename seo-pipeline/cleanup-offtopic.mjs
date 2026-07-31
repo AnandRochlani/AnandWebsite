@@ -9,7 +9,7 @@
  * already out of the blog index and 404 at their routes, but they still exist in the
  * database and are still returned by the public API. Deleting them finishes the job.
  *
- * Safety:
+ * Safety (see also the isIndexableCategory guard below):
  *  - matches by SLUG, never by id, so a re-ordered table cannot delete the wrong row;
  *  - refuses to touch anything in the System Design category or series;
  *  - writes a JSON backup of every post it deletes to seo-pipeline/reports/ first, so
@@ -19,6 +19,7 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { INDEXABLE_SERIES, isIndexableCategory } from '../src/lib/contentTaxonomy.js';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = (process.env.SITE_URL || 'https://anandrochlani.com').replace(/\/$/, '');
@@ -84,11 +85,11 @@ const posts = json.posts || [];
 
 const targets = posts.filter((p) => OFF_TOPIC_SLUGS.includes(p.slug));
 const guarded = targets.filter(
-  (p) => p.category === 'System Design' || p.series === 'System Design Tutorial',
+  (p) => isIndexableCategory(p.category) || INDEXABLE_SERIES.includes(p.series),
 );
 
 if (guarded.length) {
-  console.error('Refusing to run: these slugs are now System Design content:');
+  console.error('Refusing to run: these slugs are now indexable cluster content:');
   for (const p of guarded) console.error(`  - ${p.slug}`);
   process.exit(1);
 }

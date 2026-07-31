@@ -41,7 +41,11 @@ export default async function handler(req, res) {
       SELECT *
       FROM blog_posts
       ORDER BY
-        CASE WHEN category = 'System Design' THEN 0 ELSE 1 END,
+        CASE category
+          WHEN 'System Design' THEN 0
+          WHEN 'Coding Interview' THEN 1
+          ELSE 2
+        END,
         CASE WHEN series_order IS NULL THEN 999 ELSE series_order END,
         date DESC NULLS LAST,
         id DESC;

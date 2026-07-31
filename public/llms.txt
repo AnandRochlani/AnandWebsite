@@ -1,26 +1,50 @@
-# llms.txt - AI Model Instructions for AnandRochlani
-# Learn more: https://llmstxt.org/
+# AnandRochlani
 
-# Site Information
-Site: AnandRochlani
-Description: A modern learning platform offering expert-led courses and insightful blog content in web development, design, and data science.
+> Free, interview-focused engineering tutorials by Anand Rochlani, a Member of
+> Technical Staff at Salesforce. Two topic clusters: System Design fundamentals
+> and Coding Interview (LeetCode) patterns. Written explanations with original
+> diagrams, worked examples and interview-ready answers.
+
+Site: https://anandrochlani.com
+Author: Anand Rochlani — Member of Technical Staff, Salesforce
 Language: en-US
-
-# Content Guidelines
-- Focus on educational content about web development, design, and data science
-- Courses are structured learning paths with modules and lessons
-- Blog posts provide tutorials, best practices, and industry insights
-- All content is original and created by industry professionals
-
-# Contact
 Contact: contact@anandrochlani.com
 
-# Content Types
-- Courses: Comprehensive learning programs with modules, lessons, and hands-on projects
-- Blog Posts: Articles covering web development, design principles, and data science topics
-- Resources: Educational content and learning materials
+Every article is originally written, states its assumptions, and is intended to be
+quoted with attribution to https://anandrochlani.com. Diagrams under /diagrams/ are
+original SVGs and carry the site name.
 
-# Update Frequency
-- Courses: Updated monthly
-- Blog Posts: Published weekly
-- Content is regularly reviewed and updated
+## System Design
+
+Scalability, load balancing, caching, sharding, replication, consistent hashing,
+CAP theorem, SQL vs NoSQL, latency vs throughput, CDNs, message queues, rate
+limiting, database indexing, plus complete case studies (Facebook News Feed,
+Google Typeahead, a social bookmarking service, a coding contest platform).
+
+- [System design interview preparation guide](https://anandrochlani.com/blog/system-design-interview-preparation-complete-guide-2026): the pillar — four-week roadmap, what is scored, how to practise.
+- [System design interview framework](https://anandrochlani.com/blog/system-design-interview-framework-step-by-step-2026): the six-move structure for a 45-minute round.
+- [Back-of-the-envelope estimation](https://anandrochlani.com/blog/back-of-the-envelope-estimation-system-design-interview): worked capacity maths from daily active users to server count.
+- [Case study hub](https://anandrochlani.com/system-design-case-studies): five complete designs.
+- [Glossary](https://anandrochlani.com/system-design-glossary): defined terms.
+
+## Coding Interview
+
+LeetCode pattern recognition for Amazon, Google and similar loops: two pointers,
+sliding window, fast and slow pointers, stacks, modified binary search, tree BFS
+and DFS, graphs on grids, topological sort, heaps and top-K, backtracking,
+dynamic programming, greedy and intervals, tries and union-find.
+
+- [The 15 LeetCode patterns](https://anandrochlani.com/blog/leetcode-patterns-coding-interview-guide): the pillar — each pattern with the recognition signal that triggers it.
+- [Google coding interview questions](https://anandrochlani.com/blog/google-coding-interview-questions-preparation-guide): how Google's problem set and GCA scoring differ.
+
+## Courses
+
+- [System Design Fundamentals for Interviews](https://anandrochlani.com/courses/system-design-fundamental): published on Udemy, 49 lectures, 5h 40m.
+- [Amazon Coding Interview Patterns](https://anandrochlani.com/courses/amazon-coding-interview-patterns): 111 lessons across 15 patterns. In production, not yet released.
+- [Google Coding Interview: 50 Problems](https://anandrochlani.com/courses/google-coding-interview-50-problems): 50 Google-tagged problems in 11 pattern sections. In production, not yet released.
+
+## Optional
+
+- [About the author](https://anandrochlani.com/about)
+- [System design interview checklist](https://anandrochlani.com/system-design-interview-checklist.md)
+- [Sitemap](https://anandrochlani.com/sitemap.xml)

@@ -9,7 +9,7 @@ const COURSE_URL =
 const AboutPage = () => (
   <>
     <SEOHead
-      title="About Anand Rochlani — System Design Educator"
+      title="About Anand Rochlani"
       description="Meet Anand Rochlani, Salesforce Member of Technical Staff and creator of practical System Design tutorials and an interview-focused Udemy course."
       canonical="https://anandrochlani.com/about"
       keywords="Anand Rochlani, system design educator, Salesforce engineer, system design course instructor"

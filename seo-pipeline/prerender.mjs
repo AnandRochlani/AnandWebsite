@@ -35,6 +35,7 @@ import { fileURLToPath } from 'node:url';
 import { slugify } from '../src/lib/slug.js';
 import { getAllBlogPosts } from '../src/data/blogPosts.js';
 import { defaultCourses } from '../src/data/courses.js';
+import { comparePosts, isIndexablePost } from '../src/lib/contentTaxonomy.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(HERE, '..');
@@ -466,7 +467,11 @@ async function main() {
     courses = mergeByKey(
       bundled.courses,
       c.courses || [],
-      (course) => course.slug || String(course.id || '')
+      (course) => course.slug || String(course.id || ''),
+      // Admin edits stay authoritative, but the database has no column for the
+      // build-time SEO fields, so a wholesale replacement silently dropped them
+      // and every course page fell back to the same generic description.
+      (bundledCourse, liveCourse) => ({ ...bundledCourse, ...liveCourse })
     );
   } catch (e) {
     // A remote API outage must not turn a production deploy back into one generic
@@ -478,11 +483,12 @@ async function main() {
     );
   }
 
-  // This site now has one clear editorial focus. Legacy template posts remain
-  // accessible through the app, but they are noindex and omitted from the static
-  // crawl surface so they do not dilute the System Design topic cluster.
-  posts = posts.filter((post) => post.category === 'System Design');
-  posts.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+  // This site has a small number of deliberate editorial clusters (see
+  // src/lib/contentTaxonomy.js). Legacy template posts remain accessible through
+  // the app, but they are noindex and omitted from the static crawl surface so
+  // they do not dilute those clusters.
+  posts = posts.filter(isIndexablePost);
+  posts.sort(comparePosts);
   const written = [];
 
   /* home */
@@ -490,9 +496,9 @@ async function main() {
     '/',
     renderPage(template, {
       head: headTags({
-        title: 'System Design Tutorials & Courses | AnandRochlani',
+        title: 'System Design & Coding Interview Tutorials | AnandRochlani',
         description:
-          'Free System Design tutorials for interview prep — caching, sharding, consistent hashing, load balancing and full case studies.',
+          'Free System Design and LeetCode pattern tutorials for interview prep — caching, sharding, consistent hashing, sliding window, graphs and full case studies.',
         canonical: `${CANONICAL_HOST}/`,
         type: 'website',
         keywords: 'system design, system design interview, system design tutorial, software architecture',
@@ -532,9 +538,9 @@ async function main() {
     '/blog',
     renderPage(template, {
       head: headTags({
-        title: 'System Design Tutorial Series | AnandRochlani',
+        title: 'System Design & LeetCode Tutorial Series | AnandRochlani',
         description:
-          'The complete System Design Tutorial series: latency, throughput, caching, sharding, replication, consistent hashing and real interview case studies.',
+          'Two tutorial series: System Design fundamentals with real case studies, and the LeetCode patterns behind Amazon and Google coding interviews.',
         canonical: `${CANONICAL_HOST}/blog`,
         type: 'website',
         jsonLd: [
@@ -570,7 +576,7 @@ async function main() {
     '/about',
     renderPage(template, {
       head: headTags({
-        title: 'About Anand Rochlani — System Design Educator',
+        title: 'About Anand Rochlani',
         description:
           'Meet Anand Rochlani, Salesforce Member of Technical Staff and creator of practical System Design tutorials and an interview-focused Udemy course.',
         canonical: `${CANONICAL_HOST}/about`,
@@ -755,9 +761,9 @@ async function main() {
     '/courses',
     renderPage(template, {
       head: headTags({
-        title: 'System Design Courses for Interview Prep',
+        title: 'Interview Prep Courses',
         description:
-          'Build system design skills with practical, interview-focused courses covering scalability, caching, databases, load balancing, and distributed systems.',
+          'Interview-focused engineering courses: system design fundamentals plus the LeetCode patterns behind the Amazon and Google coding interviews.',
         canonical: `${CANONICAL_HOST}/courses`,
         type: 'website',
         jsonLd: [
@@ -770,7 +776,7 @@ async function main() {
       body: [
         staticHeader,
         listBody(
-          'System Design Courses for Interview Prep',
+          'System Design and Coding Interview Courses',
           'Practical courses covering scalability, caching, databases, load balancing, and distributed systems.',
           courses.map((c) => ({
             url: `/courses/${c.slug || slugify(c.name || c.title || String(c.id))}`,
@@ -784,7 +790,9 @@ async function main() {
     written
   );
 
-  const courseFaqs = [
+  // Per-course FAQ sets. Keyed by slug; every course MUST have its own so the
+  // three course pages do not ship identical FAQPage schema and body copy.
+  const systemDesignFaqs = [
     {
       question: 'Who is this System Design course for?',
       answer:
@@ -816,6 +824,93 @@ async function main() {
     },
   ];
 
+  const amazonFaqs = [
+    {
+      question: 'Which LeetCode patterns does the Amazon course cover?',
+      answer:
+        'Fifteen: two pointers, sliding window, fast and slow pointers, in-place linked list reversal, stacks and monotonic stacks, modified binary search, tree BFS, tree DFS, graphs on grids, topological sort, heaps and top-K, subsets and backtracking, dynamic programming, greedy and intervals, and tries with union-find.',
+    },
+    {
+      question: 'Why learn 15 patterns instead of grinding 300 problems?',
+      answer:
+        'Amazon rarely asks a problem you have already memorised. It asks a new problem that maps to a pattern you know. Learning the recognition signal for each pattern transfers to unseen problems; memorised solutions do not.',
+    },
+    {
+      question: 'Do I need a computer science degree?',
+      answer:
+        'No. You need one language you are comfortable in and a basic idea of what an array, hash map, and linked list are. Examples are given in Python and Java, and the course re-teaches every data structure a pattern depends on.',
+    },
+    {
+      question: 'Does the course cover Amazon Leadership Principles?',
+      answer:
+        'Yes. The final section maps your own project stories to the 14 Leadership Principles using the STAR structure, because the behavioural round is roughly half of the Amazon loop.',
+    },
+    {
+      question: 'How long is the Amazon course?',
+      answer:
+        'It contains 111 lessons across 20 sections, four narrated mock interviews and five downloadable cheat sheets, at roughly 16 hours of video and about 11 minutes per lesson.',
+    },
+    {
+      question: 'When does the Amazon course launch?',
+      answer:
+        'It is in production. The full curriculum is published on this page, and the free written pattern guides on the blog cover the same material in the meantime.',
+    },
+  ];
+
+  const googleFaqs = [
+    {
+      question: 'Which problems are on the Google 50 list?',
+      answer:
+        'Fifty Google-tagged LeetCode problems grouped into 11 pattern sections, including Text Justification, Sentence Screen Fitting, Shortest Path in a Grid with Obstacles Elimination, Swim in Rising Water, Meeting Rooms III, Snapshot Array, Race Car, Robot Room Cleaner and Guess the Word.',
+    },
+    {
+      question: 'How is a Google interview different from an Amazon interview?',
+      answer:
+        'Google scores General Cognitive Ability — how you reason out loud on a problem you have never seen — alongside Role-Related Knowledge, Leadership and Googleyness. The problems skew harder and stranger, and several are LeetCode Premium.',
+    },
+    {
+      question: 'Is this course for beginners?',
+      answer:
+        'No. It assumes you already know the common patterns and want the harder, less-rehearsed Google set. Start with the Amazon patterns course or the free pattern guides first if you are new to LeetCode.',
+    },
+    {
+      question: 'What does intuition-first teaching mean?',
+      answer:
+        'Each problem starts with how you would actually arrive at the solution — first instinct, the reframe, where brute force hurts, and the leap — before any code. Each solve then runs brute force, optimised, and space optimisation.',
+    },
+    {
+      question: 'How long is the Google course?',
+      answer:
+        'Fifty problems across 11 pattern sections plus Googleyness and GCA preparation, at roughly 11 hours of video.',
+    },
+    {
+      question: 'When does the Google course launch?',
+      answer:
+        'It is in production. The full 50-problem list and section breakdown are published on this page, and the free written pattern guides cover the underlying patterns in the meantime.',
+    },
+  ];
+
+  const faqsBySlug = {
+    'system-design-fundamental': systemDesignFaqs,
+    'amazon-coding-interview-patterns': amazonFaqs,
+    'google-coding-interview-50-problems': googleFaqs,
+  };
+
+  // Body copy under the H1, per course. Keeps each prerendered page's text unique.
+  const bodyBySlug = {
+    'system-design-fundamental': `\t\t\t\t<h2>Free tutorials or the guided course?</h2>
+\t\t\t\t<p>Use the free roadmap, glossary, checklist, tutorials, and case studies for self-paced reference. Choose the course when you want the same fundamentals arranged as a guided video curriculum.</p>
+\t\t\t\t<p><a href="/blog/system-design-interview-preparation-complete-guide-2026">Read the complete interview-preparation guide</a> · <a href="/system-design-case-studies">Explore the case-study hub</a></p>`,
+    'amazon-coding-interview-patterns': `\t\t\t\t<h2>Patterns, not problem counts</h2>
+\t\t\t\t<p>Three hundred solved problems does not make an Amazon offer; recognising which of fifteen patterns a new problem belongs to does. Every lesson names the recognition signal, writes the brute force and explains why it times out, then applies the pattern and states the complexity out loud.</p>
+\t\t\t\t<p>This course is in production. The written pattern guides on the blog cover the same material and are free.</p>
+\t\t\t\t<p><a href="/blog/leetcode-patterns-coding-interview-guide">Read the 15 LeetCode patterns guide</a> · <a href="/blog/sliding-window-pattern-explained-leetcode">Start with the sliding window pattern</a></p>`,
+    'google-coding-interview-50-problems': `\t\t\t\t<h2>A fixed list of 50, taught intuition-first</h2>
+\t\t\t\t<p>Google's loop leans on harder, stranger problems than the generic top-75 list — and scores General Cognitive Ability while you talk through them. Each of these fifty problems is taught from first instinct to optimal solution, then mapped to the reusable pattern underneath it.</p>
+\t\t\t\t<p>This course is in production. The written pattern guides on the blog cover the underlying patterns and are free.</p>
+\t\t\t\t<p><a href="/blog/google-coding-interview-questions-preparation-guide">Read the Google coding interview guide</a> · <a href="/blog/leetcode-patterns-coding-interview-guide">Learn the pattern set first</a></p>`,
+  };
+
   for (const c of courses) {
     const name = c.name || c.title || `Course ${c.id}`;
     // CoursesPage links to the slug form, so that is the primary indexable URL.
@@ -823,6 +918,14 @@ async function main() {
     // but canonicalises to the slug so the two do not compete as duplicates.
     const slug = c.slug || slugify(name);
     const canonical = `${CANONICAL_HOST}/courses/${slug}`;
+    const courseFaqs = faqsBySlug[slug] || [];
+    const courseBody = bodyBySlug[slug] || '';
+    // Mirrors CourseDetail's SEOHead description exactly, so the prerendered and
+    // client-rendered pages never disagree — and every course gets its own.
+    const courseDescription = clamp(
+      toText(c.seoDescription || c.description || name),
+      300
+    );
     for (const routeKey of [slug, String(c.id)]) {
     write(
       `/courses/${routeKey}`,
@@ -830,9 +933,8 @@ async function main() {
         head: headTags({
           // Mirrors CourseDetail's SEOHead title so the prerendered and rendered
           // titles are identical.
-          title: `${name} Course`,
-          description:
-            'Master scalability, load balancing, caching, databases, and distributed systems in this practical system design course for interview preparation.',
+          title: c.seoTitle || `${name} Course`,
+          description: courseDescription,
           canonical,
           image: c.featuredImage || c.image || c.thumbnail,
           type: 'website',
@@ -845,24 +947,41 @@ async function main() {
               url: canonical,
               provider: organization,
               inLanguage: 'en-US',
+              ...(c.level ? { educationalLevel: c.level } : {}),
+              ...(c.learningOutcomes?.length ? { teaches: c.learningOutcomes } : {}),
+              // A course that has not shipped has no instance a learner can join,
+              // so only published courses advertise one.
+              ...(c.status === 'published' && c.workload
+                ? {
+                    hasCourseInstance: {
+                      '@type': 'CourseInstance',
+                      courseMode: 'online',
+                      courseWorkload: c.workload,
+                    },
+                  }
+                : {}),
             },
             breadcrumb([
               { name: 'Home', url: `${CANONICAL_HOST}/` },
               { name: 'Courses', url: `${CANONICAL_HOST}/courses` },
               { name, url: canonical },
             ]),
-            {
-              '@context': 'https://schema.org',
-              '@type': 'FAQPage',
-              mainEntity: courseFaqs.map(({ question, answer }) => ({
-                '@type': 'Question',
-                name: question,
-                acceptedAnswer: {
-                  '@type': 'Answer',
-                  text: answer,
-                },
-              })),
-            },
+            ...(courseFaqs.length
+              ? [
+                  {
+                    '@context': 'https://schema.org',
+                    '@type': 'FAQPage',
+                    mainEntity: courseFaqs.map(({ question, answer }) => ({
+                      '@type': 'Question',
+                      name: question,
+                      acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: answer,
+                      },
+                    })),
+                  },
+                ]
+              : []),
           ],
         }),
         body: [
@@ -870,16 +989,26 @@ async function main() {
           `\t\t\t<main id="static-content">
 \t\t\t\t<h1>${esc(name)}</h1>
 \t\t\t\t<p>${esc(c.description ? clamp(c.description, 400) : '')}</p>
-\t\t\t\t<h2>Free tutorials or the guided course?</h2>
-\t\t\t\t<p>Use the free roadmap, glossary, checklist, tutorials, and case studies for self-paced reference. Choose the course when you want the same fundamentals arranged as a guided video curriculum.</p>
-\t\t\t\t<p><a href="/blog/system-design-interview-preparation-complete-guide-2026">Read the complete interview-preparation guide</a> · <a href="/system-design-case-studies">Explore the case-study hub</a></p>
-\t\t\t\t<h2>Frequently asked questions</h2>
-${courseFaqs
+${courseBody}
+\t\t\t\t<h2>Curriculum</h2>
+\t\t\t\t<ul>
+${(c.modules || [])
   .map(
-    ({ question, answer }) =>
-      `\t\t\t\t<h3>${esc(question)}</h3>\n\t\t\t\t<p>${esc(answer)}</p>`
+    (m) =>
+      `\t\t\t\t\t<li>${esc(m.title)} — ${esc(String(m.lessons))} lessons, ${esc(m.duration)}</li>`
   )
   .join('\n')}
+\t\t\t\t</ul>
+${
+  courseFaqs.length
+    ? `\t\t\t\t<h2>Frequently asked questions</h2>\n${courseFaqs
+        .map(
+          ({ question, answer }) =>
+            `\t\t\t\t<h3>${esc(question)}</h3>\n\t\t\t\t<p>${esc(answer)}</p>`
+        )
+        .join('\n')}`
+    : ''
+}
 \t\t\t</main>`,
           staticFooter,
         ].join('\n'),

@@ -63,9 +63,9 @@ const HomePage = () => {
   return (
     <>
       <SEOHead 
-        title="System Design Tutorials & Courses"
-        description="Free System Design tutorials for interview prep — caching, sharding, consistent hashing, load balancing and full case studies."
-        keywords="system design, system design interview, system design tutorial, software architecture, scalability, distributed systems"
+        title="System Design & Coding Interview Tutorials"
+        description="Free System Design and LeetCode pattern tutorials for interview prep — caching, sharding, consistent hashing, sliding window, graphs and full case studies."
+        keywords="system design interview, system design tutorial, leetcode patterns, coding interview preparation, scalability, distributed systems"
         canonical="https://anandrochlani.com/"
       />
 

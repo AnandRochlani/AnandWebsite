@@ -6,12 +6,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import {
+  INDEXABLE_SERIES,
+  isIndexableCategory,
+} from '../../src/lib/contentTaxonomy.js';
+
 export const CANONICAL_HOST = 'https://anandrochlani.com';
 export const SERIES = 'System Design Tutorial';
 
 /** Posts we are willing to link TO (template placeholders are excluded). */
 function isLinkable(post) {
-  return post.series === SERIES || post.category === 'System Design';
+  return INDEXABLE_SERIES.includes(post.series) || isIndexableCategory(post.category);
 }
 
 export function blogUrl(slug) {

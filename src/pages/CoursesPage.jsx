@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, Users, TrendingUp, Search, Filter, Star, BookOpen, Crown, ExternalLink } from 'lucide-react';
 import { fetchCourses } from '@/data/dbApi';
+import { isInProduction } from '@/data/courses';
 import SaveButton from '@/components/SaveButton';
 import SEOHead from '@/components/SEOHead';
 import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
@@ -106,9 +107,9 @@ const CoursesPage = () => {
   return (
       <>
       <SEOHead
-        title="System Design Courses for Interview Prep"
-        description="Build system design skills with practical, interview-focused courses covering scalability, caching, databases, load balancing, and distributed systems."
-        keywords="system design course, system design interview course, scalability, caching, load balancing, distributed systems"
+        title="Interview Prep Courses"
+        description="Interview-focused engineering courses: system design fundamentals plus the LeetCode patterns behind the Amazon and Google coding interviews."
+        keywords="system design course, coding interview course, leetcode patterns course, amazon interview prep, google interview prep, scalability"
         canonical="https://anandrochlani.com/courses"
       />
 
@@ -123,7 +124,7 @@ const CoursesPage = () => {
               className="text-center"
             >
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-4">
-                Build interview-ready <span className="text-lavender">System Design skills</span>
+                Build interview-ready <span className="text-lavender">System Design &amp; coding skills</span>
               </h1>
               <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto">
                 Compare the learning paths, review exactly what is included, and choose the course that fits your current level.
@@ -148,6 +149,7 @@ const CoursesPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {featuredCourses.map((course, index) => {
                   const isSystemDesign = course.category === 'System Design';
+                  const upcoming = isInProduction(course);
                   const cardClassName = "group relative h-full rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300";
 
                   return (
@@ -207,17 +209,21 @@ const CoursesPage = () => {
                                 <Clock className="w-4 h-4 mr-1" />
                                 {course.duration}
                               </span>
-                              <span className="flex items-center">
-                                <Users className="w-4 h-4 mr-1" />
-                                {typeof course.studentsEnrolled === 'number' ? course.studentsEnrolled.toLocaleString() : course.studentsEnrolled}
-                              </span>
+                              {!upcoming && (
+                                <span className="flex items-center">
+                                  <Users className="w-4 h-4 mr-1" />
+                                  {typeof course.studentsEnrolled === 'number' ? course.studentsEnrolled.toLocaleString() : course.studentsEnrolled}
+                                </span>
+                              )}
                             </div>
                             <div className="flex items-center justify-between">
-                              <span className="text-2xl font-bold text-slate-900">{course.price}</span>
-                              <div className="flex items-center space-x-1">
-                                <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-                                <span className="text-slate-900 font-medium">{course.rating}</span>
-                              </div>
+                              <span className={upcoming ? 'text-lg font-bold text-slate-900' : 'text-2xl font-bold text-slate-900'}>{course.price}</span>
+                              {!upcoming && course.rating != null && (
+                                <div className="flex items-center space-x-1">
+                                  <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                                  <span className="text-slate-900 font-medium">{course.rating}</span>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -311,6 +317,7 @@ const CoursesPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredCourses.slice(0, visibleCourses).map((course, index) => {
               const isSystemDesign = course.category === 'System Design';
+              const upcoming = isInProduction(course);
               const cardClassName = "group h-full rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300";
 
               return (
@@ -345,6 +352,11 @@ const CoursesPage = () => {
                            <ExternalLink className="w-4 h-4" />
                          </div>
                       )}
+                      {upcoming && (
+                        <span className="absolute bottom-4 left-4 px-3 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200 text-xs font-bold">
+                          In production
+                        </span>
+                      )}
                     </div>
                     <div className="p-6">
                       {/* Category + Level chips */}
@@ -368,17 +380,21 @@ const CoursesPage = () => {
                           <Clock className="w-4 h-4 mr-1" />
                           {course.duration}
                         </span>
-                        <span className="flex items-center">
-                          <Users className="w-4 h-4 mr-1" />
-                          {typeof course.studentsEnrolled === 'number' ? course.studentsEnrolled.toLocaleString() : course.studentsEnrolled}
-                        </span>
+                        {!upcoming && (
+                          <span className="flex items-center">
+                            <Users className="w-4 h-4 mr-1" />
+                            {typeof course.studentsEnrolled === 'number' ? course.studentsEnrolled.toLocaleString() : course.studentsEnrolled}
+                          </span>
+                        )}
                       </div>
                       <div className="flex items-center justify-between pt-4 border-t border-slate-200">
-                        <span className="text-2xl font-bold text-slate-900">{course.price}</span>
-                        <div className="flex items-center space-x-1">
-                          <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-                          <span className="text-slate-900 font-medium">{course.rating}</span>
-                        </div>
+                        <span className={upcoming ? 'text-lg font-bold text-slate-900' : 'text-2xl font-bold text-slate-900'}>{course.price}</span>
+                        {!upcoming && course.rating != null && (
+                          <div className="flex items-center space-x-1">
+                            <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                            <span className="text-slate-900 font-medium">{course.rating}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

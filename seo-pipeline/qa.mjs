@@ -8,6 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CONTENT_CLUSTERS, INDEXABLE_CATEGORIES } from '../src/lib/contentTaxonomy.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const articlesDir = path.join(here, 'articles');
@@ -63,10 +64,13 @@ export async function runQa(files) {
     for (const f of REQUIRED) if (d[f] === undefined || d[f] === null || d[f] === '') fail(file, `missing field "${f}"`);
     if (!d.content) continue;
 
+    // `order` drives prev/next inside a series, so it must be unique per series
+    // — not globally. The two clusters number independently from 1.
+    const orderKey = `${d.series}#${d.order}`;
     if (seenSlugs.has(d.slug)) fail(file, `duplicate slug ${d.slug}`);
-    if (seenOrders.has(d.order)) fail(file, `duplicate order ${d.order}`);
+    if (seenOrders.has(orderKey)) fail(file, `duplicate order ${d.order} in series "${d.series}"`);
     seenSlugs.add(d.slug);
-    seenOrders.add(d.order);
+    seenOrders.add(orderKey);
 
     if (!/^[a-z0-9-]+$/.test(d.slug)) fail(file, `slug has invalid characters: ${d.slug}`);
     if (d.description.length < 120 || d.description.length > 170)
@@ -87,8 +91,14 @@ export async function runQa(files) {
     if (!/^\d+ min read$/.test(d.readTime)) fail(file, `readTime format: ${d.readTime}`);
     if (plan.imagePool && !plan.imagePool.includes(d.featuredImage))
       fail(file, `featuredImage not in verified imagePool`);
-    if (d.category !== 'System Design') fail(file, `category "${d.category}" (want "System Design")`);
-    if (d.series !== plan.series) fail(file, `series "${d.series}" (want "${plan.series}")`);
+    const cluster = CONTENT_CLUSTERS.find((c) => c.category === d.category);
+    if (!cluster)
+      fail(
+        file,
+        `category "${d.category}" is not an indexable cluster (want one of ${INDEXABLE_CATEGORIES.join(', ')})`
+      );
+    else if (d.series !== cluster.series)
+      fail(file, `series "${d.series}" (want "${cluster.series}" for ${d.category})`);
 
     if (!fileFailed) console.log(`  ok   ${path.basename(file)} (${words} words, ${internal.length} internal links)`);
   }

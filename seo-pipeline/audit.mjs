@@ -21,6 +21,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isIndexablePost } from '../src/lib/contentTaxonomy.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPORTS_DIR = path.join(HERE, 'reports');
@@ -461,9 +462,7 @@ async function loadInventory(base) {
     try {
       const data = JSON.parse(postsRes.body);
       inventory.posts = Array.isArray(data.posts)
-        ? data.posts.filter(
-            (post) => post && post.slug && post.category === 'System Design'
-          )
+        ? data.posts.filter((post) => post && post.slug && isIndexablePost(post))
         : [];
     } catch (e) {
       inventory.apiErrors.push(`blog-posts JSON parse failed: ${e.message}`);

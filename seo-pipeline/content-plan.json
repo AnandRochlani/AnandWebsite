@@ -304,6 +304,134 @@
         "idempotent api design",
         "retry storm"
       ]
+    },
+    {
+      "order": 1,
+      "status": "drafted",
+      "category": "Coding Interview",
+      "slug": "leetcode-patterns-coding-interview-guide",
+      "workingTitle": "15 LeetCode Patterns That Cover Most Coding Interviews (2026)",
+      "primaryKeyword": "leetcode patterns",
+      "secondaryKeywords": [
+        "coding interview patterns",
+        "leetcode patterns list",
+        "how to prepare for coding interviews",
+        "pattern recognition leetcode"
+      ],
+      "courseSection": "Amazon course — all 15 pattern sections",
+      "brief": "Pillar. Why 15 patterns beat 300 problems; the recognition signal for each; the 6-step in-room sequence; study order by payoff."
+    },
+    {
+      "order": 2,
+      "status": "drafted",
+      "category": "Coding Interview",
+      "slug": "google-coding-interview-questions-preparation-guide",
+      "primaryKeyword": "google coding interview questions",
+      "workingTitle": "Google Coding Interview Questions: How to Prepare (2026)",
+      "secondaryKeywords": [
+        "google interview preparation",
+        "google leetcode questions",
+        "general cognitive ability google",
+        "googleyness"
+      ],
+      "courseSection": "Google course — the 50-problem list, 11 pattern sections",
+      "brief": "How the Google set differs; GCA/RRK/Leadership/Googleyness; the pattern families; intuition-first 4-layer method; 8-week plan."
+    },
+    {
+      "order": 3,
+      "status": "staged",
+      "category": "Coding Interview",
+      "slug": "sliding-window-pattern-explained-leetcode",
+      "workingTitle": "Sliding Window Pattern Explained: A LeetCode Guide (2026)",
+      "primaryKeyword": "sliding window pattern",
+      "secondaryKeywords": [
+        "sliding window leetcode",
+        "fixed vs dynamic window",
+        "longest substring without repeating characters",
+        "minimum window substring"
+      ],
+      "courseSection": "Amazon course — Section 3, Sliding Window (7 lessons)",
+      "brief": "Fixed vs dynamic; why O(n); record-during-shrink vs record-after for min vs max; the 5 canonical problems."
+    },
+    {
+      "order": 4,
+      "status": "staged",
+      "category": "Coding Interview",
+      "slug": "two-pointers-pattern-explained-leetcode",
+      "workingTitle": "Two Pointers Pattern Explained: A LeetCode Guide (2026)",
+      "primaryKeyword": "two pointers pattern",
+      "secondaryKeywords": [
+        "two pointers leetcode",
+        "converging pointers",
+        "fast and slow pointers",
+        "3sum duplicates"
+      ],
+      "courseSection": "Amazon course — Section 2, Two Pointers (6 lessons)",
+      "brief": "Three shapes (converging/fast-slow/parallel); invariant-driven pointer choice; when NOT to sort; 3Sum duplicate skipping."
+    },
+    {
+      "order": 5,
+      "status": "queued",
+      "category": "Coding Interview",
+      "slug": "amazon-coding-interview-questions-preparation-guide",
+      "workingTitle": "Amazon Coding Interview Questions: How to Prepare (2026)",
+      "primaryKeyword": "amazon coding interview questions",
+      "secondaryKeywords": [
+        "amazon leetcode questions",
+        "amazon online assessment",
+        "bar raiser",
+        "amazon leadership principles interview"
+      ],
+      "courseSection": "Amazon course — Sections 17-19",
+      "brief": "The Amazon loop (OA, phone, on-site, bar raiser); most-asked tags; LRU cache; 14 Leadership Principles with STAR."
+    },
+    {
+      "order": 6,
+      "status": "queued",
+      "category": "Coding Interview",
+      "slug": "dynamic-programming-patterns-coding-interview",
+      "workingTitle": "Dynamic Programming Patterns for Coding Interviews (2026)",
+      "primaryKeyword": "dynamic programming patterns",
+      "secondaryKeywords": [
+        "dp leetcode",
+        "memoization vs tabulation",
+        "knapsack pattern",
+        "longest common subsequence"
+      ],
+      "courseSection": "Amazon course — Section 14, Dynamic Programming (10 lessons)",
+      "brief": "Memoize-first framing; the recurring DP shapes; how to spot overlapping subproblems; the 8 problems that cover it."
+    },
+    {
+      "order": 7,
+      "status": "queued",
+      "category": "Coding Interview",
+      "slug": "big-o-notation-explained-coding-interview",
+      "workingTitle": "Big-O Notation Explained for Coding Interviews (2026)",
+      "primaryKeyword": "big o notation explained",
+      "secondaryKeywords": [
+        "time complexity interview",
+        "space complexity",
+        "why o(n squared) times out",
+        "amortized complexity"
+      ],
+      "courseSection": "Amazon course — Section 1, Complexity & The Toolbox",
+      "brief": "Constraints as hints; reading n to pick a complexity class; stating time AND space out loud; amortized cost."
+    },
+    {
+      "order": 8,
+      "status": "queued",
+      "category": "Coding Interview",
+      "slug": "binary-search-pattern-explained-leetcode",
+      "workingTitle": "Binary Search Pattern Explained: Beyond Sorted Arrays (2026)",
+      "primaryKeyword": "binary search pattern",
+      "secondaryKeywords": [
+        "modified binary search",
+        "binary search on the answer",
+        "rotated sorted array",
+        "off by one binary search"
+      ],
+      "courseSection": "Amazon course — Section 7, Modified Binary Search (6 lessons)",
+      "brief": "The template that never off-by-ones; rotated arrays; binary search on a monotonic answer space (Koko Eating Bananas)."
     }
   ],
   "expansionBacklog": {
@@ -353,5 +481,22 @@
       7,
       8
     ]
+  },
+  "clusters": {
+    "System Design": {
+      "series": "System Design Tutorial",
+      "course": {
+        "name": "System Design Fundamentals for Interviews",
+        "udemyUrl": "https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73",
+        "stats": "5.5 hours on-demand video, 8 sections, 49 lectures, 4.8 rating, 350+ students"
+      }
+    },
+    "Coding Interview": {
+      "series": "Coding Interview Patterns",
+      "courses": [
+        "amazon-coding-interview-patterns",
+        "google-coding-interview-50-problems"
+      ]
+    }
   }
 }

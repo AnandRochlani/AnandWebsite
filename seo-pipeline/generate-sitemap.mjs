@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { slugify } from '../src/lib/slug.js';
 import { getAllBlogPosts } from '../src/data/blogPosts.js';
 import { defaultCourses } from '../src/data/courses.js';
+import { comparePosts, isIndexablePost, priorityFor } from '../src/lib/contentTaxonomy.js';
 
 const SITE = (process.env.SITE_URL || 'https://anandrochlani.com').replace(/\/$/, '');
 const CANONICAL = 'https://anandrochlani.com'; // apex only — www is not attached in Vercel
@@ -78,14 +79,8 @@ async function main() {
     );
   }
 
-  posts = posts.filter((post) => post.category === 'System Design');
-  posts.sort((a, b) => {
-    const aSystem = a.category === 'System Design' ? 0 : 1;
-    const bSystem = b.category === 'System Design' ? 0 : 1;
-    if (aSystem !== bSystem) return aSystem - bSystem;
-    if (aSystem === 0) return (a.order ?? 999) - (b.order ?? 999);
-    return new Date(b.date || 0) - new Date(a.date || 0);
-  });
+  posts = posts.filter(isIndexablePost);
+  posts.sort(comparePosts);
 
   const today = iso();
   const entries = [
@@ -108,7 +103,7 @@ async function main() {
 
   for (const p of posts) {
     if (!p.slug) continue;
-    const priority = p.category === 'System Design' ? '0.8' : '0.6';
+    const priority = priorityFor(p);
     entries.push(url(`${CANONICAL}/blog/${p.slug}`, iso(p.updatedAt || p.updated_at || p.date), 'monthly', priority));
   }
 

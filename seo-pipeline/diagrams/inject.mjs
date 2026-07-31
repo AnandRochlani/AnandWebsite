@@ -5,6 +5,7 @@
  *   node seo-pipeline/diagrams/inject.mjs                                  # dry run, shows the plan
  *   ADMIN_USERNAME=... ADMIN_PASSWORD=... node .../inject.mjs --yes         # write to the live blog
  *   node seo-pipeline/diagrams/inject.mjs --slug consistent-hashing-...     # limit to one post
+ *   node seo-pipeline/diagrams/inject.mjs --drafts --yes                    # write into draft JSON files
  *
  * Idempotent: a post that already contains its diagram id is skipped, so this can be
  * re-run safely after regenerating SVGs. Only the <figure> block is added — the rest of
@@ -15,7 +16,7 @@
  * the first screen. Override per spec with `after: '<heading substring>'`.
  */
 
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync, readdirSync, existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SPECS, BY_SLUG } from './specs.mjs';
@@ -28,6 +29,9 @@ const PASS = process.env.ADMIN_PASSWORD;
 
 const argv = process.argv.slice(2);
 const YES = argv.includes('--yes');
+// --drafts writes into seo-pipeline/articles/*.json instead of the live database,
+// for articles that ship as prerendered pages before they are published to Neon.
+const DRAFTS = argv.includes('--drafts');
 const slugFilter = argv.includes('--slug') ? argv[argv.indexOf('--slug') + 1] : null;
 
 /** The markup inserted into the article body. */
@@ -102,7 +106,48 @@ async function login() {
   return setCookie.split(';')[0];
 }
 
+/**
+ * Draft mode. Articles that have not been published to the database yet still ship
+ * as prerendered pages straight from seo-pipeline/articles/*.json, so their figure
+ * has to go into the draft file. Same insertFigure, same idempotency.
+ */
+async function injectDrafts() {
+  const dirs = [
+    resolve(ROOT, 'seo-pipeline/articles'),
+    resolve(ROOT, 'seo-pipeline/articles/staged'),
+  ];
+  let changed = 0;
+  let skipped = 0;
+  for (const dir of dirs) {
+    if (!existsSync(dir)) continue;
+    for (const name of readdirSync(dir).filter((f) => f.endsWith('.json'))) {
+      const file = resolve(dir, name);
+      const doc = JSON.parse(readFileSync(file, 'utf8'));
+      if (slugFilter && doc.slug !== slugFilter) continue;
+      const spec = BY_SLUG.get(doc.slug);
+      if (!spec) continue;
+      const next = insertFigure(doc.content, spec);
+      if (next === null) {
+        skipped += 1;
+        continue;
+      }
+      console.log(`  ${YES ? 'inject' : 'would inject'} ${spec.id} → ${doc.slug}`);
+      if (YES) {
+        doc.content = next;
+        writeFileSync(file, `${JSON.stringify(doc, null, 2)}\n`);
+      }
+      changed += 1;
+    }
+  }
+  console.log(
+    `\n${changed} draft(s) ${YES ? 'updated' : 'to update'}, ${skipped} already had their diagram.`
+  );
+  if (!YES && changed) console.log('Dry run. Re-run with --yes to write the draft files.');
+}
+
 async function main() {
+  if (DRAFTS) return injectDrafts();
+
   const { res, json } = await api('/api/public/blog-posts');
   if (!res.ok) {
     console.error(`Could not fetch live posts (${res.status}).`);

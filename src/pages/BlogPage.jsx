@@ -5,6 +5,7 @@ import { Calendar, Clock, ArrowRight, Filter, Star } from 'lucide-react';
 import { fetchBlogPosts } from '@/data/dbApi';
 import SEOHead from '@/components/SEOHead';
 import { optimizeImageUrl, generateImageSrcset, highlightDescription } from '@/lib/utils';
+import { CONTENT_CLUSTERS, isIndexablePost } from '@/lib/contentTaxonomy';
 
 const BlogPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -18,9 +19,7 @@ const BlogPage = () => {
     fetchBlogPosts()
       .then((posts) => {
         if (mounted) {
-          const focusedPosts = Array.isArray(posts)
-            ? posts.filter((post) => post.category === 'System Design')
-            : [];
+          const focusedPosts = Array.isArray(posts) ? posts.filter(isIndexablePost) : [];
           setAllBlogPosts(focusedPosts);
         }
       })
@@ -40,8 +39,8 @@ const BlogPage = () => {
       ? allBlogPosts 
       : allBlogPosts.filter(post => post.category === selectedCategory);
 
-    // For System Design category, sort by order if available, otherwise by date
-    if (selectedCategory === 'System Design') {
+    // Ordered series (System Design, Coding Interview) read in curriculum order.
+    if (CONTENT_CLUSTERS.some((c) => c.ordered && c.category === selectedCategory)) {
       posts = [...posts].sort((a, b) => {
         // If both have order, sort by order
         if (a.order !== undefined && b.order !== undefined) {
@@ -164,9 +163,9 @@ const BlogPage = () => {
   return (
       <>
       <SEOHead 
-        title="System Design Tutorial Series"
-        description="The complete System Design Tutorial series: latency, throughput, caching, sharding, replication, consistent hashing and real interview case studies."
-        keywords="system design tutorial, system design interview, scalability, caching, sharding, load balancing, consistent hashing, distributed systems"
+        title="System Design & LeetCode Tutorial Series"
+        description="Two tutorial series: System Design fundamentals with real case studies, and the LeetCode patterns behind Amazon and Google coding interviews."
+        keywords="system design tutorial, system design interview, leetcode patterns, coding interview questions, sliding window, two pointers, scalability"
         canonical="https://anandrochlani.com/blog"
       />
 
@@ -179,7 +178,7 @@ const BlogPage = () => {
             transition={{ duration: 0.4 }}
             className="text-center mb-12"
           >
-            <p className="text-brand font-semibold text-sm uppercase tracking-wider mb-3">Free System Design tutorials</p>
+            <p className="text-brand font-semibold text-sm uppercase tracking-wider mb-3">Free System Design &amp; coding interview tutorials</p>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight mb-4">
               Learn one concept at a time
             </h1>
