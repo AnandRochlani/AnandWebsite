@@ -51,10 +51,80 @@ Every article must include:
 - 2–8 contextual internal links, with higher counts only for pillar pages;
 - exactly one Udemy CTA qualified with `rel="sponsored noopener noreferrer"`;
 - author and date information, BlogPosting schema, breadcrumbs, and descriptive image alt;
+- **one original diagram** (see below);
 - only the `System Design` category.
 
 The production build enforces these requirements. Off-topic template content stays outside
 the index.
+
+## Publishing cadence — does it matter if everything goes live in one day?
+
+Google has no ranking factor for publishing frequency. A steady schedule is not rewarded
+and a quiet month is not punished. But **how** you release still matters, for three
+reasons that have nothing to do with a "consistency" signal:
+
+1. **Scaled content abuse.** Google's spam policy targets mass-produced pages made
+   primarily to rank. A low-authority domain that goes from 20 pages to 70 in a day, with
+   uniform structure and length, matches that pattern — not because of the date, but
+   because of the volume-to-quality shape. Twenty pages a week from a site with no link
+   profile invites the wrong kind of review.
+2. **You lose the feedback loop.** Publish 12 at once and you learn nothing until they
+   are all indexed. Publish 2 a week and Search Console tells you which angles earn
+   impressions while there is still a queue to redirect.
+3. **Distribution bandwidth.** Every article deserves its own promotion push — a LinkedIn
+   post, a newsletter mention, an outreach email. Twelve on one day means eleven get
+   nothing, and promotion is what actually earns the links.
+
+**The rule: draft in bulk, release on a schedule.** Writing ten articles in a weekend is
+fine and efficient. Publishing them across five weeks at 2 per week is what to do with
+them. A batch of 2–5 in one day is unremarkable; 20+ is a pattern.
+
+Two things genuinely do not matter: the day of the week, and the time of day. Submit the
+sitemap and ping IndexNow after each batch and discovery takes care of itself.
+
+## Diagrams
+
+Every article carries one original SVG diagram. This is a deliberate differentiator: the
+competing pages are largely wall-of-text, diagrams are the most cited/linked asset type in
+this topic, and an original image is something a competitor cannot copy without attribution.
+
+**Visual language is carried over from the LLD Masterclass video decks** ("Daylight
+Classroom"), so the blog and the courses look like one product: `#FAFAF5` paper, a kicker
+over a bold heading with a short indigo underline bar, amber (`#B45309`) marker handwriting
+for the human annotations, hand-drawn wobbly strokes and stamps, emerald for the good path
+and red for the failure path, and a thin indigo footer band with a diagonal notch carrying
+`anandrochlani.com · System Design Tutorial`.
+
+The handwriting is the point, not decoration. A diagram that only draws boxes states the
+architecture; a handwritten "adding servers here changes nothing" next to the app tier
+teaches the lesson the article is actually about — and it is what makes the image worth
+sharing. The footer band means every shared or hot-linked copy carries attribution back.
+
+- Specs live in `seo-pipeline/diagrams/specs.mjs`; layouts (`flow`, `ring`, `compare`,
+  `steps`, `triangle`) in `lib.mjs`. `npm run seo:diagrams` renders them.
+- Output is **standalone `.svg` files** in `public/diagrams/`, referenced with
+  `<img src="/diagrams/<id>.svg" alt="…">`. Standalone files are used rather than inline
+  `<svg>` because Google Image Search indexes image files; inline SVG is not indexed as an
+  image, and inline markup would bloat every article row in the database.
+- Alt text must describe the diagram's content well enough to replace it. The generator
+  refuses to build a spec whose alt text is missing or under 60 characters.
+- `npm run seo:diagrams:inject` places each figure into its live post, idempotently
+  (a post that already references its diagram id is skipped).
+- Diagram generation runs as the first step of `npm run build`, so a spec change can never
+  ship without its rendered file.
+- Everything is deterministic (the wobble uses a seeded PRNG, never `Math.random`), so
+  `npm run seo:diagrams:check` can fail a build whose SVGs are stale.
+
+## How publishing actually works here
+
+Worth writing down because it is not obvious: `src/data/seoArticles.js` reads every JSON in
+`seo-pipeline/articles/` at build time. **Adding a draft file and deploying publishes it** —
+it becomes a prerendered page and enters the sitemap via `npm run seo:sitemap`. It does not
+need `publish.mjs`; that path exists to also write the post into Neon so the admin UI and
+the public API agree.
+
+The practical consequence for cadence (§ above): staged release means adding drafts to the
+folder in batches of 2–5 and deploying, not writing ten and shipping them in one commit.
 
 ## Six-month content direction
 

@@ -21,7 +21,12 @@
       "slug": "consistent-hashing-explained-system-design-interview-guide",
       "workingTitle": "Consistent Hashing Explained: A System Design Interview Guide (2026)",
       "primaryKeyword": "consistent hashing explained",
-      "secondaryKeywords": ["consistent hashing system design", "consistent hashing interview question", "hash ring", "virtual nodes"],
+      "secondaryKeywords": [
+        "consistent hashing system design",
+        "consistent hashing interview question",
+        "hash ring",
+        "virtual nodes"
+      ],
       "courseSection": "Detailed Discussion on Case Study-1 To learn Consistent Hashing (7 lectures)",
       "brief": "Why modulo hashing breaks when servers are added/removed; the hash ring; virtual nodes; where it's used (DynamoDB, Cassandra, CDNs). Walk the del.icio.us cache-partitioning story from the course."
     },
@@ -31,7 +36,12 @@
       "slug": "master-slave-replication-database-architecture-explained",
       "workingTitle": "Master-Slave Replication: Database Architecture Explained (2026)",
       "primaryKeyword": "master slave replication",
-      "secondaryKeywords": ["master slave architecture", "database replication interview", "read replicas", "replication lag"],
+      "secondaryKeywords": [
+        "master slave architecture",
+        "database replication interview",
+        "read replicas",
+        "replication lag"
+      ],
       "courseSection": "Master Slave Architecture (2 lectures)",
       "brief": "Read/write split, why reads dominate, replication lag and eventual consistency, failover, when to move to multi-master. Contrast with sharding (link tutorial 7)."
     },
@@ -41,7 +51,11 @@
       "slug": "design-a-social-bookmarking-service-delicious-system-design-case-study",
       "workingTitle": "Design a Social Bookmarking Service (del.icio.us): System Design Case Study",
       "primaryKeyword": "social bookmarking system design",
-      "secondaryKeywords": ["del.icio.us architecture", "system design case study", "design bookmarking service interview"],
+      "secondaryKeywords": [
+        "del.icio.us architecture",
+        "system design case study",
+        "design bookmarking service interview"
+      ],
       "courseSection": "Case Study-1 (del.icio.us) social bookmarking web service (8 lectures)",
       "brief": "Full interview walkthrough: requirements, capacity estimation, API design, data model (users/bookmarks/tags), read-heavy scaling with caching + replication, what breaks at 10M users."
     },
@@ -51,7 +65,11 @@
       "slug": "design-a-coding-contest-platform-leetcode-system-design-interview",
       "workingTitle": "Design a Coding Contest Platform like LeetCode: System Design Interview (2026)",
       "primaryKeyword": "leetcode system design",
-      "secondaryKeywords": ["design coding contest platform", "leaderboard system design", "code judge architecture"],
+      "secondaryKeywords": [
+        "design coding contest platform",
+        "leaderboard system design",
+        "code judge architecture"
+      ],
       "courseSection": "Case Study-2 Leetcode Contest (2 lectures)",
       "brief": "Contest traffic spikes, sandboxed judge workers + queue, real-time leaderboard (sorted sets), ranking consistency, handling 100k concurrent submissions."
     },
@@ -61,7 +79,11 @@
       "slug": "design-facebook-news-feed-system-design-interview-guide",
       "workingTitle": "Design Facebook News Feed: System Design Interview Guide (2026)",
       "primaryKeyword": "facebook news feed system design",
-      "secondaryKeywords": ["design news feed interview", "fanout on write vs fanout on read", "feed ranking architecture"],
+      "secondaryKeywords": [
+        "design news feed interview",
+        "fanout on write vs fanout on read",
+        "feed ranking architecture"
+      ],
       "courseSection": "Case Study 3: Designing Facebook's News Feed (7 lectures)",
       "brief": "Feed publishing vs feed generation, fanout-on-write vs fanout-on-read, celebrity problem, feed cache, ranking basics. The classic interview question — target it hard."
     },
@@ -71,7 +93,11 @@
       "slug": "design-google-typeahead-autocomplete-system-design-interview",
       "workingTitle": "Design Google Typeahead (Autocomplete): System Design Interview (2026)",
       "primaryKeyword": "typeahead system design",
-      "secondaryKeywords": ["autocomplete system design", "design search suggestions", "trie data structure interview"],
+      "secondaryKeywords": [
+        "autocomplete system design",
+        "design search suggestions",
+        "trie data structure interview"
+      ],
       "courseSection": "Add on 1: Designing Google Typeahead (6 lectures)",
       "brief": "Prefix matching with tries, top-k suggestions, precomputation vs on-the-fly, sampling + offline aggregation pipeline, latency budget (<100ms), caching at every layer."
     },
@@ -81,7 +107,10 @@
       "slug": "system-design-interview-framework-step-by-step-2026",
       "workingTitle": "The System Design Interview Framework: A Step-by-Step Method (2026)",
       "primaryKeyword": "system design interview framework",
-      "secondaryKeywords": ["how to answer system design questions", "system design interview steps"],
+      "secondaryKeywords": [
+        "how to answer system design questions",
+        "system design interview steps"
+      ],
       "brief": "A time-boxed five-step framework covering requirements, estimation, APIs and data, high-level design, and bottleneck deep dives."
     },
     {
@@ -90,7 +119,11 @@
       "slug": "back-of-the-envelope-estimation-system-design-interview",
       "workingTitle": "Back-of-the-Envelope Estimation for System Design Interviews (2026)",
       "primaryKeyword": "back of the envelope estimation system design",
-      "secondaryKeywords": ["capacity estimation system design", "qps calculation interview", "system design estimation cheat sheet"],
+      "secondaryKeywords": [
+        "capacity estimation system design",
+        "qps calculation interview",
+        "system design estimation cheat sheet"
+      ],
       "brief": "Reusable capacity-estimation method with QPS, storage, bandwidth, cache sizing, and a complete URL shortener example."
     },
     {
@@ -99,7 +132,11 @@
       "slug": "system-design-interview-preparation-complete-guide-2026",
       "workingTitle": "System Design Interview Preparation: Complete Guide (2026)",
       "primaryKeyword": "system design interview preparation",
-      "secondaryKeywords": ["system design roadmap", "system design study plan", "system design interview checklist"]
+      "secondaryKeywords": [
+        "system design roadmap",
+        "system design study plan",
+        "system design interview checklist"
+      ]
     },
     {
       "order": 19,
@@ -107,7 +144,11 @@
       "slug": "cap-theorem-explained-system-design-interview",
       "workingTitle": "CAP Theorem Explained for System Design Interviews (2026)",
       "primaryKeyword": "cap theorem explained",
-      "secondaryKeywords": ["cap theorem interview", "consistency vs availability", "eventual consistency"]
+      "secondaryKeywords": [
+        "cap theorem interview",
+        "consistency vs availability",
+        "eventual consistency"
+      ]
     },
     {
       "order": 20,
@@ -115,7 +156,10 @@
       "slug": "sql-vs-nosql-system-design-interview",
       "workingTitle": "SQL vs NoSQL for System Design Interviews (2026)",
       "primaryKeyword": "sql vs nosql system design",
-      "secondaryKeywords": ["choose database interview", "when to use nosql"]
+      "secondaryKeywords": [
+        "choose database interview",
+        "when to use nosql"
+      ]
     },
     {
       "order": 21,
@@ -123,39 +167,55 @@
       "slug": "latency-vs-throughput-system-design",
       "workingTitle": "Latency vs Throughput in System Design (2026)",
       "primaryKeyword": "latency vs throughput system design",
-      "secondaryKeywords": ["p99 latency", "system throughput", "Little's Law system design"]
+      "secondaryKeywords": [
+        "p99 latency",
+        "system throughput",
+        "Little's Law system design"
+      ]
     },
     {
       "order": 22,
-      "status": "queued",
+      "status": "drafted",
       "slug": "content-delivery-network-cdn-explained-system-design",
       "workingTitle": "CDN Explained: How Content Delivery Networks Work (2026)",
       "primaryKeyword": "cdn explained",
-      "secondaryKeywords": ["content delivery network system design", "edge caching"]
+      "secondaryKeywords": [
+        "content delivery network system design",
+        "edge caching"
+      ]
     },
     {
       "order": 23,
-      "status": "queued",
+      "status": "drafted",
       "slug": "message-queues-explained-kafka-rabbitmq-system-design",
       "workingTitle": "Message Queues Explained: Async Processing in System Design (2026)",
       "primaryKeyword": "message queue system design",
-      "secondaryKeywords": ["kafka vs rabbitmq interview", "async processing architecture"]
+      "secondaryKeywords": [
+        "kafka vs rabbitmq interview",
+        "async processing architecture"
+      ]
     },
     {
       "order": 24,
-      "status": "queued",
+      "status": "drafted",
       "slug": "design-a-rate-limiter-system-design-interview-guide",
       "workingTitle": "Design a Rate Limiter: System Design Interview Guide (2026)",
       "primaryKeyword": "rate limiter system design",
-      "secondaryKeywords": ["token bucket vs sliding window", "api rate limiting"]
+      "secondaryKeywords": [
+        "token bucket vs sliding window",
+        "api rate limiting"
+      ]
     },
     {
       "order": 25,
-      "status": "queued",
+      "status": "drafted",
       "slug": "database-indexing-explained-system-design-interview",
       "workingTitle": "Database Indexing Explained: B-Trees, Trade-offs, and Interview Answers",
       "primaryKeyword": "database indexing explained",
-      "secondaryKeywords": ["b-tree index interview", "index trade-offs"]
+      "secondaryKeywords": [
+        "b-tree index interview",
+        "index trade-offs"
+      ]
     },
     {
       "order": 26,
@@ -163,7 +223,10 @@
       "slug": "websockets-vs-polling-real-time-communication-system-design",
       "workingTitle": "WebSockets vs Polling vs SSE: Real-Time Communication in System Design",
       "primaryKeyword": "websockets vs polling",
-      "secondaryKeywords": ["real time system design", "long polling interview"]
+      "secondaryKeywords": [
+        "real time system design",
+        "long polling interview"
+      ]
     },
     {
       "order": 27,
@@ -171,7 +234,10 @@
       "slug": "design-a-chat-system-whatsapp-system-design-interview",
       "workingTitle": "Design a Chat System like WhatsApp: System Design Interview (2026)",
       "primaryKeyword": "whatsapp system design",
-      "secondaryKeywords": ["design chat application interview", "message delivery guarantees"]
+      "secondaryKeywords": [
+        "design chat application interview",
+        "message delivery guarantees"
+      ]
     },
     {
       "order": 28,
@@ -179,7 +245,10 @@
       "slug": "design-instagram-photo-sharing-system-design-interview",
       "workingTitle": "Design Instagram: Photo Sharing System Design Interview (2026)",
       "primaryKeyword": "instagram system design",
-      "secondaryKeywords": ["design photo sharing service", "blob storage architecture"]
+      "secondaryKeywords": [
+        "design photo sharing service",
+        "blob storage architecture"
+      ]
     },
     {
       "order": 29,
@@ -187,7 +256,10 @@
       "slug": "design-youtube-video-streaming-system-design-interview",
       "workingTitle": "Design YouTube: Video Streaming System Design Interview (2026)",
       "primaryKeyword": "youtube system design",
-      "secondaryKeywords": ["video streaming architecture", "design video platform interview"]
+      "secondaryKeywords": [
+        "video streaming architecture",
+        "design video platform interview"
+      ]
     },
     {
       "order": 30,
@@ -195,7 +267,10 @@
       "slug": "design-uber-ride-sharing-system-design-interview",
       "workingTitle": "Design Uber: Ride-Sharing System Design Interview (2026)",
       "primaryKeyword": "uber system design",
-      "secondaryKeywords": ["geospatial index interview", "design ride sharing app"]
+      "secondaryKeywords": [
+        "geospatial index interview",
+        "design ride sharing app"
+      ]
     },
     {
       "order": 31,
@@ -203,7 +278,10 @@
       "slug": "design-a-web-crawler-system-design-interview-guide",
       "workingTitle": "Design a Web Crawler: System Design Interview Guide (2026)",
       "primaryKeyword": "web crawler system design",
-      "secondaryKeywords": ["design search engine crawler", "url frontier"]
+      "secondaryKeywords": [
+        "design search engine crawler",
+        "url frontier"
+      ]
     },
     {
       "order": 32,
@@ -211,7 +289,10 @@
       "slug": "design-a-notification-system-push-email-sms-system-design",
       "workingTitle": "Design a Notification System: Push, Email, SMS at Scale (2026)",
       "primaryKeyword": "notification system design",
-      "secondaryKeywords": ["push notification architecture", "design notification service interview"]
+      "secondaryKeywords": [
+        "push notification architecture",
+        "design notification service interview"
+      ]
     },
     {
       "order": 33,
@@ -219,22 +300,58 @@
       "slug": "idempotency-and-retries-distributed-systems-interview",
       "workingTitle": "Idempotency and Retries: Distributed Systems Interview Essentials",
       "primaryKeyword": "idempotency distributed systems",
-      "secondaryKeywords": ["idempotent api design", "retry storm"]
+      "secondaryKeywords": [
+        "idempotent api design",
+        "retry storm"
+      ]
     }
   ],
   "expansionBacklog": {
     "note": "Live tutorials 3-8 are thin (200-400 words) — expand each to 1300+ words per ARTICLE_SPEC. Expand via PUT /api/admin/blog-posts?id=<id> keeping slug/order.",
     "posts": [
-      {"id": 16, "order": 3, "slug": "system-design-fundamentals-introduction-to-scalable-architecture"},
-      {"id": 10, "order": 4, "slug": "scalability-patterns-horizontal-vs-vertical-scaling"},
-      {"id": 11, "order": 5, "slug": "load-balancing-distributing-traffic-across-servers"},
-      {"id": 12, "order": 6, "slug": "caching-strategies-improving-performance-with-smart-data-storage"},
-      {"id": 13, "order": 7, "slug": "database-design-replication-sharding-and-consistency"},
-      {"id": 14, "order": 8, "slug": "microservices-architecture-building-distributed-systems"}
+      {
+        "id": 16,
+        "order": 3,
+        "slug": "system-design-fundamentals-introduction-to-scalable-architecture"
+      },
+      {
+        "id": 10,
+        "order": 4,
+        "slug": "scalability-patterns-horizontal-vs-vertical-scaling"
+      },
+      {
+        "id": 11,
+        "order": 5,
+        "slug": "load-balancing-distributing-traffic-across-servers"
+      },
+      {
+        "id": 12,
+        "order": 6,
+        "slug": "caching-strategies-improving-performance-with-smart-data-storage"
+      },
+      {
+        "id": 13,
+        "order": 7,
+        "slug": "database-design-replication-sharding-and-consistency"
+      },
+      {
+        "id": 14,
+        "order": 8,
+        "slug": "microservices-architecture-building-distributed-systems"
+      }
     ]
   },
   "cleanupBacklog": {
     "note": "8 template placeholder posts (ids 1-8, categories Web Development/Design/Data Science) dilute topical authority. Recommend deleting or noindexing once System Design catalog is deep enough.",
-    "ids": [1, 2, 3, 4, 5, 6, 7, 8]
+    "ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ]
   }
 }

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite --host :: --port 3000",
-    "build": "vite build && node seo-pipeline/prerender.mjs && node seo-pipeline/validate-build.mjs",
+    "build": "node seo-pipeline/diagrams/generate.mjs && vite build && node seo-pipeline/prerender.mjs && node seo-pipeline/validate-build.mjs",
     "build:spa": "vite build",
     "preview": "vite preview --host :: --port 3000",
     "seo": "node seo-pipeline/seo.mjs",
@@ -21,6 +21,9 @@
     "seo:links": "node seo-pipeline/internal-links.mjs",
     "seo:indexnow": "node seo-pipeline/indexing/indexnow.mjs --new",
     "seo:backlinks": "node seo-pipeline/backlinks/monitor.mjs",
+    "seo:diagrams": "node seo-pipeline/diagrams/generate.mjs",
+    "seo:diagrams:check": "node seo-pipeline/diagrams/generate.mjs --check",
+    "seo:diagrams:inject": "node seo-pipeline/diagrams/inject.mjs",
     "lint": "eslint . --quiet",
     "lint:warn": "eslint ."
   },

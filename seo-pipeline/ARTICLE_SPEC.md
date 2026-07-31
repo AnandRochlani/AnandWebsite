@@ -57,6 +57,10 @@ covered in depth in my Udemy course <a href="https://www.udemy.com/course/system
 — 5.5 hours, rated 4.8★, built from real interview questions.</p>
 ```
 
+- **One original diagram.** Add a spec to `seo-pipeline/diagrams/specs.mjs` keyed by the
+  article slug, then `npm run seo:diagrams`. Do NOT hand-write `<figure>` markup into the
+  content — `npm run seo:diagrams:inject` inserts it (before the second `<h2>` by default)
+  and is idempotent. Alt text must be able to stand in for the image.
 - End with `<h3>Key Takeaways</h3>` + `<ul>` (3–5 bullets), then `<h2>Next Steps</h2>` + one
   paragraph teasing the next article in the series (link it if published).
 - **Never invent URLs**: no made-up YouTube links, no external references you are not sure
