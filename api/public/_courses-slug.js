@@ -1,4 +1,4 @@
-import handler from '../courses.js';
+import handler from './_courses.js';
 
 // REST-style alias for the existing query-string endpoint:
 //   GET /api/public/courses/:slug

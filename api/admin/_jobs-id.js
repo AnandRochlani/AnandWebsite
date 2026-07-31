@@ -1,5 +1,5 @@
-import { forwardJson } from '../../_jobsProxy.js';
-import { requireAdmin } from '../_requireAdmin.js';
+import { forwardJson } from '../_jobsProxy.js';
+import { requireAdmin } from './_requireAdmin.js';
 
 export default async function handler(req, res) {
   const user = await requireAdmin(req);

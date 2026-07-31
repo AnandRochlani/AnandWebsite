@@ -1,4 +1,4 @@
-import { forwardGetJson } from '../../_jobsProxy.js';
+import { forwardGetJson } from '../_jobsProxy.js';
 
 export default async function handler(req, res) {
   try {
@@ -9,13 +9,13 @@ export default async function handler(req, res) {
 
     const id = req.query?.id;
     if (id === undefined || id === null || String(id).trim() === '') {
-      res.status(400).json({ error: 'Missing job id' });
+      res.status(400).json({ error: 'Missing company id' });
       return;
     }
 
-    const { status, body } = await forwardGetJson(`/jobs/${encodeURIComponent(String(id))}`);
+    const { status, body } = await forwardGetJson(`/companies/${encodeURIComponent(String(id))}`);
     res.status(status).json(body);
   } catch (e) {
-    res.status(502).json({ error: e?.message || 'Job API proxy failed' });
+    res.status(502).json({ error: e?.message || 'Companies API proxy failed' });
   }
 }

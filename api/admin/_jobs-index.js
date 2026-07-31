@@ -1,5 +1,5 @@
-import { forwardJson } from '../../_jobsProxy.js';
-import { requireAdmin } from '../_requireAdmin.js';
+import { forwardJson } from '../_jobsProxy.js';
+import { requireAdmin } from './_requireAdmin.js';
 
 function normalizeSkills(value) {
   if (Array.isArray(value)) {

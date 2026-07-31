@@ -1,4 +1,4 @@
-import { forwardGetJson, vercelQueryToString } from '../../_jobsProxy.js';
+import { forwardGetJson, vercelQueryToString } from '../_jobsProxy.js';
 
 export default async function handler(req, res) {
   try {
@@ -8,9 +8,9 @@ export default async function handler(req, res) {
     }
 
     const qs = vercelQueryToString(req.query);
-    const { status, body } = await forwardGetJson('/companies', qs);
+    const { status, body } = await forwardGetJson('/jobs', qs);
     res.status(status).json(body);
   } catch (e) {
-    res.status(502).json({ error: e?.message || 'Companies API proxy failed' });
+    res.status(502).json({ error: e?.message || 'Job API proxy failed' });
   }
 }

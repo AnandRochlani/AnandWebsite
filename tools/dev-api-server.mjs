@@ -40,21 +40,35 @@ function walkApi(dir, prefix = '/api') {
     const base = entry.name.replace(/\.js$/, '');
     let routePath;
     let dynamicParam = null;
+    let catchAllParam = null;
     if (base === 'index') {
       routePath = prefix;
+    } else if (/^\[\.\.\..+\]$/.test(base)) {
+      // Vercel catch-all: [...route].js matches every path under prefix and
+      // exposes the segments as an array in req.query.<param>.
+      catchAllParam = base.slice(4, -1);
+      routePath = prefix + '/*';
     } else if (/^\[.+\]$/.test(base)) {
       dynamicParam = base.slice(1, -1);
       routePath = prefix + '/:' + dynamicParam;
     } else {
       routePath = prefix + '/' + base;
     }
-    out.push({ routePath, dynamicParam, file: full });
+    out.push({ routePath, dynamicParam, catchAllParam, file: full });
   }
   return out;
 }
 
 // Match a request URL against a route pattern. Returns { params } or null.
-function matchRoute(routePath, urlPath) {
+function matchRoute(routePath, urlPath, catchAllParam) {
+  if (routePath.endsWith('/*')) {
+    const prefix = routePath.slice(0, -2);
+    if (urlPath === prefix || !urlPath.startsWith(prefix + '/')) return null;
+    const rest = urlPath.slice(prefix.length + 1);
+    const segments = rest.split('/').filter(Boolean).map(decodeURIComponent);
+    if (!segments.length) return null;
+    return { params: { [catchAllParam || 'route']: segments } };
+  }
   if (!routePath.includes(':')) {
     return urlPath === routePath ? { params: {} } : null;
   }
@@ -115,8 +129,10 @@ function adaptRes(rawRes) {
 }
 
 const routes = walkApi(API_DIR).sort((a, b) => {
-  // Prefer non-dynamic routes first so /api/foo wins over /api/:id.
-  return (a.dynamicParam ? 1 : 0) - (b.dynamicParam ? 1 : 0);
+  // Prefer non-dynamic routes first so /api/foo wins over /api/:id,
+  // and catch-alls last so they only see what nothing else claimed.
+  const rank = (r) => (r.catchAllParam ? 2 : r.dynamicParam ? 1 : 0);
+  return rank(a) - rank(b);
 });
 console.log('[dev-api] mounted routes:');
 for (const r of routes) console.log('   ', r.routePath, '←', path.relative(ROOT, r.file));
@@ -137,7 +153,7 @@ const server = http.createServer(async (rawReq, rawRes) => {
   const url = new URL(rawReq.url, `http://localhost:${PORT}`);
   let matched = null;
   for (const r of routes) {
-    const m = matchRoute(r.routePath, url.pathname);
+    const m = matchRoute(r.routePath, url.pathname, r.catchAllParam);
     if (m) { matched = { route: r, params: m.params }; break; }
   }
   if (!matched) {
