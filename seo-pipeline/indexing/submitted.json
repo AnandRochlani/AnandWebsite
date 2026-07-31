@@ -1,0 +1,119 @@
+{
+  "host": "anandrochlani.com",
+  "endpoint": "https://api.indexnow.org/indexnow",
+  "entries": {
+    "https://anandrochlani.com/": {
+      "signature": "a8d2623067b0a522",
+      "lastmod": "2026-07-31",
+      "contentHash": null,
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/courses": {
+      "signature": "a8d2623067b0a522",
+      "lastmod": "2026-07-31",
+      "contentHash": null,
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog": {
+      "signature": "a8d2623067b0a522",
+      "lastmod": "2026-07-31",
+      "contentHash": null,
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/about": {
+      "signature": "a8d2623067b0a522",
+      "lastmod": "2026-07-31",
+      "contentHash": null,
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/jobs": {
+      "signature": "a8d2623067b0a522",
+      "lastmod": "2026-07-31",
+      "contentHash": null,
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/courses/system-design-fundamental": {
+      "signature": "a8d2623067b0a522",
+      "lastmod": "2026-07-31",
+      "contentHash": null,
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog/consistent-hashing-explained-system-design-interview-guide": {
+      "signature": "4869561b79d797a3",
+      "lastmod": "2026-07-31",
+      "contentHash": "f1eb9b9f31691566",
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog/master-slave-replication-database-architecture-explained": {
+      "signature": "77d351e97550c6d4",
+      "lastmod": "2026-07-31",
+      "contentHash": "a29ff4b3ae87ac6a",
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog/design-a-social-bookmarking-service-delicious-system-design-case-study": {
+      "signature": "8bf3a041463807bf",
+      "lastmod": "2026-07-31",
+      "contentHash": "5b378208280aa7a7",
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog/design-a-coding-contest-platform-leetcode-system-design-interview": {
+      "signature": "4178128131348554",
+      "lastmod": "2026-07-31",
+      "contentHash": "081b7fb7a0ab7fa2",
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog/design-facebook-news-feed-system-design-interview-guide": {
+      "signature": "fc0541ab9cb9e179",
+      "lastmod": "2026-07-31",
+      "contentHash": "e482b0192e6be038",
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog/design-google-typeahead-autocomplete-system-design-interview": {
+      "signature": "47ec8f7edd408a70",
+      "lastmod": "2026-07-31",
+      "contentHash": "6d65fa6acfd17e9e",
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog/system-design-interview-framework-step-by-step-2026": {
+      "signature": "4eea50acf8c36af3",
+      "lastmod": "2026-07-31",
+      "contentHash": "fab2d0361a671c9f",
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog/back-of-the-envelope-estimation-system-design-interview": {
+      "signature": "768922426849b324",
+      "lastmod": "2026-07-31",
+      "contentHash": "5846263d6eb9607e",
+      "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
+      "lastStatus": 202,
+      "submissions": 1
+    }
+  },
+  "updatedAt": "2026-07-31T05:16:00.776Z"
+}

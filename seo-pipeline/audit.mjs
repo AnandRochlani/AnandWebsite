@@ -439,7 +439,7 @@ function parseHtml(html) {
  * URL inventory
  * ------------------------------------------------------------------ */
 
-const STATIC_ROUTES = ['/', '/courses', '/blog', '/jobs'];
+const STATIC_ROUTES = ['/', '/courses', '/blog', '/about', '/jobs'];
 
 async function loadInventory(base) {
   const inventory = { posts: [], courses: [], apiErrors: [] };
@@ -452,7 +452,11 @@ async function loadInventory(base) {
   } else {
     try {
       const data = JSON.parse(postsRes.body);
-      inventory.posts = Array.isArray(data.posts) ? data.posts.filter((p) => p && p.slug) : [];
+      inventory.posts = Array.isArray(data.posts)
+        ? data.posts.filter(
+            (post) => post && post.slug && post.category === 'System Design'
+          )
+        : [];
     } catch (e) {
       inventory.apiErrors.push(`blog-posts JSON parse failed: ${e.message}`);
     }
@@ -1176,7 +1180,7 @@ async function main() {
   }
   if (inventory.posts.length) {
     add('PASS', 'API_OK',
-      `public API lists ${inventory.posts.length} blog posts and ${inventory.courses.length} courses`);
+      `public API exposes ${inventory.posts.length} indexable System Design posts and ${inventory.courses.length} courses`);
   }
 
   const allEntries = buildUrlList(base, inventory);
