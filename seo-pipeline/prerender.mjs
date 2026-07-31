@@ -218,6 +218,26 @@ const organization = {
   logo: { '@type': 'ImageObject', url: LOGO },
 };
 
+/**
+ * One author entity, referenced by @id from every article and defined in full on
+ * /about. Google can only credit experience/expertise to an author it can resolve;
+ * a bare `{"@type":"Person","name":"…"}` on each post is an unlinked string, so the
+ * profiles that prove the credential never attach to the articles.
+ */
+const authorPerson = {
+  '@type': 'Person',
+  '@id': `${CANONICAL_HOST}/about#person`,
+  name: AUTHOR,
+  url: `${CANONICAL_HOST}/about`,
+  jobTitle: 'Member of Technical Staff',
+  worksFor: { '@type': 'Organization', name: 'Salesforce' },
+  sameAs: [
+    'https://in.linkedin.com/in/anand-rochlani',
+    'https://www.youtube.com/@anandrochlani5226',
+    'https://www.udemy.com/user/anand-561/',
+  ],
+};
+
 const breadcrumb = (trail) => ({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -240,13 +260,53 @@ function articleSchema(post, canonical) {
     image: post.featuredImage || DEFAULT_OG,
     datePublished: isoDate(post.date),
     dateModified: isoDate(post.updatedAt || post.updated_at || post.date),
-    author: { '@type': 'Person', name: post.author || AUTHOR, url: CANONICAL_HOST },
+    author:
+      post.author && post.author !== AUTHOR
+        ? { '@type': 'Person', name: post.author }
+        : authorPerson,
     publisher: organization,
     articleSection: post.category || 'System Design',
     inLanguage: 'en-US',
     wordCount: body ? body.split(/\s+/).length : undefined,
     keywords: post.keywords || undefined,
     isAccessibleForFree: true,
+  };
+}
+
+/**
+ * Optional per-article video. Set a `video` object on the article JSON when the
+ * post embeds one of the lecture videos:
+ *
+ *   "video": {
+ *     "name": "Design a Parking Lot — Low-Level Design",
+ *     "description": "…",
+ *     "embedUrl": "https://www.youtube.com/embed/<id>",
+ *     "thumbnailUrl": "https://i.ytimg.com/vi/<id>/maxresdefault.jpg",
+ *     "uploadDate": "2026-08-08",
+ *     "duration": "PT8M32S"          // ISO 8601
+ *   }
+ *
+ * Google requires name, description, thumbnailUrl and uploadDate for a video rich
+ * result, plus embedUrl or contentUrl to actually play it. Anything missing here is
+ * omitted rather than faked — an incomplete VideoObject is ignored, an incorrect one
+ * is a structured-data error.
+ */
+function videoSchema(post) {
+  const v = post.video;
+  if (!v || !(v.embedUrl || v.contentUrl)) return null;
+  const thumbnailUrl = v.thumbnailUrl || post.featuredImage;
+  if (!thumbnailUrl) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: v.name || post.title,
+    description: v.description || metaDescription(post),
+    thumbnailUrl,
+    uploadDate: isoDate(v.uploadDate || post.date),
+    ...(v.duration ? { duration: v.duration } : {}),
+    ...(v.embedUrl ? { embedUrl: v.embedUrl } : {}),
+    ...(v.contentUrl ? { contentUrl: v.contentUrl } : {}),
+    publisher: organization,
   };
 }
 
@@ -451,10 +511,15 @@ async function main() {
       bundled.posts,
       (p.posts || []).filter((x) => x && x.slug),
       (post) => post.slug,
-      (bundledPost, livePost) =>
-        contentWordCount(bundledPost) > contentWordCount(livePost)
+      (bundledPost, livePost) => {
+        // The blog table has no column for these, so they exist only in the bundled
+        // article JSON and have to survive the merge in *both* branches — otherwise
+        // a post that is live in the database silently loses them.
+        const bundledOnly = bundledPost.video ? { video: bundledPost.video } : {};
+        return contentWordCount(bundledPost) > contentWordCount(livePost)
           ? {
               ...livePost,
+              ...bundledOnly,
               title: bundledPost.title,
               description: bundledPost.description,
               content: bundledPost.content,
@@ -462,7 +527,8 @@ async function main() {
               series: bundledPost.series,
               order: bundledPost.order,
             }
-          : livePost
+          : { ...livePost, ...bundledOnly };
+      }
     );
     courses = mergeByKey(
       bundled.courses,
@@ -582,20 +648,7 @@ async function main() {
         canonical: `${CANONICAL_HOST}/about`,
         type: 'website',
         jsonLd: [
-          {
-            '@context': 'https://schema.org',
-            '@type': 'Person',
-            '@id': `${CANONICAL_HOST}/about#person`,
-            name: AUTHOR,
-            url: `${CANONICAL_HOST}/about`,
-            jobTitle: 'Member of Technical Staff',
-            worksFor: { '@type': 'Organization', name: 'Salesforce' },
-            sameAs: [
-              'https://in.linkedin.com/in/anand-rochlani',
-              'https://www.youtube.com/@anandrochlani5226',
-              'https://www.udemy.com/user/anand-561/',
-            ],
-          },
+          { '@context': 'https://schema.org', ...authorPerson },
           breadcrumb([
             { name: 'Home', url: `${CANONICAL_HOST}/` },
             { name: 'About', url: `${CANONICAL_HOST}/about` },
@@ -748,7 +801,8 @@ async function main() {
               { name: 'Blog', url: `${CANONICAL_HOST}/blog` },
               { name: post.title, url: canonical },
             ]),
-          ],
+            videoSchema(post),
+          ].filter(Boolean),
         }),
         body: [staticHeader, postBody(post, posts), staticFooter].join('\n'),
       }),

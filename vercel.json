@@ -33,6 +33,12 @@
   ],
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.anandrochlani.com" }],
+      "destination": "https://anandrochlani.com/:path*",
+      "permanent": true
+    },
+    {
       "source": "/blog/17",
       "destination": "/blog/throughput-explained-a-beginners-guide-to-system-design-scale-2026",
       "permanent": true

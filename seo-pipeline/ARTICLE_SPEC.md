@@ -24,9 +24,26 @@ Rank for long-tail system-design interview keywords and funnel readers to the Ud
   "featuredImage": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
   "featured": false,
   "series": "System Design Tutorial",
-  "order": 10
+  "order": 10,
+
+  "video": {
+    "name": "Design a Parking Lot — Low-Level Design",
+    "description": "What the video covers, 1-2 sentences.",
+    "embedUrl": "https://www.youtube.com/embed/<id>",
+    "thumbnailUrl": "https://i.ytimg.com/vi/<id>/maxresdefault.jpg",
+    "uploadDate": "2026-08-08",
+    "duration": "PT8M32S"
+  }
 }
 ```
+
+**`video` is optional.** Add it only when the article actually embeds that lecture video
+in its `content` — a `VideoObject` describing a video the page does not show is a
+structured-data violation. When present, `prerender.mjs` emits a `VideoObject` block and
+the page becomes eligible for a video rich result. `embedUrl` (or `contentUrl`),
+`thumbnailUrl`, `name`, `description` and `uploadDate` are all required by Google;
+`prerender.mjs` skips the block rather than emitting an incomplete one. `duration` is
+ISO 8601 (`PT8M32S` = 8 min 32 s).
 
 ## Rules
 

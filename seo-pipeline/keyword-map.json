@@ -1,0 +1,173 @@
+{
+  "$comment": "90-day keyword map (Aug-Oct 2026). Companion to SEO_MASTER_PLAN_90_DAYS.md. Volumes are ESTIMATES: the attached Ahrefs plan rejects Keywords Explorer, so these come from SERP composition + category knowledge, not a metrics API. Verify in Google Keyword Planner (Week 1 Day 2) and overwrite `volumeEst` with `volumeActual`.",
+  "generated": "2026-07-31",
+  "baseline": {
+    "domainRating": 0,
+    "domainRatingSource": "Ahrefs public DR API, 2026-07-31",
+    "sitemapUrls": 37,
+    "liveArticles": 23,
+    "competitorDomainRating": {
+      "educative.io": 77,
+      "bytebytego.com": 72,
+      "tryexponent.com": 66,
+      "designgurus.io": 56,
+      "algomaster.io": 55,
+      "hellointerview.com": 52,
+      "systemdesign.one": 52,
+      "systemdesignschool.io": 51,
+      "interviewready.io": 41,
+      "codemia.io": 34
+    }
+  },
+  "difficultyLegend": {
+    "E": "DR-0 site can plausibly reach page 1 in 3-6 months",
+    "M": "page 1 in 6-12 months with links",
+    "H": "not before 12-18 months - do not target this quarter"
+  },
+  "effortSplit": {
+    "low-level-design": 0.4,
+    "system-design": 0.35,
+    "interview-meta": 0.2,
+    "coding-interview": 0.05
+  },
+  "clusters": {
+    "low-level-design": {
+      "pillar": "/low-level-design-interview-preparation",
+      "hub": "/lld-problems",
+      "series": "Low-Level Design Tutorial",
+      "course": {
+        "name": "Low-Level Design Masterclass",
+        "landingPage": "/courses/low-level-design",
+        "status": "landing page not built yet - Week 3"
+      },
+      "rationale": "Least consolidated SERP in the niche; 45-lesson course and 13 rendered lecture videos already exist; zero pages on the site target it today.",
+      "keywords": [
+        { "id": "C1", "keyword": "low level design interview questions", "volumeEst": [3000, 6000], "difficulty": "M", "intent": "informational", "type": "pillar", "week": 2 },
+        { "id": "C19", "keyword": "lld vs hld difference", "volumeEst": [1000, 2000], "difficulty": "E", "intent": "informational", "week": 2 },
+        { "id": "C3", "keyword": "design a parking lot system low level design", "volumeEst": [2000, 4000], "difficulty": "E", "intent": "informational", "week": 3, "hasVideo": true },
+        { "id": "C5", "keyword": "machine coding round preparation", "volumeEst": [800, 1500], "difficulty": "E", "intent": "informational", "week": 3 },
+        { "id": "C2", "keyword": "low level design interview preparation", "volumeEst": [1000, 2000], "difficulty": "E", "intent": "informational", "week": 3 },
+        { "id": "C7", "keyword": "solid principles explained with examples", "volumeEst": [8000, 15000], "difficulty": "M", "intent": "informational", "week": 4, "hasVideo": true },
+        { "id": "C12", "keyword": "design a vending machine low level design", "volumeEst": [700, 1500], "difficulty": "E", "intent": "informational", "week": 4, "hasVideo": true },
+        { "id": "C6", "keyword": "design patterns for interviews", "volumeEst": [1000, 3000], "difficulty": "M", "intent": "informational", "week": 5, "hasVideo": true },
+        { "id": "C8", "keyword": "strategy pattern real world example", "volumeEst": [1000, 2000], "difficulty": "E", "intent": "informational", "week": 6, "hasVideo": true },
+        { "id": "C4", "keyword": "design elevator system low level design", "volumeEst": [1000, 2000], "difficulty": "E", "intent": "informational", "week": 6, "hasVideo": true },
+        { "id": "C18", "keyword": "uml class diagram for interviews", "volumeEst": [800, 1500], "difficulty": "E", "intent": "informational", "week": 7 },
+        { "id": "C9", "keyword": "factory pattern vs abstract factory", "volumeEst": [1000, 2000], "difficulty": "E", "intent": "informational", "week": 8, "hasVideo": true },
+        { "id": "C15", "keyword": "design splitwise low level design", "volumeEst": [400, 900], "difficulty": "E", "intent": "informational", "week": 8 },
+        { "id": "C10", "keyword": "observer pattern explained java", "volumeEst": [1000, 2000], "difficulty": "E", "intent": "informational", "week": 9, "hasVideo": true },
+        { "id": "C13", "keyword": "design tic tac toe low level design", "volumeEst": [600, 1200], "difficulty": "E", "intent": "informational", "week": 10 },
+        { "id": "C20", "keyword": "how to approach a low level design interview", "volumeEst": [500, 1000], "difficulty": "E", "intent": "informational", "week": 10 },
+        { "id": "C14", "keyword": "design a library management system oops", "volumeEst": [500, 1000], "difficulty": "E", "intent": "informational", "week": 11 },
+        { "id": "C11", "keyword": "singleton pattern thread safe java", "volumeEst": [1000, 2000], "difficulty": "E", "intent": "informational", "week": 12, "hasVideo": true },
+        { "id": "C21", "keyword": "low level design roadmap", "volumeEst": [400, 900], "difficulty": "E", "intent": "informational", "week": 13 },
+        { "id": "C16", "keyword": "design an atm machine low level design", "volumeEst": [400, 800], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "C17", "keyword": "design snake and ladder game oop", "volumeEst": [300, 700], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "C22", "keyword": "concurrency in low level design interview", "volumeEst": [300, 600], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "C23", "keyword": "best low level design course", "volumeEst": [300, 700], "difficulty": "E", "intent": "commercial", "week": null, "backlog": true },
+        { "id": "C24", "keyword": "design bookmyshow low level design", "volumeEst": [500, 1000], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "C25", "keyword": "design a chess game object oriented design", "volumeEst": [400, 800], "difficulty": "E", "intent": "informational", "week": null, "backlog": true }
+      ]
+    },
+    "system-design": {
+      "pillar": "/blog/system-design-interview-preparation-complete-guide-2026",
+      "hub": "/system-design-case-studies",
+      "series": "System Design Tutorial",
+      "course": {
+        "name": "System Design Fundamentals for Interviews",
+        "udemyUrl": "https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73",
+        "landingPage": "/courses/system-design-fundamental"
+      },
+      "owned": [
+        "consistent hashing", "master slave replication", "cap theorem", "sql vs nosql",
+        "latency vs throughput", "load balancing", "caching strategies", "database sharding",
+        "microservices architecture", "cdn", "message queues", "rate limiter",
+        "database indexing", "url shortener", "social bookmarking system design",
+        "leetcode system design", "facebook news feed system design",
+        "google typeahead system design", "back of the envelope estimation",
+        "system design interview framework", "system design interview preparation"
+      ],
+      "keywords": [
+        { "id": "A1", "keyword": "websockets vs polling vs sse", "volumeEst": [2000, 4000], "difficulty": "E", "intent": "informational", "week": 5, "contentPlanOrder": 26 },
+        { "id": "A8", "keyword": "idempotency in distributed systems", "volumeEst": [1000, 2000], "difficulty": "E", "intent": "informational", "week": 7, "contentPlanOrder": 33 },
+        { "id": "A11", "keyword": "api gateway vs load balancer", "volumeEst": [2000, 4000], "difficulty": "E", "intent": "informational", "week": 9 },
+        { "id": "A9", "keyword": "database sharding vs partitioning", "volumeEst": [1000, 3000], "difficulty": "E", "intent": "informational", "week": 11 },
+        { "id": "A2", "keyword": "whatsapp system design", "volumeEst": [3000, 6000], "difficulty": "M", "intent": "informational", "week": null, "contentPlanOrder": 27, "backlog": true },
+        { "id": "A3", "keyword": "instagram system design", "volumeEst": [3000, 6000], "difficulty": "M", "intent": "informational", "week": null, "contentPlanOrder": 28, "backlog": true },
+        { "id": "A4", "keyword": "youtube system design", "volumeEst": [3000, 5000], "difficulty": "M", "intent": "informational", "week": null, "contentPlanOrder": 29, "backlog": true },
+        { "id": "A5", "keyword": "uber system design", "volumeEst": [4000, 8000], "difficulty": "M", "intent": "informational", "week": null, "contentPlanOrder": 30, "backlog": true },
+        { "id": "A6", "keyword": "web crawler system design", "volumeEst": [2000, 4000], "difficulty": "M", "intent": "informational", "week": null, "contentPlanOrder": 31, "backlog": true },
+        { "id": "A7", "keyword": "notification system design", "volumeEst": [2000, 3000], "difficulty": "E", "intent": "informational", "week": null, "contentPlanOrder": 32, "backlog": true },
+        { "id": "A10", "keyword": "eventual consistency vs strong consistency", "volumeEst": [1000, 2000], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "A12", "keyword": "read heavy vs write heavy system design", "volumeEst": [300, 800], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "A13", "keyword": "how to design for 1 million users", "volumeEst": [500, 1000], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "A14", "keyword": "single point of failure system design", "volumeEst": [400, 900], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "A15", "keyword": "bloom filter system design", "volumeEst": [800, 1500], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "A16", "keyword": "leader election distributed systems", "volumeEst": [700, 1500], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "A17", "keyword": "quorum in distributed systems", "volumeEst": [500, 1000], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "A18", "keyword": "design google docs collaborative editing", "volumeEst": [1000, 2000], "difficulty": "M", "intent": "informational", "week": null, "backlog": true },
+        { "id": "A19", "keyword": "design a payment system idempotency", "volumeEst": [800, 1500], "difficulty": "M", "intent": "informational", "week": null, "backlog": true },
+        { "id": "A20", "keyword": "design ticketmaster concurrency", "volumeEst": [600, 1200], "difficulty": "M", "intent": "informational", "week": null, "backlog": true }
+      ]
+    },
+    "interview-meta": {
+      "rationale": "Cheapest wins available to a DR-0 domain: low individual volume, high intent, few dedicated pages exist, and they interlink both pillars.",
+      "keywords": [
+        { "id": "D1", "keyword": "system design interview preparation 30 day plan", "volumeEst": [400, 900], "difficulty": "E", "intent": "informational", "week": 6 },
+        { "id": "D6", "keyword": "system design interview cheat sheet", "volumeEst": [1000, 3000], "difficulty": "E", "intent": "informational", "week": 8, "linkableAsset": true, "note": "gated PDF - builds the email list" },
+        { "id": "D4", "keyword": "system design interview mistakes to avoid", "volumeEst": [400, 800], "difficulty": "E", "intent": "informational", "week": 10 },
+        { "id": "D10", "keyword": "system design numbers every engineer should know", "volumeEst": [500, 1000], "difficulty": "E", "intent": "informational", "week": 12, "linkableAsset": true, "note": "prime AI-Overview citation bait - specific quotable figures" },
+        { "id": "D2", "keyword": "how much system design for sde 2", "volumeEst": [200, 500], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "D3", "keyword": "system design interview for 3 years experience", "volumeEst": [300, 700], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "D5", "keyword": "how to structure a 45 minute system design interview", "volumeEst": [200, 500], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "D7", "keyword": "best system design course udemy", "volumeEst": [300, 800], "difficulty": "E", "intent": "commercial", "week": null, "backlog": true, "note": "highest conversion keyword on the whole list" },
+        { "id": "D8", "keyword": "system design interview book vs course", "volumeEst": [200, 400], "difficulty": "E", "intent": "commercial", "week": null, "backlog": true },
+        { "id": "D9", "keyword": "is system design asked for freshers", "volumeEst": [300, 700], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "D11", "keyword": "system design interview questions for indian companies", "volumeEst": [300, 700], "difficulty": "E", "intent": "informational", "week": null, "backlog": true },
+        { "id": "D12", "keyword": "free system design resources", "volumeEst": [800, 2000], "difficulty": "E", "intent": "informational", "week": null, "backlog": true, "linkableAsset": true }
+      ]
+    },
+    "coding-interview": {
+      "rationale": "MAINTENANCE ONLY this quarter. Most contested SERPs in developer education (igotanoffer, educative, designgurus, interviewbit, geeksforgeeks), heaviest AI-Overview coverage, and no purchasable Amazon/Google course yet so the traffic cannot convert. Revisit Q1 2027.",
+      "keywords": [
+        { "id": "B1", "keyword": "amazon coding interview questions", "volumeEst": [8000, 15000], "difficulty": "H", "intent": "informational", "action": "refresh existing page only" },
+        { "id": "B2", "keyword": "google coding interview questions", "volumeEst": [6000, 12000], "difficulty": "H", "intent": "informational", "action": "refresh existing page only" },
+        { "id": "B4", "keyword": "leetcode patterns", "volumeEst": [10000, 20000], "difficulty": "H", "intent": "informational", "action": "existing page, do not expand" },
+        { "id": "B3", "keyword": "amazon sde 2 system design interview", "volumeEst": [500, 1000], "difficulty": "E", "intent": "informational", "week": 13, "note": "the one exception - bridges the coding cluster to the live System Design course" },
+        { "id": "B5a", "keyword": "sliding window pattern", "volumeEst": [3000, 8000], "difficulty": "H", "action": "HOLD - staged draft, do not publish this quarter" },
+        { "id": "B5b", "keyword": "two pointers pattern", "volumeEst": [3000, 8000], "difficulty": "H", "action": "HOLD - staged draft, do not publish this quarter" },
+        { "id": "B5c", "keyword": "binary search pattern", "volumeEst": [3000, 8000], "difficulty": "H", "action": "HOLD - queued, do not publish this quarter" },
+        { "id": "B5d", "keyword": "dynamic programming patterns", "volumeEst": [3000, 8000], "difficulty": "H", "action": "HOLD - queued, do not publish this quarter" },
+        { "id": "B5e", "keyword": "big o notation explained", "volumeEst": [5000, 12000], "difficulty": "H", "action": "HOLD - queued, do not publish this quarter" }
+      ]
+    }
+  },
+  "targets": {
+    "2026-08-31": { "indexedPages": 37, "impressions": 1500, "clicks": 40, "queriesPos5to20": 5, "referringDomains": 2, "domainRating": 3, "aiCitations": 0, "udemyCtaClicks": 10, "youtubeSubs": 50 },
+    "2026-09-30": { "indexedPages": 47, "impressions": 12000, "clicks": 140, "queriesPos5to20": 20, "referringDomains": 5, "domainRating": 7, "aiCitations": 2, "udemyCtaClicks": 40, "youtubeSubs": 200 },
+    "2026-10-31": { "indexedPages": 60, "impressions": 40000, "clicks": 320, "queriesPos5to20": 45, "referringDomains": 9, "domainRating": 10, "aiCitations": 5, "udemyCtaClicks": 90, "youtubeSubs": 500 }
+  },
+  "forecastAssumptions": {
+    "newPageTop10RateWithin1Year": 0.0174,
+    "top10PagesOlderThan3Years": 0.729,
+    "fastMoverDaysToTop10": [61, 182],
+    "aiOverviewCoverageInformationalQueries": 0.36,
+    "aiOverviewCtrDeclineInformational": 0.61,
+    "udemyInstructorShareViaReferralLink": 0.97,
+    "udemyInstructorShareWithoutReferralLink": 0.37,
+    "assumedCtaClickRate": 0.10,
+    "assumedUdemyPurchaseRate": 0.06,
+    "sources": [
+      "Ahrefs: How Long Does It Take to Rank in Google? And How Old Are Top Ranking Pages?",
+      "Seer Interactive / Neil Patel AI Overview CTR studies, 2026",
+      "Udemy support: Instructor revenue share; Promote your course with coupons and referral links"
+    ]
+  },
+  "decisionRules": [
+    "Any page with impressions but position 8-20 gets refreshed BEFORE any new page is written.",
+    "Any query with >200 impressions and no dedicated page becomes the next article, overriding this file.",
+    "Two pages competing for one query get merged and 301'd.",
+    "A cluster with zero impressions after 60 days stops being fed.",
+    "Cadence: 2 articles/week baseline, 3 only when the third is a low-level-design page."
+  ]
+}
