@@ -1,0 +1,90 @@
+name: SEO weekly
+
+# Monday 06:00 IST (00:30 UTC). This is the "you don't have to remember anything"
+# job: it pulls Search Console data, applies the decision rules from
+# SEO_MASTER_PLAN_90_DAYS.md §9, commits the report, and opens an issue with the
+# week's actual assignment.
+on:
+  schedule:
+    - cron: '30 0 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: seo-weekly
+  cancel-in-progress: false
+
+jobs:
+  cockpit:
+    runs-on: ubuntu-latest
+    # The `secrets` context is not available in step-level `if:`, so the key is
+    # promoted to job env once and the steps gate on that instead.
+    env:
+      GSC_KEY: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # Optional: with no key the cockpit still emits the week's assignment and
+      # exits 0. A missing secret is a setup gap, not a broken pipeline.
+      - name: Write GSC service-account key
+        if: env.GSC_KEY != ''
+        run: |
+          printf '%s' "$GSC_KEY" > seo-pipeline/.gsc-service-account.json
+          echo "GSC key written"
+
+      - name: Pull Search Console performance
+        if: env.GSC_KEY != ''
+        continue-on-error: true
+        run: node seo-pipeline/gsc.mjs performance 28
+
+      - name: Sitemap status in Search Console
+        if: env.GSC_KEY != ''
+        continue-on-error: true
+        run: node seo-pipeline/gsc.mjs status
+
+      - name: Live technical audit
+        continue-on-error: true
+        run: npm run seo:audit
+
+      - name: Submit changed URLs to IndexNow
+        continue-on-error: true
+        run: npm run seo:indexnow -- --yes
+
+      - name: Build the weekly cockpit report
+        run: node seo-pipeline/cockpit.mjs > /dev/null
+
+      - name: Remove the key before anything can commit it
+        if: always()
+        run: rm -f seo-pipeline/.gsc-service-account.json
+
+      - name: Commit reports
+        run: |
+          git config user.name  "seo-bot"
+          git config user.email "seo-bot@users.noreply.github.com"
+          git add seo-pipeline/reports || true
+          if git diff --staged --quiet; then
+            echo "No report changes."
+          else
+            git commit -m "chore(seo): weekly cockpit report [skip ci]"
+            git push
+          fi
+
+      - name: Open the weekly issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+          gh issue create \
+            --title "SEO week of $DATE" \
+            --body-file seo-pipeline/reports/weekly-latest.md \
+            --label seo || echo "Issue creation skipped (label or permission missing)."

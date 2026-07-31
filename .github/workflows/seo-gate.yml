@@ -1,0 +1,60 @@
+name: SEO gate
+
+# Runs on every push/PR that can affect what Google sees. This is the regression
+# net: it fails the build if an article drops below the depth minimum, a canonical
+# breaks, an internal link dies, a diagram goes stale, or metadata collides.
+#
+# Deliberately does NOT submit anything to search engines — the site is still
+# deploying while this runs, so submission belongs in the weekly job.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'seo-pipeline/**'
+      - 'public/**'
+      - 'api/**'
+      - 'vercel.json'
+      - 'package.json'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'seo-pipeline/**'
+      - 'public/**'
+      - 'api/**'
+      - 'vercel.json'
+      - 'package.json'
+  workflow_dispatch:
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Article QA (depth, metadata, links, CTA qualification)
+        run: npm run seo:qa
+
+      - name: Validators
+        run: node tools/test-validators.mjs
+
+      - name: Diagrams are current
+        run: npm run seo:diagrams:check
+
+      # Build runs diagram generation + prerender + validate-build, which is the
+      # real gate: 0 errors / 0 content warnings or the job fails.
+      - name: Build, prerender and validate
+        run: npm run build
+
+      - name: Internal link integrity
+        run: npm run seo:links

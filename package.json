@@ -25,7 +25,9 @@
     "seo:diagrams:check": "node seo-pipeline/diagrams/generate.mjs --check",
     "seo:diagrams:inject": "node seo-pipeline/diagrams/inject.mjs",
     "lint": "eslint . --quiet",
-    "lint:warn": "eslint ."
+    "lint:warn": "eslint .",
+    "seo:cockpit": "node seo-pipeline/cockpit.mjs",
+    "seo:gsc": "node seo-pipeline/gsc.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",

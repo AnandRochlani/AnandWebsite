@@ -184,16 +184,91 @@ async function cmdInspect(token, urls) {
   }
 }
 
+/**
+ * Search Analytics pull — the data the whole measurement loop runs on.
+ *
+ * Google reports on a 2-3 day delay, so the window ends 3 days ago rather than today;
+ * asking for "up to today" silently returns a partial final day and makes every
+ * week-over-week comparison wrong.
+ */
+async function cmdPerformance(token, args) {
+  const days = Number(args.find((a) => /^\d+$/.test(a))) || 28;
+  const end = new Date(Date.now() - 3 * 864e5);
+  const start = new Date(end.getTime() - (days - 1) * 864e5);
+  const iso = (d) => d.toISOString().slice(0, 10);
+
+  const query = async (dimensions) => {
+    const { res, json } = await gapi(
+      token,
+      `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(PROPERTY)}/searchAnalytics/query`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          startDate: iso(start),
+          endDate: iso(end),
+          dimensions,
+          rowLimit: 5000,
+          dataState: 'final',
+        }),
+      }
+    );
+    if (!res.ok) {
+      console.error(`Search Analytics [${dimensions.join('+')}] failed (${res.status}): ${json?.error?.message || ''}`);
+      if (res.status === 403) console.error('→ Is the service-account email added as a user on the GSC property?');
+      process.exit(1);
+    }
+    return (json.rows || []).map((r) => ({
+      keys: r.keys,
+      clicks: r.clicks,
+      impressions: r.impressions,
+      ctr: r.ctr,
+      position: r.position,
+    }));
+  };
+
+  const [totals, queries, pages, queryPage] = await Promise.all([
+    query([]),
+    query(['query']),
+    query(['page']),
+    query(['query', 'page']),
+  ]);
+
+  const report = {
+    property: PROPERTY,
+    generatedAt: new Date().toISOString(),
+    window: { startDate: iso(start), endDate: iso(end), days },
+    totals: totals[0] || { clicks: 0, impressions: 0, ctr: 0, position: 0 },
+    queries: queries.map((r) => ({ query: r.keys[0], ...r, keys: undefined })),
+    pages: pages.map((r) => ({ page: r.keys[0], ...r, keys: undefined })),
+    queryPage: queryPage.map((r) => ({ query: r.keys[0], page: r.keys[1], ...r, keys: undefined })),
+  };
+
+  const reportsDir = path.join(here, 'reports');
+  fs.mkdirSync(reportsDir, { recursive: true });
+  const dated = path.join(reportsDir, `performance-${iso(end)}.json`);
+  const latest = path.join(reportsDir, 'performance-latest.json');
+  const body = JSON.stringify(report, null, 2);
+  fs.writeFileSync(dated, body);
+  fs.writeFileSync(latest, body);
+
+  const t = report.totals;
+  console.log(`${iso(start)} → ${iso(end)} (${days}d)`);
+  console.log(`  clicks ${t.clicks}  impressions ${t.impressions}  avg position ${(t.position || 0).toFixed(1)}`);
+  console.log(`  ${report.queries.length} queries, ${report.pages.length} pages with data`);
+  console.log(`Report: ${path.relative(process.cwd(), dated)}`);
+}
+
 async function main() {
   const [cmd, ...rest] = process.argv.slice(2);
-  if (!['status', 'submit', 'inspect'].includes(cmd)) {
-    console.log('Usage: node seo-pipeline/gsc.mjs <status|submit|inspect> [urls...]');
+  if (!['status', 'submit', 'inspect', 'performance'].includes(cmd)) {
+    console.log('Usage: node seo-pipeline/gsc.mjs <status|submit|inspect|performance> [urls... | days]');
     process.exit(1);
   }
   const token = await getAccessToken();
   if (cmd === 'status') await cmdStatus(token);
   if (cmd === 'submit') await cmdSubmit(token);
   if (cmd === 'inspect') await cmdInspect(token, rest);
+  if (cmd === 'performance') await cmdPerformance(token, rest);
 }
 
 main().catch((e) => {
