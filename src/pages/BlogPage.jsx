@@ -17,7 +17,12 @@ const BlogPage = () => {
     let mounted = true;
     fetchBlogPosts()
       .then((posts) => {
-        if (mounted) setAllBlogPosts(Array.isArray(posts) ? posts : []);
+        if (mounted) {
+          const focusedPosts = Array.isArray(posts)
+            ? posts.filter((post) => post.category === 'System Design')
+            : [];
+          setAllBlogPosts(focusedPosts);
+        }
       })
       .catch(() => {
         if (mounted) setAllBlogPosts([]);
@@ -56,7 +61,10 @@ const BlogPage = () => {
   }, [selectedCategory, sortBy, allBlogPosts]);
 
   // Memoize featured post to prevent recalculation
-  const featuredPost = useMemo(() => allBlogPosts.find(post => post.featured), [allBlogPosts]);
+  const featuredPost = useMemo(
+    () => allBlogPosts.find((post) => post.featured) || allBlogPosts[0],
+    [allBlogPosts]
+  );
 
   // Lazy load images using Intersection Observer
   useEffect(() => {
@@ -157,7 +165,7 @@ const BlogPage = () => {
         canonical="https://anandrochlani.com/blog"
       />
 
-      <div className="min-h-screen bg-white pt-24 pb-16">
+      <div className="min-h-screen bg-white pt-28 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <motion.div
@@ -166,12 +174,12 @@ const BlogPage = () => {
             transition={{ duration: 0.4 }}
             className="text-center mb-12"
           >
-            <p className="text-brand font-semibold text-sm uppercase tracking-wider mb-3">Insights & Tutorials</p>
+            <p className="text-brand font-semibold text-sm uppercase tracking-wider mb-3">Free System Design tutorials</p>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight mb-4">
-              Our Blog
+              Learn one concept at a time
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Insights, tutorials, and best practices from industry experts
+              Follow the series in order for a guided path, or jump straight to the topic you need today.
             </p>
           </motion.div>
 
@@ -185,6 +193,7 @@ const BlogPage = () => {
             >
               <Link 
                 to={`/blog/${featuredPost.slug || featuredPost.id}`}
+                className="block rounded-2xl focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4"
                 onMouseEnter={() => {
                   // Prefetch featured post detail route on hover
                   const link = document.createElement('link');
@@ -208,7 +217,7 @@ const BlogPage = () => {
                         srcSet={generateImageSrcset(featuredPost.featuredImage)}
                         sizes="(max-width: 768px) 100vw, 50vw"
                         alt={featuredPost.title}
-                        fetchpriority="high"
+                        fetchPriority="high"
                         loading="eager"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
@@ -233,7 +242,7 @@ const BlogPage = () => {
                         {highlightDescription(featuredPost.description)}
                       </p>
                       </div>
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-wrap items-center justify-between gap-4">
                         <div className="flex items-center space-x-4 text-sm text-slate-500">
                           <span className="flex items-center">
                             <Calendar className="w-4 h-4 mr-1" />
@@ -244,7 +253,10 @@ const BlogPage = () => {
                             {featuredPost.readTime}
                           </span>
                         </div>
-                        <ArrowRight className="w-6 h-6 text-brand group-hover:translate-x-2 transition-transform duration-300" />
+                        <span className="inline-flex items-center font-semibold text-brand">
+                          Read the article
+                          <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -258,7 +270,7 @@ const BlogPage = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="mb-8 flex flex-col sm:flex-row items-center justify-between gap-4"
+            className="mb-8 flex flex-col items-stretch justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center"
           >
             <div className="flex items-center space-x-2">
               <Filter className="w-5 h-5 text-brand" />
@@ -267,7 +279,8 @@ const BlogPage = () => {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 ${
+                    aria-pressed={selectedCategory === category}
+                    className={`min-h-11 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 ${
                       selectedCategory === category
                         ? 'bg-brand text-white shadow-sm'
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -281,7 +294,8 @@ const BlogPage = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 rounded-lg bg-white border border-slate-300 text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand transition-all duration-300"
+              aria-label="Sort articles"
+              className="min-h-11 px-4 py-2 rounded-lg bg-white border border-slate-300 text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand transition-all duration-300"
             >
               <option value="date" className="bg-white">Latest First</option>
             </select>
@@ -297,6 +311,7 @@ const BlogPage = () => {
               >
                 <Link 
                   to={`/blog/${post.slug || post.id}`}
+                  className="block h-full rounded-2xl focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4"
                   onMouseEnter={() => {
                     // Prefetch blog post detail route on hover
                     const link = document.createElement('link');
@@ -306,7 +321,7 @@ const BlogPage = () => {
                     document.head.appendChild(link);
                   }}
                 >
-                  <div className="group h-full rounded-2xl overflow-hidden bg-white border border-slate-200 hover:border-brand shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                  <div className="group flex h-full flex-col rounded-2xl overflow-hidden bg-white border border-slate-200 hover:border-brand shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                     <div className="relative h-48 overflow-hidden bg-slate-100">
                       <img
                         data-lazy={optimizeImageUrl(post.featuredImage, 250, 30)}
@@ -314,7 +329,7 @@ const BlogPage = () => {
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         alt={post.title}
                         loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       <div className="absolute top-4 left-4 right-4 flex items-center justify-between gap-2">
                         <span className="px-3 py-1 rounded-full bg-white/95 text-brand text-xs font-semibold shadow-sm">
@@ -327,7 +342,7 @@ const BlogPage = () => {
                         )}
                       </div>
                     </div>
-                    <div className="p-6">
+                    <div className="flex flex-1 flex-col p-6">
                       <div className="flex items-start justify-between gap-2 mb-3">
                         <h3 className="text-xl font-bold text-slate-900 group-hover:text-brand transition-colors duration-300 line-clamp-2 flex-1">
                           {post.title}
@@ -341,7 +356,7 @@ const BlogPage = () => {
                           {highlightDescription(post.description)}
                         </p>
                       </div>
-                      <div className="flex items-center justify-between text-xs text-slate-500">
+                      <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-4 text-xs text-slate-500">
                         <span className="flex items-center">
                           <Calendar className="w-3 h-3 mr-1" />
                           {new Date(post.date).toLocaleDateString()}

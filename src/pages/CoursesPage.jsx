@@ -106,15 +106,15 @@ const CoursesPage = () => {
   return (
       <>
       <SEOHead
-        title="Online Courses - Web Dev & Design"
-        description="Browse expert-led courses in web development, design, and data science. Learn React, JavaScript, Node.js, UI/UX, and machine learning with hands-on projects."
-        keywords="web development courses, react courses, javascript courses, node.js courses, UI/UX design courses, data science courses, machine learning courses, programming courses, online coding courses"
+        title="System Design Courses for Interview Prep"
+        description="Build system design skills with practical, interview-focused courses covering scalability, caching, databases, load balancing, and distributed systems."
+        keywords="system design course, system design interview course, scalability, caching, load balancing, distributed systems"
         canonical="https://anandrochlani.com/courses"
       />
 
       <div className="min-h-screen bg-white pb-16">
         {/* Header band */}
-        <div className="bg-gradient-to-b from-ink to-ink-2 pt-32 pb-14">
+        <div className="bg-gradient-to-b from-ink to-ink-2 pt-32 pb-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -123,10 +123,10 @@ const CoursesPage = () => {
               className="text-center"
             >
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-4">
-                Explore <span className="text-lavender">Courses</span>
+                Build interview-ready <span className="text-lavender">System Design skills</span>
               </h1>
               <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto">
-                Master new skills with comprehensive courses taught by industry experts
+                Compare the learning paths, review exactly what is included, and choose the course that fits your current level.
               </p>
             </motion.div>
           </div>
@@ -187,7 +187,7 @@ const CoursesPage = () => {
                               srcSet={generateImageSrcset(course.featuredImage)}
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                               alt={course.name}
-                              fetchpriority={index < 3 ? "high" : "auto"}
+                              fetchPriority={index < 3 ? "high" : "auto"}
                               loading={index < 3 ? "eager" : "lazy"}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />
@@ -234,14 +234,15 @@ const CoursesPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mb-8 space-y-4"
+            className="mb-8 space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6"
           >
             {/* Search Bar */}
             <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
               <input
                 type="text"
-                placeholder="Search courses..."
+                placeholder="Search by topic, level, or instructor"
+                aria-label="Search courses"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-all duration-300"
@@ -258,7 +259,8 @@ const CoursesPage = () => {
                     <button
                       key={category}
                       onClick={() => setSelectedCategory(category)}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                      aria-pressed={selectedCategory === category}
+                      className={`min-h-11 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                         selectedCategory === category
                           ? 'bg-brand text-white shadow-sm'
                           : 'bg-white border border-slate-300 text-slate-600 hover:border-brand hover:text-brand'
@@ -278,7 +280,8 @@ const CoursesPage = () => {
                     <button
                       key={level}
                       onClick={() => setSelectedLevel(level)}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                      aria-pressed={selectedLevel === level}
+                      className={`min-h-11 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                         selectedLevel === level
                           ? 'bg-brand text-white shadow-sm'
                           : 'bg-white border border-slate-300 text-slate-600 hover:border-brand hover:text-brand'
@@ -317,7 +320,7 @@ const CoursesPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Link to={`/courses/${course.slug || slugify(course.name)}`}>
+                <Link to={`/courses/${course.slug || slugify(course.name)}`} className="block h-full rounded-2xl focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4">
                   <div className={cardClassName}>
                     <div className="relative h-48 overflow-hidden">
                       <img

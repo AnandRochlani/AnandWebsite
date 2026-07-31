@@ -84,14 +84,14 @@ export default function JobDetailPage() {
               ? seoPlain.slice(0, 155) + (seoPlain.length > 155 ? '…' : '')
               : `${job.title} at ${job.company_name || 'company'}`
           }
-          canonical={`https://anandrochlani.com/jobs/${job.id}`}
           type="website"
+          noindex
         />
       ) : (
         <SEOHead
           title="Job details"
           description="View role details and apply on the employer site."
-          canonical={`https://anandrochlani.com/jobs/${id || ''}`}
+          noindex
         />
       )}
 

@@ -8,6 +8,21 @@ import { useToast } from '@/components/ui/use-toast';
 import SEOHead from '@/components/SEOHead';
 import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
 
+const articleMetaDescription = (post) => {
+  const description = String(post?.description || '').replace(/\s+/g, ' ').trim();
+  if (description.length >= 70) return description;
+
+  const excerpt = String(post?.content || '')
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return `${description}${description && excerpt ? ' ' : ''}${excerpt}`.trim();
+};
+
 const BlogPostDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -177,13 +192,15 @@ const BlogPostDetail = () => {
     <>
       <SEOHead 
         title={post.title}
-        description={post.description}
+        description={articleMetaDescription(post)}
         image={post.featuredImage}
-        keywords={`react hooks, useState hook, useEffect hook, custom hooks, functional components, learn how to use react hooks, react hooks tutorial, ${post.category}, ${post.title}, tech blog, programming tutorial, web development, ${post.author}`}
+        keywords={`${post.title}, ${post.category}, system design tutorial, system design interview preparation`}
         canonical={`https://anandrochlani.com/blog/${post.slug}`}
         type="article"
         authorName={post.author}
         publishedTime={post.date}
+        modifiedTime={post.updatedAt || post.updated_at || post.date}
+        noindex={post.category !== 'System Design'}
       />
 
       <div className="min-h-screen bg-white pt-24 pb-16">
@@ -191,7 +208,7 @@ const BlogPostDetail = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Left Sidebar - Related Blogs */}
             {sidebarPosts.length > 1 && (
-              <aside className="lg:w-80 flex-shrink-0 order-2 lg:order-1">
+              <aside aria-label="Article series" className="lg:w-80 flex-shrink-0 order-2 lg:order-1">
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -199,9 +216,10 @@ const BlogPostDetail = () => {
                   className="lg:sticky lg:top-24"
                 >
                   <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
-                    <h3 className="text-xl font-bold text-slate-900 mb-4">
-                      {post.series ? post.series : `${post.category} Articles`}
+                    <h3 className="text-xl font-bold text-slate-900 mb-1">
+                      {post.series ? 'Continue the series' : `${post.category} Articles`}
                     </h3>
+                    {post.series && <p className="mb-4 text-sm text-slate-500">{post.series}</p>}
                     <div className="space-y-2 max-h-[60vh] lg:max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
                       {sidebarPosts.map((sidebarPost) => {
                         const isActive = sidebarPost.id === post.id;
@@ -248,7 +266,7 @@ const BlogPostDetail = () => {
             )}
 
             {/* Main Content */}
-            <article className="flex-1 max-w-4xl order-1 lg:order-2">
+            <article className="min-w-0 flex-1 max-w-4xl order-1 lg:order-2">
           {/* Back Button */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -259,29 +277,11 @@ const BlogPostDetail = () => {
             <Button
               onClick={() => navigate('/blog', { replace: true })}
               variant="outline"
-              className="bg-white border-slate-300 text-slate-700 hover:border-brand hover:text-brand"
+              className="min-h-11 bg-white border-slate-300 text-slate-700 hover:border-brand hover:text-brand"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               All Articles
             </Button>
-          </motion.div>
-
-          {/* Featured Image */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="relative h-96 rounded-2xl overflow-hidden mb-8 border border-slate-200 shadow-sm"
-          >
-            <img
-              src={optimizeImageUrl(post.featuredImage, 600, 35)}
-              srcSet={generateImageSrcset(post.featuredImage)}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
-              alt={post.title}
-              loading="eager"
-              fetchpriority="high"
-              className="w-full h-full object-cover"
-            />
           </motion.div>
 
           {/* Post Header */}
@@ -297,6 +297,7 @@ const BlogPostDetail = () => {
             <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
               {post.title}
             </h1>
+            <p className="mb-6 max-w-3xl text-lg leading-relaxed text-slate-600">{post.description}</p>
             <div className="flex flex-wrap items-center gap-6 text-slate-500 mb-6">
               <span className="flex items-center">
                 <Calendar className="w-4 h-4 mr-2" />
@@ -314,7 +315,7 @@ const BlogPostDetail = () => {
             </div>
 
             {/* Share Buttons */}
-            <div className="flex items-center space-x-2">
+            <div className="hidden items-center space-x-2">
               <span className="text-slate-500 text-sm mr-2">Share:</span>
               <button
                 onClick={() => handleShare('Facebook')}
@@ -345,6 +346,24 @@ const BlogPostDetail = () => {
                 <Share2 className="w-5 h-5" />
               </button>
             </div>
+          </motion.div>
+
+          {/* Featured Image */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative h-56 sm:h-80 lg:h-96 rounded-2xl overflow-hidden mb-10 border border-slate-200 shadow-sm"
+          >
+            <img
+              src={optimizeImageUrl(post.featuredImage, 600, 35)}
+              srcSet={generateImageSrcset(post.featuredImage)}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+              alt={post.title}
+              loading="eager"
+              fetchPriority="high"
+              className="w-full h-full object-cover"
+            />
           </motion.div>
 
           {/* Post Content */}
@@ -449,7 +468,7 @@ const BlogPostDetail = () => {
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
                           alt={relatedPost.title}
                           loading="lazy"
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
                       <div className="p-4">

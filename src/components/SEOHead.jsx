@@ -1,6 +1,21 @@
 import React, { useEffect, useMemo, useContext } from 'react';
 import { SiteSettingsContext } from '@/context/SiteSettingsContext';
 
+const truncateAtWord = (value, maxLength) => {
+  const text = String(value || '').replace(/\s+/g, ' ').trim();
+  if (text.length <= maxLength) return text;
+  const slice = text.slice(0, Math.max(1, maxLength - 1));
+  const lastSpace = slice.lastIndexOf(' ');
+  return `${(lastSpace > maxLength * 0.6 ? slice.slice(0, lastSpace) : slice).trim()}…`;
+};
+
+const buildTitle = (title, siteName) => {
+  const raw = String(title || '').trim();
+  if (raw.includes(siteName)) return truncateAtWord(raw, 60);
+  const suffix = ` | ${siteName}`;
+  return `${truncateAtWord(raw, 60 - suffix.length)}${suffix}`;
+};
+
 const SEOHead = ({
   title,
   description,
@@ -83,12 +98,11 @@ const SEOHead = ({
     fullUrl = currentUrl || siteUrl;
   }
   // Only append brand name if title doesn't already contain it
-  const fullTitle = title
-    ? (title.includes(siteName) ? title : `${title} | ${siteName}`)
-    : defaultTitle;
-  const fullDescription = description || defaultDescription;
+  const fullTitle = title ? buildTitle(title, siteName) : truncateAtWord(defaultTitle, 60);
+  const fullDescription = truncateAtWord(description || defaultDescription, 160);
   const fullKeywords = keywords || defaultKeywords;
   const isArticle = type === 'article';
+  const ogType = isArticle ? 'article' : 'website';
 
   const schemaJson = useMemo(() => {
     const schema = isArticle
@@ -121,12 +135,36 @@ const SEOHead = ({
             }
           }
         }
-      : {
+      : fullUrl === siteUrl || fullUrl === `${siteUrl}/`
+        ? {
           "@context": "https://schema.org",
           "@type": "WebSite",
+          "@id": `${siteUrl}/#website`,
+          "name": siteName,
+          "description": fullDescription,
+          "url": siteUrl,
+          "publisher": {
+            "@type": "Organization",
+            "name": siteName,
+            "logo": {
+              "@type": "ImageObject",
+              "url": logoUrl
+            }
+          }
+        }
+        : {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": fullUrl,
+          "url": fullUrl,
           "name": fullTitle,
           "description": fullDescription,
-          "url": fullUrl,
+          "isPartOf": {
+            "@type": "WebSite",
+            "@id": `${siteUrl}/#website`,
+            "name": siteName,
+            "url": siteUrl
+          },
           "publisher": {
             "@type": "Organization",
             "name": siteName,
@@ -138,7 +176,7 @@ const SEOHead = ({
         };
 
     return JSON.stringify(schema);
-  }, [authorName, fullDescription, fullTitle, fullUrl, isArticle, logoUrl, modifiedTime, publishedTime, resolvedImage, siteName]);
+  }, [authorName, fullDescription, fullTitle, fullUrl, isArticle, logoUrl, modifiedTime, publishedTime, resolvedImage, siteName, siteUrl]);
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -168,6 +206,19 @@ const SEOHead = ({
       el.setAttribute('href', href);
     };
 
+    const removeMeta = ({ name, property }) => {
+      const selector = name
+        ? `meta[name="${CSS.escape(name)}"]`
+        : `meta[property="${CSS.escape(property)}"]`;
+      document.head.querySelectorAll(selector).forEach((el) => el.remove());
+    };
+
+    const removeLink = (rel) => {
+      document.head
+        .querySelectorAll(`link[rel="${CSS.escape(rel)}"]`)
+        .forEach((el) => el.remove());
+    };
+
     const ensureJsonLd = ({ id, json }) => {
       let el = document.getElementById(id);
       if (!el) {
@@ -190,13 +241,16 @@ const SEOHead = ({
         : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
     });
     if (fullKeywords) ensureMeta({ name: 'keywords', content: fullKeywords });
+    else removeMeta({ name: 'keywords' });
 
-    // Canonical
-    ensureLink({ rel: 'canonical', href: fullUrl });
+    // A noindex page should not simultaneously claim to be the canonical version.
+    if (noindex) removeLink('canonical');
+    else ensureLink({ rel: 'canonical', href: fullUrl });
 
     // Open Graph
-    ensureMeta({ property: 'og:type', content: type });
-    ensureMeta({ property: 'og:url', content: fullUrl });
+    ensureMeta({ property: 'og:type', content: ogType });
+    if (noindex) removeMeta({ property: 'og:url' });
+    else ensureMeta({ property: 'og:url', content: fullUrl });
     ensureMeta({ property: 'og:title', content: fullTitle });
     ensureMeta({ property: 'og:description', content: fullDescription });
     ensureMeta({ property: 'og:image', content: resolvedImage });
@@ -205,21 +259,46 @@ const SEOHead = ({
 
     // Twitter
     ensureMeta({ name: 'twitter:card', content: 'summary_large_image' });
-    ensureMeta({ name: 'twitter:url', content: fullUrl });
+    if (noindex) removeMeta({ name: 'twitter:url' });
+    else ensureMeta({ name: 'twitter:url', content: fullUrl });
     ensureMeta({ name: 'twitter:title', content: fullTitle });
     ensureMeta({ name: 'twitter:description', content: fullDescription });
     ensureMeta({ name: 'twitter:image', content: resolvedImage });
 
-    // Structured data. Prerendered pages (seo-pipeline/prerender.mjs) already ship a
-    // richer, route-specific JSON-LD graph — BlogPosting plus BreadcrumbList — so only
-    // inject this thinner client-side fallback when no prerendered block is present.
-    const prerenderedLd = document.head.querySelector(
-      'script[type="application/ld+json"][id^="ld-prerender-"]'
-    );
-    if (!prerenderedLd) {
-      ensureJsonLd({ id: 'seohead-jsonld', json: schemaJson });
+    if (isArticle) {
+      if (publishedTime) ensureMeta({ property: 'article:published_time', content: publishedTime });
+      else removeMeta({ property: 'article:published_time' });
+      if (modifiedTime) ensureMeta({ property: 'article:modified_time', content: modifiedTime });
+      else removeMeta({ property: 'article:modified_time' });
+      if (authorName) ensureMeta({ property: 'article:author', content: authorName });
+      else removeMeta({ property: 'article:author' });
+    } else {
+      removeMeta({ property: 'article:published_time' });
+      removeMeta({ property: 'article:modified_time' });
+      removeMeta({ property: 'article:author' });
     }
-  }, [fullDescription, fullTitle, fullUrl, fullKeywords, noindex, resolvedImage, schemaJson, siteName, type]);
+
+    // Keep rich prerendered JSON-LD on the route it belongs to, but remove it
+    // after client-side navigation so stale Home/Article schema cannot leak into
+    // the next page. The client fallback is then injected for the new route.
+    const prerenderedBlocks = Array.from(
+      document.head.querySelectorAll('script[type="application/ld+json"][id^="ld-prerender-"]')
+    );
+    const matchingPrerender = prerenderedBlocks.filter(
+      (el) => el.getAttribute('data-page-url') === fullUrl
+    );
+    prerenderedBlocks
+      .filter((el) => !matchingPrerender.includes(el))
+      .forEach((el) => el.remove());
+
+    if (noindex) {
+      document.getElementById('seohead-jsonld')?.remove();
+    } else if (!matchingPrerender.length) {
+      ensureJsonLd({ id: 'seohead-jsonld', json: schemaJson });
+    } else {
+      document.getElementById('seohead-jsonld')?.remove();
+    }
+  }, [authorName, fullDescription, fullTitle, fullUrl, fullKeywords, isArticle, modifiedTime, noindex, ogType, publishedTime, resolvedImage, schemaJson, siteName]);
 
   return null;
 };

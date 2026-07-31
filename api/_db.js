@@ -176,6 +176,40 @@ export async function seedIfEmpty(sql) {
     }
   }
 
+  // Correct the original placeholder catalog row without overwriting a course
+  // that an administrator has since replaced.
+  const systemDesignCourse = defaultCourses.find((course) => course.id === 9);
+  if (systemDesignCourse) {
+    await sql`
+      UPDATE courses
+      SET
+        name = ${systemDesignCourse.name},
+        slug = ${systemDesignCourse.slug},
+        description = ${systemDesignCourse.description},
+        instructor = ${systemDesignCourse.instructor},
+        instructor_bio = ${systemDesignCourse.instructorBio},
+        level = ${systemDesignCourse.level},
+        duration = ${systemDesignCourse.duration},
+        price = ${systemDesignCourse.price},
+        category = ${systemDesignCourse.category},
+        rating = ${systemDesignCourse.rating},
+        students_enrolled = ${String(systemDesignCourse.studentsEnrolled)},
+        featured_image = ${systemDesignCourse.featuredImage},
+        featured = ${Boolean(systemDesignCourse.featured)},
+        is_external = ${Boolean(systemDesignCourse.isExternal)},
+        external_url = ${systemDesignCourse.externalUrl},
+        modules = ${JSON.stringify(systemDesignCourse.modules)},
+        learning_outcomes = ${JSON.stringify(systemDesignCourse.learningOutcomes)},
+        updated_at = NOW()
+      WHERE id = 9
+        AND (
+          name = 'System Design Fundamental'
+          OR students_enrolled = '50K+'
+          OR duration = 'Self-paced (Udemy)'
+        );
+    `;
+  }
+
   // Backfill: any rows still missing a slug (e.g. existing prod rows from
   // before this migration) get one derived from name. We do this row-by-row
   // because each slug must be unique; on a collision we suffix the id.
@@ -232,6 +266,45 @@ export async function seedIfEmpty(sql) {
     }
   }
 
+  // Publish the reviewed System Design editorial queue idempotently. New slugs
+  // are inserted on deploy; existing rows are left untouched so admin edits are
+  // never overwritten by a later cold start.
+  for (const p of seededBlogPosts.filter(
+    (post) => post.category === 'System Design' && Number(post.order) >= 10
+  )) {
+    await sql`
+      INSERT INTO blog_posts (
+        slug,
+        title,
+        description,
+        content,
+        author,
+        date,
+        category,
+        read_time,
+        featured_image,
+        featured,
+        series,
+        series_order
+      )
+      VALUES (
+        ${p.slug},
+        ${p.title},
+        ${p.description || null},
+        ${p.content || null},
+        ${p.author || null},
+        ${p.date || null},
+        ${p.category || null},
+        ${p.readTime || null},
+        ${p.featuredImage || null},
+        ${Boolean(p.featured)},
+        ${p.series || null},
+        ${typeof p.order === 'number' ? p.order : null}
+      )
+      ON CONFLICT (slug) DO NOTHING;
+    `;
+  }
+
   // Ensure sequences are aligned even after explicit-id seeding.
   // Without this, subsequent inserts can reuse an existing id and violate the pkey.
   await sql`
@@ -265,6 +338,42 @@ export async function seedIfEmpty(sql) {
         ${typeof s.sortOrder === 'number' ? s.sortOrder : 0}
       )
       ON CONFLICT (key) DO NOTHING;
+    `;
+  }
+
+  // Migrate only the generic defaults originally shipped with the site.
+  // Custom values entered in the admin remain untouched.
+  const focusedDefaults = [
+    ['home.hero.badge', 'Learn. Build. Grow.', 'System Design, made practical'],
+    ['home.hero.title.line1', 'Courses &', 'Understand System Design.'],
+    ['home.hero.title.line2', 'Tech Blog', 'Explain it with confidence.'],
+    [
+      'home.hero.subtitle',
+      'Explore courses and blog posts on web development, design, data science, and system design—written for real-world learning and interview prep.',
+      'Build strong fundamentals with a clear tutorial path, practical architecture case studies, and an interview-focused course.'
+    ],
+    ['home.hero.cta_primary.label', 'View Courses', 'Start with free tutorials'],
+    ['home.hero.cta_primary.path', '/courses', '/blog'],
+    ['home.hero.cta_secondary.label', 'View Blog', 'Explore the course'],
+    ['home.hero.cta_secondary.path', '/blog', '/courses'],
+    ['home.feature.blog.title', 'Insightful Blog Posts', 'Learn one concept at a time'],
+    [
+      'home.feature.blog.description',
+      'Stay updated with the latest trends, tutorials, and best practices in technology and design. Our insightful blog posts cover cutting-edge topics in web development, UI/UX design, and data science to help you stay ahead in your career.',
+      'Follow the free System Design tutorial series from latency and throughput through databases, caching, and complete case studies.'
+    ],
+    ['home.feature.courses.title', 'Curated Courses', 'Learn with a guided course'],
+    [
+      'home.feature.courses.description',
+      'Learn with structured courses across Web Development, Design, Data Science, and System Design—built to help you ship projects and level up fast.',
+      'Use a structured curriculum when you want a focused path, practical explanations, and preparation you can revisit before interviews.'
+    ]
+  ];
+  for (const [key, legacyValue, nextValue] of focusedDefaults) {
+    await sql`
+      UPDATE site_settings
+      SET value = ${JSON.stringify(nextValue)}, updated_at = NOW()
+      WHERE key = ${key} AND value = ${JSON.stringify(legacyValue)};
     `;
   }
 }
@@ -361,4 +470,3 @@ export function toBlogPostDto(row) {
     order: row.series_order !== null && row.series_order !== undefined ? Number(row.series_order) : undefined,
   };
 }
-

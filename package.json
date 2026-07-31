@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "private": true,
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.16.0"
   },
   "scripts": {
     "dev": "vite --host :: --port 3000",
-    "build": "vite build && node seo-pipeline/prerender.mjs",
+    "build": "vite build && node seo-pipeline/prerender.mjs && node seo-pipeline/validate-build.mjs",
     "build:spa": "vite build",
     "preview": "vite preview --host :: --port 3000",
     "seo": "node seo-pipeline/seo.mjs",
@@ -17,6 +17,7 @@
     "seo:sitemap": "node seo-pipeline/generate-sitemap.mjs",
     "seo:audit": "node seo-pipeline/audit.mjs",
     "seo:qa": "node seo-pipeline/qa.mjs",
+    "seo:validate": "node seo-pipeline/validate-build.mjs",
     "seo:links": "node seo-pipeline/internal-links.mjs",
     "seo:indexnow": "node seo-pipeline/indexing/indexnow.mjs --new",
     "seo:backlinks": "node seo-pipeline/backlinks/monitor.mjs",

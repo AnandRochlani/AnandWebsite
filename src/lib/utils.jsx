@@ -122,7 +122,7 @@ export function highlightDescription(text) {
 		}
 		// Add highlighted match
 		parts.push(
-			<span key={`highlight-${keyCounter++}`} className="font-bold text-purple-300 group-hover:text-purple-200">
+			<span key={`highlight-${keyCounter++}`} className="font-bold text-brand group-hover:text-brand-dark">
 				{match[0]}
 			</span>
 		);

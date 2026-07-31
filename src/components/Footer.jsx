@@ -17,15 +17,14 @@ const ICON_MAP = {
 const FALLBACK_SOCIAL = [
   { icon: 'Youtube', href: 'https://www.youtube.com/@anandrochlani5226', label: 'YouTube', external: true },
   { icon: 'Linkedin', href: 'https://in.linkedin.com/in/anand-rochlani', label: 'LinkedIn', external: true },
-  { icon: 'Github', href: '#', label: 'GitHub', external: false },
-  { icon: 'Twitter', href: '#', label: 'Twitter', external: false },
-  { icon: 'Mail', href: '#', label: 'Email', external: false },
+  { icon: 'Mail', href: 'mailto:contact@anandrochlani.com', label: 'Email', external: false },
 ];
 
 const FALLBACK_QUICK_LINKS = [
   { name: 'Home', path: '/' },
   { name: 'Courses', path: '/courses' },
   { name: 'Blog', path: '/blog' },
+  { name: 'About', path: '/about' },
   { name: 'Jobs', path: '/jobs' },
   { name: 'Saved Items', path: '/saved-courses' },
 ];
@@ -36,17 +35,18 @@ const Footer = () => {
   const brandName = get('footer.brand_name', 'AnandRochlani');
   const tagline = get(
     'footer.tagline',
-    'Courses and blog posts on web development, design, data science, and system design.'
+    'System design tutorials, interview case studies, and practical courses for software engineers.'
   );
   const copyright = get(
     'footer.copyright',
-    '© 2026 AnandRochlani. All rights reserved. Built with React and TailwindCSS.'
+    '© 2026 AnandRochlani. Practical System Design learning for software engineers.'
   );
   const quickLinksRaw = get('footer.quick_links', FALLBACK_QUICK_LINKS);
   const socialLinksRaw = get('social.links', FALLBACK_SOCIAL);
 
   const quickLinks = Array.isArray(quickLinksRaw) ? quickLinksRaw : FALLBACK_QUICK_LINKS;
-  const socialLinks = Array.isArray(socialLinksRaw) ? socialLinksRaw : FALLBACK_SOCIAL;
+  const socialLinks = (Array.isArray(socialLinksRaw) ? socialLinksRaw : FALLBACK_SOCIAL)
+    .filter((social) => sanitizeHref(social?.href, '#') !== '#');
 
   return (
     <footer className="bg-ink border-t border-white/10">
@@ -75,7 +75,7 @@ const Footer = () => {
                 <li key={link.path || link.name}>
                   <Link
                     to={sanitizePath(link.path, '/')}
-                    className="text-slate-400 hover:text-white transition-colors duration-300 text-sm"
+                    className="inline-flex min-h-11 items-center text-slate-400 hover:text-white transition-colors duration-300 text-sm"
                   >
                     {link.name}
                   </Link>
@@ -86,7 +86,8 @@ const Footer = () => {
 
           {/* Social Links */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Connect</h3>
+            <h3 className="text-white font-semibold mb-2">Connect</h3>
+            <p className="mb-4 text-sm text-slate-400">Questions, feedback, or course support.</p>
             <div className="flex space-x-3">
               {socialLinks.map((social) => {
                 const Icon = ICON_MAP[social.icon] || Mail;
@@ -99,7 +100,7 @@ const Footer = () => {
                     aria-label={social.label}
                     target={isExternal ? '_blank' : undefined}
                     rel={isExternal ? 'noopener noreferrer' : undefined}
-                    className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-lavender transition-all duration-300 hover:scale-110"
+                    className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-lavender transition-colors duration-300"
                   >
                     <Icon className="w-5 h-5" />
                   </a>
@@ -110,12 +111,12 @@ const Footer = () => {
 
           {/* Featured course */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Top Course</h3>
+            <h3 className="text-white font-semibold mb-4">Guided Learning</h3>
             <a
               href="https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73"
               target="_blank"
-              rel="noopener noreferrer"
-              className="block rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition-colors duration-300"
+              rel="sponsored noopener noreferrer"
+              className="block rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-lavender focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             >
               <p className="text-white text-sm font-semibold leading-snug">
                 System Design Fundamentals for Interviews

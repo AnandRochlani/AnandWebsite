@@ -21,12 +21,13 @@ const AdminPage = lazy(() => import('@/pages/AdminPage'));
 const AdminLoginPage = lazy(() => import('@/pages/AdminLoginPage'));
 const JobsPage = lazy(() => import('@/pages/JobsPage'));
 const JobDetailPage = lazy(() => import('@/pages/JobDetailPage'));
+const AboutPage = lazy(() => import('@/pages/AboutPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 // Loading fallback component
 const PageLoader = () => (
-  <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-    <Loader2 className="w-10 h-10 text-purple-500 animate-spin" />
+  <div className="min-h-screen bg-white flex items-center justify-center" role="status" aria-label="Loading page">
+    <Loader2 className="w-10 h-10 text-brand animate-spin" />
   </div>
 );
 
@@ -37,33 +38,36 @@ function App() {
         <AdminProvider>
           <SiteSettingsProvider>
             <SavedCoursesProvider>
-              <div className="min-h-screen bg-slate-900">
+              <div className="min-h-screen bg-white">
                 <Navigation />
-                <Suspense fallback={<PageLoader />}>
-                  <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/courses" element={<CoursesPage />} />
-                    <Route path="/courses/:slugOrId" element={<CourseDetail />} />
-                    {/* Legacy Services URLs (redirect to courses) */}
-                    <Route path="/services" element={<Navigate to="/courses" replace />} />
-                    <Route path="/services/:id" element={<Navigate to="/courses" replace />} />
-                    <Route path="/blog" element={<BlogPage />} />
-                    <Route path="/blog/:slug" element={<BlogPostDetail />} />
-                    <Route path="/jobs" element={<JobsPage />} />
-                    <Route path="/jobs/:id" element={<JobDetailPage />} />
-                    <Route path="/saved-courses" element={<SavedCoursesPage />} />
-                    <Route path="/admin/login" element={<AdminLoginPage />} />
-                    <Route
-                      path="/admin"
-                      element={
-                        <ProtectedRoute>
-                          <AdminPage />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route path="*" element={<NotFoundPage />} />
-                  </Routes>
-                </Suspense>
+                <main id="main-content" tabIndex="-1" className="outline-none">
+                  <Suspense fallback={<PageLoader />}>
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/courses" element={<CoursesPage />} />
+                      <Route path="/courses/:slugOrId" element={<CourseDetail />} />
+                      {/* Legacy Services URLs (redirect to courses) */}
+                      <Route path="/services" element={<Navigate to="/courses" replace />} />
+                      <Route path="/services/:id" element={<Navigate to="/courses" replace />} />
+                      <Route path="/blog" element={<BlogPage />} />
+                      <Route path="/blog/:slug" element={<BlogPostDetail />} />
+                      <Route path="/about" element={<AboutPage />} />
+                      <Route path="/jobs" element={<JobsPage />} />
+                      <Route path="/jobs/:id" element={<JobDetailPage />} />
+                      <Route path="/saved-courses" element={<SavedCoursesPage />} />
+                      <Route path="/admin/login" element={<AdminLoginPage />} />
+                      <Route
+                        path="/admin"
+                        element={
+                          <ProtectedRoute>
+                            <AdminPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route path="*" element={<NotFoundPage />} />
+                    </Routes>
+                  </Suspense>
+                </main>
                 <Footer />
                 <Toaster />
               </div>

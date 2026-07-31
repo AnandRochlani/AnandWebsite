@@ -1,15 +1,33 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "functions": {
+    "api/public/[...route].js": {
+      "includeFiles": "seo-pipeline/articles/*.json"
+    },
+    "api/admin/[...route].js": {
+      "includeFiles": "seo-pipeline/articles/*.json"
+    }
+  },
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "source": "/api/public/:route*",
+      "destination": "/api/public/[...route]"
     },
     {
-      "source": "/assets/(.*)",
-      "destination": "/assets/$1"
+      "source": "/api/admin/:route*",
+      "destination": "/api/admin/[...route]"
     },
     {
-      "source": "/(.*)",
+      "source": "/admin/:path*",
+      "destination": "/app-shell.html"
+    },
+    {
+      "source": "/saved-courses",
+      "destination": "/app-shell.html"
+    },
+    {
+      "source": "/jobs/:id",
       "destination": "/app-shell.html"
     }
   ],

@@ -34,15 +34,15 @@ const SaveButton = ({ courseId, className, showText = false, onSave }) => {
           className={cn(
             "w-5 h-5 transition-colors duration-300",
             saved
-              ? "fill-pink-500 text-pink-500"
-              : "text-white group-hover:text-pink-400"
+              ? "fill-brand text-brand"
+              : "text-white group-hover:text-lavender"
           )}
         />
       </motion.div>
       {showText && (
         <span className={cn(
           "ml-2 font-medium transition-colors duration-300",
-          saved ? "text-pink-500" : "text-white group-hover:text-pink-400"
+          saved ? "text-brand" : "text-white group-hover:text-lavender"
         )}>
           {saved ? "Saved" : "Save Course"}
         </span>

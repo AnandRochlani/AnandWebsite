@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">AnandRochlani System Design Tutorials and Courses</title>
+  <desc id="desc">Social sharing card for system design interview tutorials and courses.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="0.55" stop-color="#111827"/>
+      <stop offset="1" stop-color="#312E81"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="76" y1="80" x2="1110" y2="550" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#818CF8"/>
+      <stop offset="1" stop-color="#5553FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#background)"/>
+  <circle cx="1080" cy="80" r="210" fill="#5553FF" opacity=".13"/>
+  <circle cx="1020" cy="590" r="280" fill="#818CF8" opacity=".09"/>
+  <path d="M760 154h238M760 246h312M760 338h270M760 430h330" stroke="#A5B4FC" stroke-width="10" stroke-linecap="round" opacity=".35"/>
+  <circle cx="760" cy="154" r="18" fill="#818CF8"/>
+  <circle cx="760" cy="246" r="18" fill="#6D68FF"/>
+  <circle cx="760" cy="338" r="18" fill="#5553FF"/>
+  <circle cx="760" cy="430" r="18" fill="#4338CA"/>
+  <rect x="74" y="72" width="72" height="72" rx="18" fill="url(#accent)"/>
+  <text x="110" y="123" text-anchor="middle" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700">AR</text>
+  <text x="166" y="120" fill="#E2E8F0" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700">AnandRochlani</text>
+  <text x="74" y="250" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="70" font-weight="800">System Design</text>
+  <text x="74" y="332" fill="#C7D2FE" font-family="Arial, Helvetica, sans-serif" font-size="70" font-weight="800">Tutorials &amp; Courses</text>
+  <text x="78" y="410" fill="#CBD5E1" font-family="Arial, Helvetica, sans-serif" font-size="29">Interview-ready fundamentals, trade-offs,</text>
+  <text x="78" y="450" fill="#CBD5E1" font-family="Arial, Helvetica, sans-serif" font-size="29">and practical architecture case studies.</text>
+  <rect x="74" y="510" width="405" height="4" rx="2" fill="url(#accent)"/>
+</svg>

@@ -9,6 +9,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { slugify } from '../src/lib/slug.js';
+import { getAllBlogPosts } from '../src/data/blogPosts.js';
+import { defaultCourses } from '../src/data/courses.js';
 
 const SITE = (process.env.SITE_URL || 'https://anandrochlani.com').replace(/\/$/, '');
 const CANONICAL = 'https://anandrochlani.com'; // apex only — www is not attached in Vercel
@@ -30,21 +32,46 @@ function url(loc, lastmod, changefreq, priority) {
 }
 
 async function main() {
-  const [postsRes, coursesRes] = await Promise.all([
-    fetch(`${SITE}/api/public/blog-posts`),
-    fetch(`${SITE}/api/public/courses`),
-  ]);
-  if (!postsRes.ok || !coursesRes.ok) {
-    throw new Error(`API fetch failed: posts ${postsRes.status}, courses ${coursesRes.status}`);
+  let posts;
+  let courses;
+  try {
+    const [postsRes, coursesRes] = await Promise.all([
+      fetch(`${SITE}/api/public/blog-posts`),
+      fetch(`${SITE}/api/public/courses`),
+    ]);
+    if (!postsRes.ok || !coursesRes.ok) {
+      throw new Error(`API fetch failed: posts ${postsRes.status}, courses ${coursesRes.status}`);
+    }
+    const postsType = postsRes.headers.get('content-type') || '';
+    const coursesType = coursesRes.headers.get('content-type') || '';
+    if (!postsType.includes('application/json') || !coursesType.includes('application/json')) {
+      throw new Error(`API returned non-JSON content: posts ${postsType}, courses ${coursesType}`);
+    }
+    posts = (await postsRes.json()).posts || [];
+    courses = (await coursesRes.json()).courses || [];
+  } catch (error) {
+    posts = getAllBlogPosts();
+    courses = defaultCourses;
+    console.warn(
+      `Live content unavailable (${error.message}); generating from ${posts.length} bundled posts and ${courses.length} bundled courses.`
+    );
   }
-  const posts = (await postsRes.json()).posts || [];
-  const courses = (await coursesRes.json()).courses || [];
+
+  posts = posts.filter((post) => post.category === 'System Design');
+  posts.sort((a, b) => {
+    const aSystem = a.category === 'System Design' ? 0 : 1;
+    const bSystem = b.category === 'System Design' ? 0 : 1;
+    if (aSystem !== bSystem) return aSystem - bSystem;
+    if (aSystem === 0) return (a.order ?? 999) - (b.order ?? 999);
+    return new Date(b.date || 0) - new Date(a.date || 0);
+  });
 
   const today = iso();
   const entries = [
     url(`${CANONICAL}/`, today, 'weekly', '1.0'),
     url(`${CANONICAL}/courses`, today, 'weekly', '0.9'),
     url(`${CANONICAL}/blog`, today, 'daily', '0.9'),
+    url(`${CANONICAL}/about`, today, 'monthly', '0.7'),
     url(`${CANONICAL}/jobs`, today, 'daily', '0.5'),
   ];
 

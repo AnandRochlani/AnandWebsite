@@ -26,7 +26,7 @@ export const defaultSiteSettings = [
   // ── Hero (HomePage) ─────────────────────────────────────────────
   {
     key: 'home.hero.badge',
-    value: 'Learn. Build. Grow.',
+    value: 'System Design, made practical',
     category: 'hero',
     type: 'text',
     label: 'Hero badge text',
@@ -34,7 +34,7 @@ export const defaultSiteSettings = [
   },
   {
     key: 'home.hero.title.line1',
-    value: 'Courses &',
+    value: 'Understand System Design.',
     category: 'hero',
     type: 'text',
     label: 'Hero title — line 1',
@@ -42,16 +42,16 @@ export const defaultSiteSettings = [
   },
   {
     key: 'home.hero.title.line2',
-    value: 'Tech Blog',
+    value: 'Explain it with confidence.',
     category: 'hero',
     type: 'text',
-    label: 'Hero title — line 2 (gradient)',
+    label: 'Hero title — line 2 (accent)',
     sortOrder: 30,
   },
   {
     key: 'home.hero.subtitle',
     value:
-      'Explore courses and blog posts on web development, design, data science, and system design—written for real-world learning and interview prep.',
+      'Build strong fundamentals with a clear tutorial path, practical architecture case studies, and an interview-focused course.',
     category: 'hero',
     type: 'textarea',
     label: 'Hero subtitle',
@@ -67,7 +67,7 @@ export const defaultSiteSettings = [
   },
   {
     key: 'home.hero.cta_primary.label',
-    value: 'View Courses',
+    value: 'Start with free tutorials',
     category: 'hero',
     type: 'text',
     label: 'Primary CTA label',
@@ -75,7 +75,7 @@ export const defaultSiteSettings = [
   },
   {
     key: 'home.hero.cta_primary.path',
-    value: '/courses',
+    value: '/blog',
     category: 'hero',
     type: 'text',
     label: 'Primary CTA path',
@@ -83,7 +83,7 @@ export const defaultSiteSettings = [
   },
   {
     key: 'home.hero.cta_secondary.label',
-    value: 'View Blog',
+    value: 'Explore the course',
     category: 'hero',
     type: 'text',
     label: 'Secondary CTA label',
@@ -91,7 +91,7 @@ export const defaultSiteSettings = [
   },
   {
     key: 'home.hero.cta_secondary.path',
-    value: '/blog',
+    value: '/courses',
     category: 'hero',
     type: 'text',
     label: 'Secondary CTA path',
@@ -101,7 +101,7 @@ export const defaultSiteSettings = [
   // ── Feature cards (HomePage) ────────────────────────────────────
   {
     key: 'home.feature.blog.title',
-    value: 'Insightful Blog Posts',
+    value: 'Learn one concept at a time',
     category: 'features',
     type: 'text',
     label: 'Blog feature card — title',
@@ -110,7 +110,7 @@ export const defaultSiteSettings = [
   {
     key: 'home.feature.blog.description',
     value:
-      "Stay updated with the latest trends, tutorials, and best practices in technology and design. Our insightful blog posts cover cutting-edge topics in web development, UI/UX design, and data science to help you stay ahead in your career.",
+      'Follow the free System Design tutorial series from latency and throughput through databases, caching, and complete case studies.',
     category: 'features',
     type: 'textarea',
     label: 'Blog feature card — description',
@@ -118,7 +118,7 @@ export const defaultSiteSettings = [
   },
   {
     key: 'home.feature.courses.title',
-    value: 'Curated Courses',
+    value: 'Learn with a guided course',
     category: 'features',
     type: 'text',
     label: 'Courses feature card — title',
@@ -127,7 +127,7 @@ export const defaultSiteSettings = [
   {
     key: 'home.feature.courses.description',
     value:
-      'Learn with structured courses across Web Development, Design, Data Science, and System Design—built to help you ship projects and level up fast.',
+      'Use a structured curriculum when you want a focused path, practical explanations, and preparation you can revisit before interviews.',
     category: 'features',
     type: 'textarea',
     label: 'Courses feature card — description',
@@ -146,7 +146,7 @@ export const defaultSiteSettings = [
   {
     key: 'footer.tagline',
     value:
-      'Courses and blog posts on web development, design, data science, and system design.',
+      'System design tutorials, interview case studies, and practical courses for software engineers.',
     category: 'footer',
     type: 'textarea',
     label: 'Footer tagline',
@@ -154,7 +154,7 @@ export const defaultSiteSettings = [
   },
   {
     key: 'footer.copyright',
-    value: '© 2026 AnandRochlani. All rights reserved. Built with React and TailwindCSS.',
+    value: '© 2026 AnandRochlani. Practical System Design learning for software engineers.',
     category: 'footer',
     type: 'text',
     label: 'Copyright line',
@@ -166,6 +166,7 @@ export const defaultSiteSettings = [
       { name: 'Home', path: '/' },
       { name: 'Courses', path: '/courses' },
       { name: 'Blog', path: '/blog' },
+      { name: 'About', path: '/about' },
       { name: 'Jobs', path: '/jobs' },
       { name: 'Saved Items', path: '/saved-courses' },
     ],
@@ -181,9 +182,7 @@ export const defaultSiteSettings = [
     value: [
       { icon: 'Youtube', href: 'https://www.youtube.com/@anandrochlani5226', label: 'YouTube', external: true },
       { icon: 'Linkedin', href: 'https://in.linkedin.com/in/anand-rochlani', label: 'LinkedIn', external: true },
-      { icon: 'Github', href: '#', label: 'GitHub', external: false },
-      { icon: 'Twitter', href: '#', label: 'Twitter', external: false },
-      { icon: 'Mail', href: '#', label: 'Email', external: false },
+      { icon: 'Mail', href: 'mailto:contact@anandrochlani.com', label: 'Email', external: false },
     ],
     category: 'social',
     type: 'json',
@@ -230,7 +229,7 @@ export const defaultSiteSettings = [
   {
     key: 'seo.default_keywords',
     value:
-      'online courses, web development, react, javascript, UI/UX design, data science, system design, programming tutorials, tech blog',
+      'system design, system design interview, distributed systems, scalability, caching, load balancing, software architecture',
     category: 'seo',
     type: 'textarea',
     label: 'Default meta keywords',

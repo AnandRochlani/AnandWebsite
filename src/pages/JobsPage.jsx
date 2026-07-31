@@ -252,7 +252,7 @@ export default function JobsPage() {
   return (
     <>
       <SEOHead
-        title="Job openings"
+        title="Software Engineering Jobs"
         description="Browse curated job openings from leading technology companies. Roles are with third-party employers; apply on their official sites."
         keywords="tech jobs, software engineer jobs, developer careers, remote jobs, job board"
         canonical="https://anandrochlani.com/jobs"

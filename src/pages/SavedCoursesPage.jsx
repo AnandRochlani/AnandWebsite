@@ -31,7 +31,7 @@ const SavedCoursesPage = () => {
       <SEOHead
         title="My Courses"
         description="View and manage your saved courses. Access your personal learning wishlist and continue your learning journey."
-        canonical="https://anandrochlani.com/saved-courses"
+        noindex
       />
 
       <div className="min-h-screen bg-white pt-24 pb-16">

@@ -5,13 +5,8 @@
 User-agent: *
 Allow: /
 
-# Admin surfaces — no search value, keep them out of the index.
-Disallow: /admin
-Disallow: /admin/
-Disallow: /admin/login
-
-# Personalised / stateful pages — thin and user-specific.
-Disallow: /saved-courses
+# Admin and personalised pages emit noindex. They remain crawlable so search
+# engines can see that directive and remove any previously indexed copies.
 
 # Never index raw API responses as pages.
 Disallow: /api/

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">AnandRochlani logo</title>
+  <desc id="desc">The letters AR on a purple rounded square.</desc>
+  <defs>
+    <linearGradient id="bg" x1="64" y1="32" x2="448" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6C63FF"/>
+      <stop offset="1" stop-color="#4338CA"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <path d="M105 365 205 135h50l100 230h-61l-20-50H183l-20 50h-58Zm98-102h51l-25-65-26 65Z" fill="#fff"/>
+  <path d="M303 135h58c57 0 91 29 91 77 0 32-17 57-47 69l54 84h-66l-45-73h-1v73h-44V135Zm44 52v56h12c28 0 43-9 43-28 0-19-14-28-43-28h-12Z" fill="#E0E7FF"/>
+</svg>

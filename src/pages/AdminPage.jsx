@@ -616,8 +616,7 @@ const AdminPage = () => {
       <SEOHead 
         title="Admin Dashboard"
         description="Manage your website content with the admin dashboard. Add and edit courses and blog posts, manage blog order, schema data, and image alt tags from one central location."
-        canonical="https://anandrochlani.com/admin"
-        keywords="admin dashboard, content management, add courses, add blog posts, blog order, schema management, image alt tags, website management"
+        noindex
       />
 
       <div className="min-h-screen bg-slate-900 pt-24 pb-16">

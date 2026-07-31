@@ -110,12 +110,12 @@ const CourseDetail = () => {
   return (
     <>
       <SEOHead
-        title={`${course.name} - ${course.category} Course | Beginner to Advanced`}
-        description={`${course.description} A ${course.level.toLowerCase()} ${course.category.toLowerCase()} course by ${course.instructor} — ${course.duration} of content, rated ${course.rating}.`}
+        title={`${course.name} Course`}
+        description="Master scalability, load balancing, caching, databases, and distributed systems in this practical system design course for interview preparation."
         image={course.featuredImage}
         keywords={`${course.name}, ${course.category}, ${course.level} course, ${course.instructor}, online course, learn ${course.category.toLowerCase()}`}
         canonical={`https://anandrochlani.com/courses/${course.slug || slugify(course.name)}`}
-        type="Course"
+        type="website"
       />
 
       <div className="min-h-screen pt-24 pb-16 bg-white">
@@ -129,7 +129,7 @@ const CourseDetail = () => {
             <Button
               onClick={() => navigate('/courses', { replace: true })}
               variant="outline"
-              className="bg-white border-slate-300 text-slate-700 hover:border-brand hover:text-brand rounded-lg"
+              className="min-h-11 bg-white border-slate-300 text-slate-700 hover:border-brand hover:text-brand rounded-lg"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               All Courses
@@ -199,12 +199,12 @@ const CourseDetail = () => {
                   srcSet={generateImageSrcset(course.featuredImage)}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
                   alt={course.name}
-                  fetchpriority="high"
+                  fetchPriority="high"
                   loading="eager"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent flex items-center justify-center">
-                  <button className="w-20 h-20 rounded-full bg-white/90 border-4 border-white flex items-center justify-center hover:scale-110 hover:bg-white transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2">
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent flex items-center justify-center" aria-hidden="true">
+                  <button tabIndex="-1" className="hidden w-20 h-20 rounded-full bg-white/90 border-4 border-white items-center justify-center">
                     <PlayCircle className="w-10 h-10 text-brand" />
                   </button>
                 </div>
@@ -235,6 +235,9 @@ const CourseDetail = () => {
                     "Enroll Now"
                   )}
                 </Button>
+                <p className="mb-4 text-center text-xs text-slate-500">
+                  You’ll review the destination before completing enrollment.
+                </p>
 
                 {/* Save Button in Sticky Sidebar */}
                 <div className="flex justify-center mb-6">

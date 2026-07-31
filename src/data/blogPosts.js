@@ -1,3 +1,5 @@
+import { seoArticles } from './seoArticles.js';
+
 export const defaultBlogPosts = [
   {
     id: 1,
@@ -128,6 +130,10 @@ function MyComponent() {
       
       <h2>Best Practices</h2>
       <p>Always consider mobile-first design and use media queries to adjust your grid layout for different screen sizes.</p>
+
+      <h2>Building a Responsive Grid Step by Step</h2>
+      <p>Start with the content rather than a fixed number of columns. A pattern such as <code>repeat(auto-fit, minmax(16rem, 1fr))</code> lets the browser add or remove columns as space changes. Use <code>gap</code> for consistent spacing, and reserve explicit row sizing for layouts that genuinely need aligned tracks. This keeps the design flexible when text grows, translations are longer, or users zoom the page.</p>
+      <p>Inspect the grid with browser developer tools and test it at widths between common breakpoints, not only at preset device sizes. Confirm that source order remains logical for keyboard and screen-reader users because visual grid placement does not change reading order. Prefer Grid for two-dimensional page structure and Flexbox for one-dimensional alignment inside individual cards, navigation items, or button groups.</p>
     `,
     author: "Michael Chen",
     date: "2026-01-18",
@@ -152,6 +158,10 @@ function MyComponent() {
       
       <h2>Getting Started</h2>
       <p>Start with Python and libraries like scikit-learn and TensorFlow to begin your machine learning journey.</p>
+
+      <h2>A Practical First Workflow</h2>
+      <p>Begin with a clearly defined prediction or classification problem and a small, understandable dataset. Split the data into training, validation, and test sets before experimenting so the final evaluation remains honest. Clean missing values, encode categorical features, and create a simple baseline model before trying a neural network. A baseline reveals whether added complexity is actually improving the result.</p>
+      <p>Choose metrics that match the business cost of mistakes. Accuracy can be misleading when one class is rare, so review precision, recall, F1 score, and the confusion matrix. Watch for data leakage, overfitting, and features that would not be available when the model runs in production. Machine learning work continues after training: monitor input drift, prediction quality, latency, and retraining needs once the model is deployed.</p>
     `,
     author: "Dr. Emily Wang",
     date: "2026-01-15",
@@ -176,6 +186,10 @@ function MyComponent() {
       
       <h2>Best Practices</h2>
       <p>Use proper HTTP status codes, implement versioning, and always validate input data to create secure and reliable APIs.</p>
+
+      <h2>Designing a Production-Ready API</h2>
+      <p>Model resources with predictable nouns, use HTTP methods consistently, and return a stable error shape that clients can handle. Validate path parameters, query strings, and request bodies at the boundary. Authentication proves who is calling, while authorization checks what that caller may do. Add rate limiting, request-size limits, secure headers, and parameterized database queries to reduce common abuse and injection risks.</p>
+      <p>Keep route handlers thin by moving business rules into services and data access into repositories. Use structured logs with request identifiers so one failure can be traced across systems. Paginate large collections, make retryable operations idempotent, and document the contract with OpenAPI. Integration tests should cover success, validation errors, authentication failures, missing records, and dependency outages before the API is released.</p>
     `,
     author: "David Martinez",
     date: "2026-01-12",
@@ -200,6 +214,10 @@ function MyComponent() {
       
       <h2>Design Process</h2>
       <p>Follow a structured process: research, wireframing, prototyping, testing, and iteration to create user-centered designs.</p>
+
+      <h2>Turning Principles into Design Decisions</h2>
+      <p>Give every screen one clear primary task and make the next action easy to recognize. Use familiar labels, consistent component behavior, and visible system status so people do not need to remember hidden rules. Prevent errors with sensible defaults and constraints, then explain recovery in plain language when an error still occurs. Accessibility is part of usability: support keyboard navigation, sufficient contrast, meaningful focus states, readable text, and touch targets large enough to use comfortably.</p>
+      <p>Test early prototypes with representative users and ask them to complete realistic tasks without coaching. Observe where they hesitate, what they expect to happen, and whether they can recover from mistakes. Prioritize repeated problems over personal preference, revise the prototype, and test again. A strong UX process connects each visual choice to evidence, user needs, and a measurable product outcome.</p>
     `,
     author: "Lisa Anderson",
     date: "2026-01-10",
@@ -224,6 +242,10 @@ function MyComponent() {
       
       <h2>Best Practices</h2>
       <p>Focus on clarity, choose appropriate chart types, and ensure your visualizations are accessible and responsive.</p>
+
+      <h2>From Raw Data to a Useful Chart</h2>
+      <p>Start by defining the question the visualization must answer. Clean and shape the data before binding it to elements, then create scales that map the data domain to the visual range. Axes, labels, and legends should explain units and context without forcing readers to guess. Use joins so entering, updating, and exiting marks remain synchronized when filters or live data change.</p>
+      <p>Choose position and length before area or color when accurate comparison matters. Provide text alternatives or an accessible table for important values, never rely on color alone, and check palettes for color-vision deficiencies. Make the SVG responsive with a viewBox and resize labels or margins deliberately at small widths. Finally, test interaction with a keyboard and avoid animations that obscure changes or trigger motion sensitivity.</p>
     `,
     author: "Robert Taylor",
     date: "2026-01-08",
@@ -248,6 +270,10 @@ function MyComponent() {
       
       <h2>Performance Optimization</h2>
       <p>Optimize images, minimize HTTP requests, and use lazy loading to ensure fast load times on all devices.</p>
+
+      <h2>Responsive Design Beyond Breakpoints</h2>
+      <p>Use fluid typography and spacing with functions such as <code>clamp()</code>, and let components adapt to their own available space with container queries when appropriate. Set image dimensions to prevent layout shifts, provide responsive <code>srcset</code> candidates, and avoid downloading desktop-sized media on a phone. Navigation, forms, tables, and dialogs each need an intentional narrow-screen behavior rather than a blanket rule that stacks everything.</p>
+      <p>Test with keyboard navigation, 200 percent zoom, long content, slow networks, and both portrait and landscape orientations. Real devices reveal issues that a desktop emulator can miss, including touch target spacing and mobile browser chrome. Track Core Web Vitals and fix large images, unstable layouts, and long main-thread tasks. Responsive design succeeds when the same content and actions remain understandable, accessible, and fast across changing conditions.</p>
     `,
     author: "Jennifer Lee",
     date: "2026-01-05",
@@ -272,6 +298,10 @@ function MyComponent() {
       
       <h2>Getting Started</h2>
       <p>Install TypeScript globally, configure your tsconfig.json, and start converting your JavaScript projects today.</p>
+
+      <h2>Using TypeScript Effectively</h2>
+      <p>Enable strict mode for new projects so nullability, implicit any values, and unsafe assumptions are caught early. Prefer narrow domain types and discriminated unions over broad objects with many optional fields. Type inference keeps local code concise, while explicit types are most valuable at public function boundaries, API responses, and shared libraries. Use <code>unknown</code> for untrusted input and narrow it with validation before access.</p>
+      <p>TypeScript checks code at compile time; it does not validate JSON received at runtime. Pair it with schema validation at network and storage boundaries. Migrate an existing project gradually by enabling JavaScript support, converting high-value modules first, and tightening compiler options over time. Avoid using type assertions simply to silence errors—the error often exposes a real missing case that should be modeled or handled.</p>
     `,
     author: "Alex Thompson",
     date: "2026-01-03",
@@ -339,7 +369,7 @@ function MyComponent() {
       <p><strong>Watch the full explanation here:</strong> <a href="https://youtu.be/r5vJP_1hX7Q" target="_blank" rel="noopener noreferrer" style="color: #a78bfa; text-decoration: underline;">What Is Latency? | System Design Fundamentals</a></p>
       
       <h2>Next Steps</h2>
-      <p>Now that you understand latency, you're ready to dive deeper into system design fundamentals. In the next blog, we'll explore scalable architecture and how to build systems that can handle growth.</p>
+      <p>Now that you understand latency, continue with the <a href="/blog/system-design-fundamentals-introduction-to-scalable-architecture">introduction to scalable architecture</a> to see how requirements, capacity estimates, and component boundaries turn into a complete system design.</p>
     `,
     author: "Anand Rochlani",
     date: "2026-01-28",
@@ -373,7 +403,11 @@ function MyComponent() {
       </ul>
       
       <h2>Getting Started</h2>
-      <p>Before diving into complex architectures, it's essential to understand the basic building blocks. In the next blog, we'll explore scalability patterns and how to design systems that can handle growth.</p>
+      <p>Before diving into complex architectures, it's essential to understand the basic building blocks. Continue with <a href="/blog/scalability-patterns-horizontal-vs-vertical-scaling">horizontal vs vertical scaling</a> to learn how systems add capacity as demand grows.</p>
+
+      <h2>A Repeatable System Design Process</h2>
+      <p>Begin by clarifying functional requirements, scale, latency targets, availability needs, and important constraints. Estimate traffic, storage, and bandwidth with simple round numbers. These estimates determine whether one database is sufficient, where caching matters, and which components require horizontal scaling. Draw the main request path first, then add data models, APIs, asynchronous workflows, and failure handling only where the requirements justify them.</p>
+      <p>Strong designs make trade-offs explicit. Consistency, availability, cost, operational complexity, and development speed cannot all be maximized at once. Identify likely bottlenecks, describe how the system behaves when a dependency fails, and explain how metrics, logs, traces, and alerts expose problems. In an interview, a clear sequence of assumptions and decisions is more valuable than naming many technologies without connecting them to the problem.</p>
     `,
     author: "System Design Expert",
     date: "2026-01-28",
@@ -412,7 +446,7 @@ function MyComponent() {
       <p>Most modern systems use horizontal scaling for better flexibility. However, you might start with vertical scaling and migrate to horizontal as you grow.</p>
       
       <h2>Next Steps</h2>
-      <p>Once you understand scaling, the next step is learning how to distribute traffic effectively. In the next blog, we'll explore load balancing strategies.</p>
+      <p>Once you understand scaling, learn how <a href="/blog/load-balancing-distributing-traffic-across-servers">load balancing distributes traffic across servers</a> so added capacity can be used safely and efficiently.</p>
     `,
     author: "System Design Expert",
     date: "2026-01-28",
@@ -476,7 +510,7 @@ function MyComponent() {
       <p><strong>Watch the full explanation here:</strong> <a href="https://www.youtube.com/watch?v=RhV7Y_7wlzk" target="_blank" rel="noopener noreferrer">Throughput Explained | System Design Fundamentals</a></p>
 
       <h2>Next Steps</h2>
-      <p>Ready to go deeper? In the next blog we’ll dive into <strong>Load Balancers</strong> and how they keep high‑traffic systems running smoothly.</p>
+      <p>Ready to go deeper? Compare the scaling options in <a href="/blog/scalability-patterns-horizontal-vs-vertical-scaling">horizontal vs vertical scaling</a>, then learn how <a href="/blog/load-balancing-distributing-traffic-across-servers">load balancers keep high-traffic systems stable</a>.</p>
     `,
     author: "Anand Rochlani",
     date: "2026-01-31",
@@ -515,7 +549,7 @@ function MyComponent() {
       <p>You can implement load balancing using hardware, software, or cloud services. Popular solutions include NGINX, HAProxy, AWS ELB, and Google Cloud Load Balancer.</p>
       
       <h2>Next Steps</h2>
-      <p>After distributing traffic, you need to optimize data access. In the next blog, we'll explore caching strategies to improve performance.</p>
+      <p>After distributing traffic, optimize the request path with these <a href="/blog/caching-strategies-improving-performance-with-smart-data-storage">caching strategies for system design</a>.</p>
     `,
     author: "System Design Expert",
     date: "2026-01-28",
@@ -555,7 +589,7 @@ function MyComponent() {
       </ul>
       
       <h2>Next Steps</h2>
-      <p>Now that you understand caching, let's explore database design. In the next blog, we'll cover database replication and sharding strategies.</p>
+      <p>Now that you understand caching, continue with <a href="/blog/database-design-replication-sharding-and-consistency">database replication, sharding, and consistency</a> to design the durable layer behind the cache.</p>
     `,
     author: "System Design Expert",
     date: "2026-01-28",
@@ -599,7 +633,7 @@ function MyComponent() {
       </ul>
       
       <h2>Next Steps</h2>
-      <p>Understanding databases is crucial, but modern systems often use microservices. In the next blog, we'll explore microservices architecture and its benefits.</p>
+      <p>Understanding databases is crucial, but service boundaries add a different set of trade-offs. Continue with <a href="/blog/microservices-architecture-building-distributed-systems">microservices architecture and distributed systems</a>.</p>
     `,
     author: "System Design Expert",
     date: "2026-01-28",
@@ -643,9 +677,13 @@ function MyComponent() {
       
       <h2>API Gateway Pattern</h2>
       <p>An API gateway acts as a single entry point, handling routing, authentication, rate limiting, and request aggregation.</p>
+
+      <h2>Data Ownership and Reliability</h2>
+      <p>Each service should own its data and expose changes through an API or event rather than allowing other services to query its tables directly. Cross-service workflows often use events, sagas, and compensating actions because a single database transaction cannot safely span independent services. Consumers must be idempotent, messages need durable delivery, and teams should plan for duplicates, delays, and out-of-order events.</p>
+      <p>Operational maturity is a prerequisite for microservices. Use timeouts, bounded retries with backoff, circuit breakers, health checks, distributed tracing, and correlation identifiers. Define service-level indicators for latency, errors, and availability, and make deployments backward compatible so services can evolve independently. A modular monolith is usually a better starting point when team boundaries and scaling needs are still unclear; extract a service only when the ownership or operational benefit outweighs the distributed-systems cost.</p>
       
       <h2>Next Steps</h2>
-      <p>Microservices are powerful but require careful design. In the next blog, we'll put it all together by designing a complete system from scratch.</p>
+      <p>Microservices are powerful but require careful design. Put the building blocks together in the complete <a href="/blog/designing-a-url-shortener-complete-system-design-case-study">URL shortener system design case study</a>.</p>
     `,
     author: "System Design Expert",
     date: "2026-01-28",
@@ -708,7 +746,7 @@ function MyComponent() {
       </ul>
       
       <h2>Conclusion</h2>
-      <p>This case study demonstrates how to apply all the concepts we've learned: scalability, load balancing, caching, database design, and more. Practice designing other systems like Twitter, Instagram, or Uber to master system design!</p>
+      <p>This case study combines <a href="/blog/caching-strategies-improving-performance-with-smart-data-storage">cache-aside caching</a> with <a href="/blog/database-design-replication-sharding-and-consistency">database sharding and replication</a>. Practice designing other systems like Twitter, Instagram, or Uber to strengthen the same trade-off-driven approach.</p>
     `,
     author: "System Design Expert",
     date: "2026-01-28",
@@ -821,8 +859,8 @@ const withSlugs = (posts) => {
   });
 };
 
-export const blogPosts = withSlugs(applyBlogOrder(applyBlogEdits([...defaultBlogPosts, ...getLocalBlogPosts()])));
+export const blogPosts = withSlugs(applyBlogOrder(applyBlogEdits([...defaultBlogPosts, ...seoArticles, ...getLocalBlogPosts()])));
 
 export const getAllBlogPosts = () => {
-  return withSlugs(applyBlogOrder(applyBlogEdits([...defaultBlogPosts, ...getLocalBlogPosts()])));
+  return withSlugs(applyBlogOrder(applyBlogEdits([...defaultBlogPosts, ...seoArticles, ...getLocalBlogPosts()])));
 };

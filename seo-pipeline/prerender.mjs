@@ -33,6 +33,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // Same helper the app uses, so prerendered course URLs match the ones CoursesPage links to.
 import { slugify } from '../src/lib/slug.js';
+import { getAllBlogPosts } from '../src/data/blogPosts.js';
+import { defaultCourses } from '../src/data/courses.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(HERE, '..');
@@ -147,7 +149,18 @@ function stripManagedHead(html) {
  * Mirror SEOHead's rule (append the brand unless it is already in the title) so the
  * prerendered <title> and the one React sets after mount are byte-identical.
  */
-const pageTitle = (t) => (t.includes(SITE_NAME) ? t : `${t} | ${SITE_NAME}`);
+const pageTitle = (t) => {
+  const raw = String(t || '').replace(/\s+/g, ' ').trim();
+  if (raw.includes(SITE_NAME)) return clamp(raw, 60);
+  const suffix = ` | ${SITE_NAME}`;
+  return `${clamp(raw, 60 - suffix.length)}${suffix}`;
+};
+
+function metaDescription(post) {
+  const description = toText(post.description || '');
+  if (description.length >= 70) return clamp(description, 160);
+  return clamp(`${description} ${toText(post.content || '')}`, 160);
+}
 
 function headTags({ title: rawTitle, description, canonical, image, type, published, modified, keywords, jsonLd, noindex }) {
   const img = image || DEFAULT_OG;
@@ -184,7 +197,11 @@ function headTags({ title: rawTitle, description, canonical, image, type, publis
     const json = JSON.stringify(block).replace(/<\//g, '<\\/');
     // The id is load-bearing: SEOHead looks for it and skips its own (thinner)
     // JSON-LD when a prerendered block is already on the page.
-    tags.push(`<script type="application/ld+json" id="ld-prerender-${i}">${json}</script>`);
+    tags.push(
+      `<script type="application/ld+json" id="ld-prerender-${i}"${
+        canonical ? ` data-page-url="${esc(canonical)}"` : ''
+      }>${json}</script>`
+    );
   });
 
   return tags.map((t) => `\t\t${t}`).join('\n');
@@ -218,7 +235,7 @@ function articleSchema(post, canonical) {
     '@type': 'BlogPosting',
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
     headline: clamp(post.title, 110),
-    description: post.description || clamp(post.content, 155),
+    description: metaDescription(post),
     image: post.featuredImage || DEFAULT_OG,
     datePublished: isoDate(post.date),
     dateModified: isoDate(post.updatedAt || post.updated_at || post.date),
@@ -241,6 +258,7 @@ const staticHeader = `\t\t\t<header id="static-header">
 \t\t\t\t\t\t<a href="/">Home</a>
 \t\t\t\t\t\t<a href="/courses">Courses</a>
 \t\t\t\t\t\t<a href="/blog">Blog</a>
+\t\t\t\t\t\t<a href="/about">About</a>
 \t\t\t\t\t\t<a href="/jobs">Jobs</a>
 \t\t\t\t\t</div>
 \t\t\t\t</nav>
@@ -252,6 +270,7 @@ const staticFooter = `\t\t\t<footer id="static-footer">
 \t\t\t\t\t<a href="/">Home</a>
 \t\t\t\t\t<a href="/courses">Courses</a>
 \t\t\t\t\t<a href="/blog">Blog</a>
+\t\t\t\t\t<a href="/about">About</a>
 \t\t\t\t\t<a href="/jobs">Jobs</a>
 \t\t\t\t</nav>
 \t\t\t</footer>`;
@@ -291,7 +310,7 @@ function postBody(post, allPosts) {
 \t\t\t\t\t<div>
 ${sanitize(post.content || '')}
 \t\t\t\t\t</div>
-\t\t\t\t\t<p><a href="${esc(COURSE_URL)}" rel="noopener">Go deeper: System Design Fundamentals for Interviews on Udemy</a></p>${seriesNav(allPosts, post.slug)}
+\t\t\t\t\t<p><a href="${esc(COURSE_URL)}" rel="sponsored noopener">Go deeper: System Design Fundamentals for Interviews on Udemy</a></p>${seriesNav(allPosts, post.slug)}
 \t\t\t\t</article>
 \t\t\t</main>`;
 }
@@ -364,7 +383,21 @@ function write(routePath, html, written) {
 async function getJson(url) {
   const res = await fetch(url, { headers: { 'user-agent': 'anandrochlani-prerender/1.0' } });
   if (!res.ok) throw new Error(`${url} → ${res.status}`);
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    throw new Error(`${url} returned ${contentType || 'an unknown content type'} instead of JSON`);
+  }
   return res.json();
+}
+
+function bundledContent() {
+  return {
+    posts: getAllBlogPosts().filter((post) => post && post.slug),
+    courses: defaultCourses.map((course) => ({
+      ...course,
+      slug: course.slug || slugify(course.name || course.title || String(course.id)),
+    })),
+  };
 }
 
 async function main() {
@@ -385,11 +418,20 @@ async function main() {
     posts = (p.posts || []).filter((x) => x && x.slug);
     courses = c.courses || [];
   } catch (e) {
-    // A prerender failure must never break the deploy — the SPA shell still works.
-    console.error(`[prerender] content fetch failed (${e.message}); leaving the SPA shell as-is.`);
-    process.exit(0);
+    // A remote API outage must not turn a production deploy back into one generic
+    // client-rendered shell. The bundled content is the same fail-safe used by the
+    // public API, so core pages still ship crawlable HTML and can be refreshed on
+    // the next deploy after the API is restored.
+    ({ posts, courses } = bundledContent());
+    console.warn(
+      `[prerender] remote content unavailable (${e.message}); using ${posts.length} bundled posts and ${courses.length} bundled courses.`
+    );
   }
 
+  // This site now has one clear editorial focus. Legacy template posts remain
+  // accessible through the app, but they are noindex and omitted from the static
+  // crawl surface so they do not dilute the System Design topic cluster.
+  posts = posts.filter((post) => post.category === 'System Design');
   posts.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
   const written = [];
 
@@ -473,6 +515,56 @@ async function main() {
     written
   );
 
+  /* author / trust page */
+  write(
+    '/about',
+    renderPage(template, {
+      head: headTags({
+        title: 'About Anand Rochlani — System Design Educator',
+        description:
+          'Meet Anand Rochlani, Salesforce Member of Technical Staff and creator of practical System Design tutorials and an interview-focused Udemy course.',
+        canonical: `${CANONICAL_HOST}/about`,
+        type: 'website',
+        jsonLd: [
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Person',
+            '@id': `${CANONICAL_HOST}/about#person`,
+            name: AUTHOR,
+            url: `${CANONICAL_HOST}/about`,
+            jobTitle: 'Member of Technical Staff',
+            worksFor: { '@type': 'Organization', name: 'Salesforce' },
+            sameAs: [
+              'https://in.linkedin.com/in/anand-rochlani',
+              'https://www.youtube.com/@anandrochlani5226',
+              'https://www.udemy.com/user/anand-561/',
+            ],
+          },
+          breadcrumb([
+            { name: 'Home', url: `${CANONICAL_HOST}/` },
+            { name: 'About', url: `${CANONICAL_HOST}/about` },
+          ]),
+        ],
+      }),
+      body: [
+        staticHeader,
+        `\t\t\t<main id="static-content">
+\t\t\t\t<article>
+\t\t\t\t\t<h1>Anand Rochlani</h1>
+\t\t\t\t\t<p>Member of Technical Staff at Salesforce and System Design educator.</p>
+\t\t\t\t\t<h2>What I teach</h2>
+\t\t\t\t\t<p>Practical lessons on scalable architecture, distributed systems, and interview trade-offs.</p>
+\t\t\t\t\t<h2>System Design Fundamentals for Interviews</h2>
+\t\t\t\t\t<p>The Udemy course includes 8 sections, 49 lectures, 5 hours 40 minutes of video, and real interview case studies.</p>
+\t\t\t\t\t<p><a href="${esc(COURSE_URL)}" rel="sponsored noopener">View the System Design course on Udemy</a></p>
+\t\t\t\t</article>
+\t\t\t</main>`,
+        staticFooter,
+      ].join('\n'),
+    }),
+    written
+  );
+
   /* one file per post */
   for (const post of posts) {
     const canonical = `${CANONICAL_HOST}/blog/${post.slug}`;
@@ -481,7 +573,7 @@ async function main() {
       renderPage(template, {
         head: headTags({
           title: post.title,
-          description: post.description || clamp(post.content, 155),
+          description: metaDescription(post),
           canonical,
           image: post.featuredImage,
           type: 'article',
@@ -507,9 +599,9 @@ async function main() {
     '/courses',
     renderPage(template, {
       head: headTags({
-        title: 'Engineering Courses | AnandRochlani',
+        title: 'System Design Courses for Interview Prep',
         description:
-          'In-depth engineering courses, including System Design Fundamentals for Interviews — 49 lectures of practical system design training.',
+          'Build system design skills with practical, interview-focused courses covering scalability, caching, databases, load balancing, and distributed systems.',
         canonical: `${CANONICAL_HOST}/courses`,
         type: 'website',
         jsonLd: [
@@ -522,8 +614,8 @@ async function main() {
       body: [
         staticHeader,
         listBody(
-          'Engineering Courses',
-          'Practical, interview-focused courses.',
+          'System Design Courses for Interview Prep',
+          'Practical courses covering scalability, caching, databases, load balancing, and distributed systems.',
           courses.map((c) => ({
             url: `/courses/${c.slug || slugify(c.name || c.title || String(c.id))}`,
             title: c.name || c.title || `Course ${c.id}`,
@@ -550,12 +642,11 @@ async function main() {
         head: headTags({
           // Mirrors CourseDetail's SEOHead title so the prerendered and rendered
           // titles are identical.
-          title: c.category
-            ? `${name} - ${c.category} Course | Beginner to Advanced`
-            : `${name} | ${SITE_NAME}`,
-          description: c.description ? clamp(c.description, 155) : `${name} — an in-depth engineering course.`,
+          title: `${name} Course`,
+          description:
+            'Master scalability, load balancing, caching, databases, and distributed systems in this practical system design course for interview preparation.',
           canonical,
-          image: c.image || c.thumbnail,
+          image: c.featuredImage || c.image || c.thumbnail,
           type: 'website',
           jsonLd: [
             {
@@ -642,9 +733,37 @@ async function main() {
     '(SPA fallback)'
   );
 
+  /* True server-side 404 for every path not covered by a static page or one of
+   * the explicit client-only rewrites in vercel.json. Vercel serves 404.html
+   * with HTTP 404 automatically, eliminating the site's soft-404 catch-all. */
+  writeFile(
+    '404.html',
+    renderPage(template, {
+      head: headTags({
+        title: 'Page Not Found',
+        description: 'This page does not exist. Browse the System Design Tutorial series or course catalog.',
+        canonical: null,
+        type: 'website',
+        noindex: true,
+      }),
+      body: [
+        staticHeader,
+        `\t\t\t<main id="static-content">
+\t\t\t\t<p>404</p>
+\t\t\t\t<h1>Page Not Found</h1>
+\t\t\t\t<p>The page you are looking for does not exist or has moved.</p>
+\t\t\t\t<p><a href="/blog">Browse tutorials</a> · <a href="/courses">View courses</a></p>
+\t\t\t</main>`,
+        staticFooter,
+      ].join('\n'),
+    }),
+    written,
+    '(404)'
+  );
+
   const label = DRY_RUN ? 'would write' : 'wrote';
   console.log(`[prerender] ${label} ${written.length} static pages to ${path.relative(process.cwd(), DIST)}/`);
-  console.log(`[prerender]   ${posts.length} blog posts, ${courses.length} courses, 4 core pages`);
+  console.log(`[prerender]   ${posts.length} blog posts, ${courses.length} courses, 5 core pages`);
   if (DRY_RUN) for (const w of written) console.log(`  ${w.route}  →  ${w.file}  (${w.bytes} bytes)`);
 }
 

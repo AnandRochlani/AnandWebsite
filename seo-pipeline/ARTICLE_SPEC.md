@@ -53,7 +53,7 @@ Rank for long-tail system-design interview keywords and funnel readers to the Ud
 
 ```html
 <p><strong>Want to master this with video lessons and real case studies?</strong> This topic is
-covered in depth in my Udemy course <a href="https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73" target="_blank" rel="noopener noreferrer">System Design Fundamentals for Interviews</a>
+covered in depth in my Udemy course <a href="https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73" target="_blank" rel="sponsored noopener noreferrer">System Design Fundamentals for Interviews</a>
 — 5.5 hours, rated 4.8★, built from real interview questions.</p>
 ```
 

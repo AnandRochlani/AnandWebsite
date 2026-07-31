@@ -66,8 +66,7 @@ const AdminLoginPage = () => {
       <SEOHead 
         title="Admin Login"
         description="Secure admin login portal for managing courses and blog posts. Access the admin dashboard to add new content and manage your website."
-        canonical="https://anandrochlani.com/admin/login"
-        keywords="admin login, admin dashboard, content management, course management, blog management"
+        noindex
       />
       <div className="min-h-screen bg-gradient-to-b from-ink to-ink-2 flex items-center justify-center p-4 pt-20">
         <motion.div 
@@ -77,7 +76,7 @@ const AdminLoginPage = () => {
           className="w-full max-w-md bg-white/5 backdrop-blur-lg border border-white/10 p-8 rounded-2xl shadow-2xl"
         >
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 mb-4 shadow-lg">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand mb-4 shadow-lg">
               <Shield className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-white">Admin Access</h1>
@@ -126,7 +125,7 @@ const AdminLoginPage = () => {
 
             <Button 
               type="submit" 
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-6 rounded-xl font-medium shadow-lg hover:shadow-purple-500/25 transition-all duration-300"
+              className="w-full bg-brand hover:bg-brand-dark text-white py-6 rounded-xl font-medium shadow-lg transition-all duration-300"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

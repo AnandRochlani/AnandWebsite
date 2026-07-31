@@ -6,6 +6,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Fade-in animation for blog posts (lighter than framer-motion) */
 @keyframes fade-in {
   from {
@@ -29,6 +33,24 @@ body {
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(85, 83, 255, 0.55);
+  outline-offset: 3px;
+}
+
+::selection {
+  color: #0D0B33;
+  background: #EEEEFF;
 }
 
 /* Ensure root takes full height */
@@ -74,6 +96,7 @@ body {
 .blog-content {
   color: rgb(51 65 85); /* slate-700 */
   line-height: 1.75;
+  max-width: 72ch;
 }
 
 .blog-content h2 {
@@ -156,4 +179,19 @@ body {
   background: rgb(248 250 252); /* slate-50 */
   color: rgb(51 65 85);
   font-style: italic;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
