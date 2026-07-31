@@ -2,6 +2,8 @@ import { neon } from '@neondatabase/serverless';
 
 import { defaultCourses } from '../src/data/courses.js';
 import { blogPosts as seededBlogPosts } from '../src/data/blogPosts.js';
+import { defaultSiteSettings } from '../src/data/siteSettings.js';
+import { slugify } from '../src/lib/slug.js';
 
 function getDatabaseUrl() {
   let url =
@@ -57,6 +59,7 @@ export async function ensureSchema(sql) {
     CREATE TABLE IF NOT EXISTS courses (
       id BIGSERIAL PRIMARY KEY,
       name TEXT NOT NULL,
+      slug TEXT,
       description TEXT,
       instructor TEXT,
       instructor_bio TEXT,
@@ -75,6 +78,15 @@ export async function ensureSchema(sql) {
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
+  `;
+
+  // Migration for tables created before the slug column existed.
+  // ADD COLUMN IF NOT EXISTS is idempotent on Postgres 9.6+.
+  await sql`ALTER TABLE courses ADD COLUMN IF NOT EXISTS slug TEXT;`;
+  await sql`
+    CREATE UNIQUE INDEX IF NOT EXISTS courses_slug_unique_idx
+    ON courses (slug)
+    WHERE slug IS NOT NULL;
   `;
 
   // Blog posts
@@ -97,6 +109,21 @@ export async function ensureSchema(sql) {
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
   `;
+
+  // Site settings (key/value, with metadata so the admin UI can render edit
+  // forms without hardcoding which keys exist)
+  await sql`
+    CREATE TABLE IF NOT EXISTS site_settings (
+      key TEXT PRIMARY KEY,
+      value JSONB,
+      category TEXT NOT NULL DEFAULT 'general',
+      type TEXT NOT NULL DEFAULT 'text',
+      label TEXT,
+      description TEXT,
+      sort_order INTEGER DEFAULT 0,
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
+  `;
 }
 
 export async function seedIfEmpty(sql) {
@@ -107,6 +134,7 @@ export async function seedIfEmpty(sql) {
         INSERT INTO courses (
           id,
           name,
+          slug,
           description,
           instructor,
           instructor_bio,
@@ -126,6 +154,7 @@ export async function seedIfEmpty(sql) {
         VALUES (
           ${c.id},
           ${c.name},
+          ${c.slug || slugify(c.name)},
           ${c.description || null},
           ${c.instructor || null},
           ${c.instructorBio || null},
@@ -145,6 +174,23 @@ export async function seedIfEmpty(sql) {
         ON CONFLICT (id) DO NOTHING;
       `;
     }
+  }
+
+  // Backfill: any rows still missing a slug (e.g. existing prod rows from
+  // before this migration) get one derived from name. We do this row-by-row
+  // because each slug must be unique; on a collision we suffix the id.
+  const missingSlugRows = await sql`
+    SELECT id, name FROM courses WHERE slug IS NULL OR slug = '';
+  `;
+  for (const row of missingSlugRows || []) {
+    const base = slugify(row.name);
+    if (!base) continue;
+    // Try the bare slug; if a collision exists (different course), append id.
+    const collision = await sql`
+      SELECT 1 FROM courses WHERE slug = ${base} AND id <> ${row.id} LIMIT 1;
+    `;
+    const finalSlug = collision?.length ? `${base}-${row.id}` : base;
+    await sql`UPDATE courses SET slug = ${finalSlug} WHERE id = ${row.id};`;
   }
 
   const postsCount = await sql`SELECT COUNT(*)::int AS count FROM blog_posts;`;
@@ -202,19 +248,60 @@ export async function seedIfEmpty(sql) {
       true
     );
   `;
+
+  // Site settings: insert any missing keys from the defaults list.
+  // We use ON CONFLICT DO NOTHING so existing values entered via the admin
+  // panel are preserved across deploys.
+  for (const s of defaultSiteSettings) {
+    await sql`
+      INSERT INTO site_settings (key, value, category, type, label, description, sort_order)
+      VALUES (
+        ${s.key},
+        ${s.value === undefined ? null : JSON.stringify(s.value)},
+        ${s.category || 'general'},
+        ${s.type || 'text'},
+        ${s.label || null},
+        ${s.description || null},
+        ${typeof s.sortOrder === 'number' ? s.sortOrder : 0}
+      )
+      ON CONFLICT (key) DO NOTHING;
+    `;
+  }
 }
+
+// Guard against re-running schema + seed on every request. Vercel's serverless
+// runtime keeps modules warm across invocations, so a single boolean per
+// process saves us 20+ round trips on hot lambdas. On a fresh cold start the
+// flag resets and we run once.
+let schemaReadyPromise = null;
 
 export async function ensureSchemaAndSeed() {
   const sql = getSqlClient();
-  await ensureSchema(sql);
-  await seedIfEmpty(sql);
+  if (!schemaReadyPromise) {
+    schemaReadyPromise = (async () => {
+      try {
+        await ensureSchema(sql);
+        await seedIfEmpty(sql);
+      } catch (e) {
+        // Reset on failure so the next request can retry instead of being
+        // permanently broken by a single transient error.
+        schemaReadyPromise = null;
+        throw e;
+      }
+    })();
+  }
+  await schemaReadyPromise;
   return sql;
 }
 
 export function toCourseDto(row) {
   if (!row) return null;
+  // Always produce a slug — if the column is somehow null we derive one from
+  // the name so the frontend never receives a course it can't link to.
+  const slug = row.slug || slugify(row.name) || String(row.id);
   return {
     id: Number(row.id),
+    slug,
     name: row.name,
     description: row.description,
     instructor: row.instructor,
@@ -232,6 +319,28 @@ export function toCourseDto(row) {
     modules: row.modules || [],
     learningOutcomes: row.learning_outcomes || [],
   };
+}
+
+export function toSiteSettingDto(row) {
+  if (!row) return null;
+  return {
+    key: row.key,
+    value: row.value === null || row.value === undefined ? null : row.value,
+    category: row.category || 'general',
+    type: row.type || 'text',
+    label: row.label || null,
+    description: row.description || null,
+    sortOrder: row.sort_order !== null && row.sort_order !== undefined ? Number(row.sort_order) : 0,
+    updatedAt: row.updated_at ? String(row.updated_at) : null,
+  };
+}
+
+export function settingsRowsToMap(rows) {
+  const out = {};
+  for (const r of rows || []) {
+    out[r.key] = r.value === null || r.value === undefined ? null : r.value;
+  }
+  return out;
 }
 
 export function toBlogPostDto(row) {

@@ -5,7 +5,12 @@ const COOKIE_NAME = 'admin_session';
 function getJwtSecret() {
   const secret = process.env.ADMIN_JWT_SECRET;
   if (!secret) {
-    throw new Error('Missing env var ADMIN_JWT_SECRET');
+    const isProd = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
+    if (isProd) {
+      throw new Error('Missing env var ADMIN_JWT_SECRET');
+    }
+    // Local-dev fallback so the admin panel works without env setup.
+    return new TextEncoder().encode('devsecret');
   }
   return new TextEncoder().encode(secret);
 }

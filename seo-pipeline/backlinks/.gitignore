@@ -1,0 +1,3 @@
+# Rendered email drafts. Personal, often half-finished, and sometimes contain
+# a contact's name — no reason for them to live in git.
+drafts/

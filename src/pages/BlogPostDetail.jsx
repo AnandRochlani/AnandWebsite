@@ -147,11 +147,16 @@ const BlogPostDetail = () => {
 
   if (isNotFound) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 flex items-center justify-center">
+      <div className="min-h-screen bg-white pt-24 flex items-center justify-center">
+        <SEOHead
+          title="Post Not Found"
+          description="This article does not exist. Browse the full System Design Tutorial series instead."
+          noindex
+        />
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">Post Not Found</h1>
+          <h1 className="text-4xl font-extrabold text-slate-900 mb-4">Post Not Found</h1>
           <Link to="/blog">
-            <Button className="bg-gradient-to-r from-purple-500 to-pink-500">
+            <Button className="bg-brand hover:bg-brand-dark text-white font-semibold">
               View All Articles
             </Button>
           </Link>
@@ -162,8 +167,8 @@ const BlogPostDetail = () => {
 
   if (loading || !post) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 flex items-center justify-center">
-        <div className="text-center text-gray-300">Loading...</div>
+      <div className="min-h-screen bg-white pt-24 flex items-center justify-center">
+        <div className="text-center text-slate-500">Loading...</div>
       </div>
     );
   }
@@ -175,13 +180,13 @@ const BlogPostDetail = () => {
         description={post.description}
         image={post.featuredImage}
         keywords={`react hooks, useState hook, useEffect hook, custom hooks, functional components, learn how to use react hooks, react hooks tutorial, ${post.category}, ${post.title}, tech blog, programming tutorial, web development, ${post.author}`}
-        canonical={`https://www.anandrochlani.com/blog/${post.slug}`}
+        canonical={`https://anandrochlani.com/blog/${post.slug}`}
         type="article"
         authorName={post.author}
         publishedTime={post.date}
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 pb-16">
+      <div className="min-h-screen bg-white pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Left Sidebar - Related Blogs */}
@@ -193,8 +198,8 @@ const BlogPostDetail = () => {
                   transition={{ duration: 0.6 }}
                   className="lg:sticky lg:top-24"
                 >
-                  <div className="bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">
+                  <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+                    <h3 className="text-xl font-bold text-slate-900 mb-4">
                       {post.series ? post.series : `${post.category} Articles`}
                     </h3>
                     <div className="space-y-2 max-h-[60vh] lg:max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
@@ -204,30 +209,30 @@ const BlogPostDetail = () => {
                           <Link
                             key={sidebarPost.id}
                             to={`/blog/${sidebarPost.slug || sidebarPost.id}`}
-                            className={`block p-3 rounded-lg transition-all duration-300 ${
+                            className={`block p-3 rounded-lg transition-all duration-300 border-l-4 ${
                               isActive
-                                ? 'bg-gradient-to-r from-purple-500/30 to-pink-500/30 border border-purple-500/50'
-                                : 'bg-white/5 hover:bg-white/10 border border-transparent hover:border-purple-500/30'
+                                ? 'bg-brand-soft border-l-brand'
+                                : 'bg-white hover:bg-slate-50 border-l-transparent'
                             }`}
                           >
                             <div className="flex items-start gap-3">
                               {sidebarPost.order && (
                                 <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
                                   isActive
-                                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                                    : 'bg-purple-500/20 text-purple-400'
+                                    ? 'bg-brand text-white'
+                                    : 'bg-brand-soft text-brand'
                                 }`}>
                                   {sidebarPost.order}
                                 </span>
                               )}
                               <div className="flex-1 min-w-0">
                                 <h4 className={`text-sm font-medium line-clamp-2 ${
-                                  isActive ? 'text-white' : 'text-gray-300 hover:text-purple-400'
+                                  isActive ? 'text-brand' : 'text-slate-600 hover:text-brand'
                                 } transition-colors`}>
                                   {sidebarPost.title}
                                 </h4>
                                 {sidebarPost.order && (
-                                  <span className="text-xs text-gray-400 mt-1 block">
+                                  <span className="text-xs text-slate-500 mt-1 block">
                                     Part {sidebarPost.order}
                                   </span>
                                 )}
@@ -254,7 +259,7 @@ const BlogPostDetail = () => {
             <Button
               onClick={() => navigate('/blog', { replace: true })}
               variant="outline"
-              className="bg-white/5 border-white/10 hover:bg-white/10 text-white"
+              className="bg-white border-slate-300 text-slate-700 hover:border-brand hover:text-brand"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               All Articles
@@ -266,7 +271,7 @@ const BlogPostDetail = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="relative h-96 rounded-2xl overflow-hidden mb-8 shadow-2xl"
+            className="relative h-96 rounded-2xl overflow-hidden mb-8 border border-slate-200 shadow-sm"
           >
             <img
               src={optimizeImageUrl(post.featuredImage, 600, 35)}
@@ -277,7 +282,6 @@ const BlogPostDetail = () => {
               fetchpriority="high"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
           </motion.div>
 
           {/* Post Header */}
@@ -287,13 +291,13 @@ const BlogPostDetail = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mb-8"
           >
-            <span className="inline-block px-4 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm font-medium mb-4">
+            <span className="inline-block px-4 py-1 rounded-full bg-brand-soft text-brand text-sm font-semibold mb-4">
               {post.category}
             </span>
-            <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
               {post.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-6 text-gray-400 mb-6">
+            <div className="flex flex-wrap items-center gap-6 text-slate-500 mb-6">
               <span className="flex items-center">
                 <Calendar className="w-4 h-4 mr-2" />
                 {new Date(post.date).toLocaleDateString('en-US', { 
@@ -311,31 +315,31 @@ const BlogPostDetail = () => {
 
             {/* Share Buttons */}
             <div className="flex items-center space-x-2">
-              <span className="text-gray-400 text-sm mr-2">Share:</span>
+              <span className="text-slate-500 text-sm mr-2">Share:</span>
               <button
                 onClick={() => handleShare('Facebook')}
-                className="p-2 rounded-lg bg-white/5 hover:bg-blue-500/20 text-gray-400 hover:text-blue-400 transition-all duration-300"
+                className="p-2 rounded-lg bg-slate-100 hover:bg-brand-soft text-slate-500 hover:text-brand transition-all duration-300"
                 aria-label="Share on Facebook"
               >
                 <Facebook className="w-5 h-5" />
               </button>
               <button
                 onClick={() => handleShare('Twitter')}
-                className="p-2 rounded-lg bg-white/5 hover:bg-sky-500/20 text-gray-400 hover:text-sky-400 transition-all duration-300"
+                className="p-2 rounded-lg bg-slate-100 hover:bg-brand-soft text-slate-500 hover:text-brand transition-all duration-300"
                 aria-label="Share on Twitter"
               >
                 <Twitter className="w-5 h-5" />
               </button>
               <button
                 onClick={() => handleShare('LinkedIn')}
-                className="p-2 rounded-lg bg-white/5 hover:bg-blue-600/20 text-gray-400 hover:text-blue-600 transition-all duration-300"
+                className="p-2 rounded-lg bg-slate-100 hover:bg-brand-soft text-slate-500 hover:text-brand transition-all duration-300"
                 aria-label="Share on LinkedIn"
               >
                 <Linkedin className="w-5 h-5" />
               </button>
               <button
                 onClick={() => handleShare('Link')}
-                className="p-2 rounded-lg bg-white/5 hover:bg-purple-500/20 text-gray-400 hover:text-purple-400 transition-all duration-300"
+                className="p-2 rounded-lg bg-slate-100 hover:bg-brand-soft text-slate-500 hover:text-brand transition-all duration-300"
                 aria-label="Copy link"
               >
                 <Share2 className="w-5 h-5" />
@@ -348,7 +352,7 @@ const BlogPostDetail = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="blog-content prose prose-invert prose-lg max-w-none mb-16"
+            className="blog-content prose prose-slate prose-lg max-w-none mb-16"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 
@@ -358,33 +362,33 @@ const BlogPostDetail = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="border-t border-white/10 pt-8 mb-12"
+              className="border-t border-slate-200 pt-8 mb-12"
             >
               <div className="mb-4">
-                <span className="text-sm text-purple-400 font-medium">{post.series}</span>
-                <span className="text-sm text-gray-400 ml-2">Part {post.order}</span>
+                <span className="text-sm text-brand font-semibold">{post.series}</span>
+                <span className="text-sm text-slate-500 ml-2">Part {post.order}</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Previous Post */}
                 {previousPost ? (
                   <Link
                     to={`/blog/${previousPost.slug || previousPost.id}`}
-                    className="group block p-6 rounded-xl bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 transition-all duration-300"
+                    className="group block p-6 rounded-xl bg-white border border-slate-300 hover:border-brand transition-all duration-300"
                   >
-                    <div className="flex items-center text-purple-400 text-sm font-medium mb-2">
+                    <div className="flex items-center text-brand text-sm font-medium mb-2">
                       <ChevronLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
                       Previous
                     </div>
-                    <h3 className="text-lg font-bold text-white group-hover:text-purple-400 transition-colors line-clamp-2">
+                    <h3 className="text-lg font-bold text-slate-700 group-hover:text-brand transition-colors line-clamp-2">
                       {previousPost.title}
                     </h3>
                     {previousPost.order && (
-                      <span className="text-xs text-gray-400 mt-2 inline-block">Part {previousPost.order}</span>
+                      <span className="text-xs text-slate-500 mt-2 inline-block">Part {previousPost.order}</span>
                     )}
                   </Link>
                 ) : (
-                  <div className="p-6 rounded-xl bg-white/5 border border-white/10 opacity-50">
-                    <div className="text-gray-500 text-sm">No previous post</div>
+                  <div className="p-6 rounded-xl bg-slate-50 border border-slate-200">
+                    <div className="text-slate-400 text-sm">No previous post</div>
                   </div>
                 )}
 
@@ -392,22 +396,22 @@ const BlogPostDetail = () => {
                 {nextPost ? (
                   <Link
                     to={`/blog/${nextPost.slug || nextPost.id}`}
-                    className="group block p-6 rounded-xl bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 transition-all duration-300 text-right md:text-left"
+                    className="group block p-6 rounded-xl bg-white border border-slate-300 hover:border-brand transition-all duration-300 text-right md:text-left"
                   >
-                    <div className="flex items-center justify-end md:justify-start text-purple-400 text-sm font-medium mb-2">
+                    <div className="flex items-center justify-end md:justify-start text-brand text-sm font-medium mb-2">
                       Next
                       <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                     </div>
-                    <h3 className="text-lg font-bold text-white group-hover:text-purple-400 transition-colors line-clamp-2">
+                    <h3 className="text-lg font-bold text-slate-700 group-hover:text-brand transition-colors line-clamp-2">
                       {nextPost.title}
                     </h3>
                     {nextPost.order && (
-                      <span className="text-xs text-gray-400 mt-2 inline-block">Part {nextPost.order}</span>
+                      <span className="text-xs text-slate-500 mt-2 inline-block">Part {nextPost.order}</span>
                     )}
                   </Link>
                 ) : (
-                  <div className="p-6 rounded-xl bg-white/5 border border-white/10 opacity-50 text-right">
-                    <div className="text-gray-500 text-sm">No next post</div>
+                  <div className="p-6 rounded-xl bg-slate-50 border border-slate-200 text-right">
+                    <div className="text-slate-400 text-sm">No next post</div>
                   </div>
                 )}
               </div>
@@ -420,9 +424,9 @@ const BlogPostDetail = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="border-t border-white/10 pt-12"
+              className="border-t border-slate-200 pt-12"
             >
-              <h2 className="text-3xl font-bold text-white mb-8">Related Articles</h2>
+              <h2 className="text-3xl font-extrabold text-slate-900 mb-8">Related Articles</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedPosts.map((relatedPost) => (
                   <Link 
@@ -437,8 +441,8 @@ const BlogPostDetail = () => {
                       document.head.appendChild(link);
                     }}
                   >
-                    <div className="group rounded-xl overflow-hidden bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                      <div className="relative h-40 overflow-hidden">
+                    <div className="group rounded-2xl overflow-hidden bg-white border border-slate-200 hover:border-brand shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                      <div className="relative h-40 overflow-hidden bg-slate-100">
                         <img
                               src={optimizeImageUrl(relatedPost.featuredImage, 200, 30)}
                           srcSet={generateImageSrcset(relatedPost.featuredImage)}
@@ -447,13 +451,12 @@ const BlogPostDetail = () => {
                           loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent" />
                       </div>
                       <div className="p-4">
-                        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors duration-300 line-clamp-2">
+                        <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-brand transition-colors duration-300 line-clamp-2">
                           {relatedPost.title}
                         </h3>
-                        <p className="text-sm text-gray-400 line-clamp-2">
+                        <p className="text-sm text-slate-600 line-clamp-2">
                           {relatedPost.description}
                         </p>
                       </div>

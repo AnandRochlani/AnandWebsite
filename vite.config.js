@@ -7,9 +7,18 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const JOBS_API_TARGET = 'https://job-aggregator-d0el.onrender.com'
 
+// When set, route every other /api/* path to a local dev API shim
+// (tools/dev-api-server.mjs). Off by default so a plain `vite dev` is
+// identical to production: only the jobs/companies routes proxy out.
+const DEV_API_URL = process.env.DEV_API_URL
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  // Allow overriding the dependency-optimization cache dir via env.
+  // Useful when the project lives on a filesystem where Vite can't unlink
+  // its cache (e.g. some sandboxed mounts).
+  cacheDir: process.env.VITE_CACHE_DIR || undefined,
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -67,6 +76,9 @@ export default defineConfig({
       strict: false,
     },
     // Same-origin /api/public/jobs → Render (production uses Vercel serverless proxy).
+    // Other /api/* routes only proxy when DEV_API_URL is set; otherwise the
+    // requests fall through to dbApi.js's static-data fallbacks, matching
+    // how production behaves before deploy.
     proxy: {
       '/api/public/jobs': {
         target: JOBS_API_TARGET,
@@ -78,6 +90,14 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (p) => p.replace(/^\/api\/public\/companies/, '/companies'),
       },
+      ...(DEV_API_URL
+        ? {
+            '/api': {
+              target: DEV_API_URL,
+              changeOrigin: true,
+            },
+          }
+        : {}),
     },
   },
   // Optimize for faster response times

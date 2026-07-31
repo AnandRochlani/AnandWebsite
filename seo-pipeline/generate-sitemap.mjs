@@ -8,6 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { slugify } from '../src/lib/slug.js';
 
 const SITE = (process.env.SITE_URL || 'https://anandrochlani.com').replace(/\/$/, '');
 const CANONICAL = 'https://anandrochlani.com'; // apex only — www is not attached in Vercel
@@ -49,7 +50,10 @@ async function main() {
 
   for (const c of courses) {
     // External (Udemy) courses still have an internal detail page worth indexing.
-    entries.push(url(`${CANONICAL}/courses/${c.id}`, iso(c.updatedAt || c.updated_at), 'monthly', '0.7'));
+    // Use the slug form — that is what CoursesPage links to and what the prerendered
+    // page canonicalises to, so the sitemap must not advertise the numeric variant.
+    const slug = c.slug || slugify(c.name || c.title || String(c.id));
+    entries.push(url(`${CANONICAL}/courses/${slug}`, iso(c.updatedAt || c.updated_at), 'monthly', '0.7'));
   }
 
   for (const p of posts) {

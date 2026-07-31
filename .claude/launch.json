@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "anand-website",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "preview"],
+      "port": 3000
+    },
+    {
+      "name": "anand-website-seo",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "preview", "--host", "127.0.0.1", "--port", "4180"],
+      "port": 4180
+    }
+  ]
+}

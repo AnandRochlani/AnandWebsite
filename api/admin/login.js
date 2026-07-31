@@ -7,8 +7,11 @@ export default async function handler(req, res) {
   }
 
   const { username, password } = req.body || {};
-  const expectedUser = process.env.ADMIN_USERNAME;
-  const expectedPass = process.env.ADMIN_PASSWORD;
+  // In production we require explicit env vars. In local dev we default to
+  // admin/admin so the site is usable without extra setup.
+  const isProd = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
+  const expectedUser = process.env.ADMIN_USERNAME || (!isProd ? 'admin' : '');
+  const expectedPass = process.env.ADMIN_PASSWORD || (!isProd ? 'admin' : '');
 
   if (!expectedUser || !expectedPass) {
     return res.status(500).json({ error: 'Admin credentials are not configured' });

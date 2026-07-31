@@ -1,0 +1,55 @@
+{
+  "note": "Hand-curated keyword seeds, merged into linking/keyword-map.json on every run (source: \"seed\", weight 0.9). Edit freely — this file is the intended place to teach the linker natural anchor phrases that cannot be derived from a title or the content plan. Phrases are matched case-insensitively, hyphen/space tolerant, with singular/plural on the last word.",
+  "seeds": {
+    "understanding-latency-a-beginners-guide-to-system-design-fundamentals": [
+      "latency", "network latency", "tail latency", "p99 latency", "latency budget", "round trip time"
+    ],
+    "throughput-explained-a-beginners-guide-to-system-design-scale-2026": [
+      "throughput", "requests per second", "queries per second"
+    ],
+    "system-design-fundamentals-introduction-to-scalable-architecture": [
+      "scalable architecture", "system design fundamentals", "scalable system"
+    ],
+    "scalability-patterns-horizontal-vs-vertical-scaling": [
+      "horizontal scaling", "vertical scaling", "scaling horizontally", "scale horizontally",
+      "horizontal vs vertical scaling", "scaling out", "adding more servers"
+    ],
+    "load-balancing-distributing-traffic-across-servers": [
+      "load balancing", "load balancer", "round robin", "least connections"
+    ],
+    "caching-strategies-improving-performance-with-smart-data-storage": [
+      "caching strategy", "cache aside", "write through", "write behind", "write back cache",
+      "cache eviction", "cache invalidation", "refresh ahead", "least recently used"
+    ],
+    "database-design-replication-sharding-and-consistency": [
+      "sharding", "database sharding", "shard key", "partitioning", "partition the data",
+      "database consistency", "horizontal partitioning"
+    ],
+    "microservices-architecture-building-distributed-systems": [
+      "microservice", "microservice architecture", "monolith", "service boundaries"
+    ],
+    "designing-a-url-shortener-complete-system-design-case-study": [
+      "url shortener", "shortening service", "short url", "tinyurl"
+    ],
+    "consistent-hashing-explained-system-design-interview-guide": [
+      "consistent hashing", "hash ring", "virtual node", "modulo hashing", "rehash"
+    ],
+    "master-slave-replication-database-architecture-explained": [
+      "master slave replication", "master slave", "read replica", "replication lag",
+      "leader follower", "primary replica", "read write split"
+    ],
+    "design-a-social-bookmarking-service-delicious-system-design-case-study": [
+      "social bookmarking", "bookmarking service", "del.icio.us", "delicious"
+    ],
+    "design-a-coding-contest-platform-leetcode-system-design-interview": [
+      "coding contest", "contest platform", "leaderboard", "code judge", "judge worker", "leetcode"
+    ],
+    "design-facebook-news-feed-system-design-interview-guide": [
+      "news feed", "fanout on write", "fanout on read", "fan out on write", "fan out on read",
+      "celebrity problem", "feed ranking", "feed generation"
+    ],
+    "design-google-typeahead-autocomplete-system-design-interview": [
+      "typeahead", "autocomplete", "trie", "search suggestion", "prefix matching", "top k suggestion"
+    ]
+  }
+}

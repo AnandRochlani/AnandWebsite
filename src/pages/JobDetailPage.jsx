@@ -84,24 +84,24 @@ export default function JobDetailPage() {
               ? seoPlain.slice(0, 155) + (seoPlain.length > 155 ? '…' : '')
               : `${job.title} at ${job.company_name || 'company'}`
           }
-          canonical={`https://www.anandrochlani.com/jobs/${job.id}`}
+          canonical={`https://anandrochlani.com/jobs/${job.id}`}
           type="website"
         />
       ) : (
         <SEOHead
           title="Job details"
           description="View role details and apply on the employer site."
-          canonical={`https://www.anandrochlani.com/jobs/${id || ''}`}
+          canonical={`https://anandrochlani.com/jobs/${id || ''}`}
         />
       )}
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 pb-16">
+      <div className="min-h-screen bg-slate-50 pt-24 pb-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <Button
             type="button"
             variant="outline"
             onClick={() => navigate(backTo)}
-            className="mb-8 border-white/20 bg-white/5 text-gray-200 hover:bg-white/10"
+            className="mb-8 border-slate-300 bg-white text-slate-700 hover:border-brand hover:text-brand"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to jobs
@@ -109,13 +109,13 @@ export default function JobDetailPage() {
 
           {loading ? (
             <div className="flex justify-center py-24">
-              <Loader2 className="w-10 h-10 text-purple-500 animate-spin" />
+              <Loader2 className="w-10 h-10 text-brand animate-spin" />
             </div>
           ) : error ? (
-            <div className="text-center py-16 rounded-xl border border-white/10 bg-white/[0.02]">
-              <p className="text-red-400 mb-4">{error}</p>
+            <div className="text-center py-16 rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <p className="text-red-500 mb-4">{error}</p>
               <Link to="/jobs">
-                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                <Button className="bg-brand hover:bg-brand-dark text-white font-semibold rounded-lg">
                   Browse all jobs
                 </Button>
               </Link>
@@ -125,30 +125,30 @@ export default function JobDetailPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-6 sm:p-8 shadow-xl"
+              className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm"
             >
               <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
                 <div>
-                  <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{job.title}</h1>
-                  <div className="flex flex-wrap items-center gap-3 text-gray-300">
+                  <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">{job.title}</h1>
+                  <div className="flex flex-wrap items-center gap-3 text-slate-600">
                     <span className="inline-flex items-center gap-1.5">
-                      <Building2 className="w-4 h-4 text-purple-400" />
+                      <Building2 className="w-4 h-4 text-brand" />
                       {job.company_name}
                     </span>
                     {job.location ? (
                       <span className="inline-flex items-center gap-1.5">
-                        <MapPin className="w-4 h-4 text-pink-400" />
+                        <MapPin className="w-4 h-4 text-brand" />
                         {job.location}
                       </span>
                     ) : null}
                     {exp ? (
                       <span className="inline-flex items-center gap-1.5">
-                        <Briefcase className="w-4 h-4 text-purple-300" />
+                        <Briefcase className="w-4 h-4 text-brand" />
                         {exp}
                       </span>
                     ) : null}
                     {job.job_type ? (
-                      <span className="text-sm px-2 py-0.5 rounded-full bg-white/10">{job.job_type}</span>
+                      <span className="text-sm px-3 py-0.5 rounded-full bg-brand-soft text-brand font-semibold">{job.job_type}</span>
                     ) : null}
                   </div>
                 </div>
@@ -159,7 +159,7 @@ export default function JobDetailPage() {
                   {skills.map((s) => (
                     <span
                       key={s}
-                      className="px-3 py-1 rounded-full bg-white/10 text-gray-200 text-sm border border-white/10"
+                      className="px-3 py-1 rounded-full bg-brand-soft text-brand text-sm font-semibold"
                     >
                       {s}
                     </span>
@@ -169,30 +169,30 @@ export default function JobDetailPage() {
 
               {descriptionSource ? (
                 <div className="mb-10">
-                  <h2 className="text-lg font-semibold text-white mb-3">Description</h2>
+                  <h2 className="text-lg font-semibold text-slate-900 mb-3">Description</h2>
                   {descriptionIsHtml ? (
                     <div
-                      className="blog-content text-gray-300 leading-relaxed"
+                      className="blog-content text-slate-600 leading-relaxed"
                       // eslint-disable-next-line react/no-danger -- sanitized with DOMPurify
                       dangerouslySetInnerHTML={{
                         __html: sanitizeJobHtml(descriptionSource),
                       }}
                     />
                   ) : (
-                    <div className="text-gray-300 leading-relaxed whitespace-pre-wrap">
+                    <div className="text-slate-600 leading-relaxed whitespace-pre-wrap">
                       {descriptionSource}
                     </div>
                   )}
                 </div>
               ) : null}
 
-              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-white/10">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-200">
                 {job.apply_url ? (
                   <a
                     href={job.apply_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center rounded-xl text-base font-semibold px-8 py-3 w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-purple-500/30 transition-all"
+                    className="inline-flex items-center justify-center rounded-lg text-base font-semibold px-8 py-3 w-full sm:w-auto bg-brand hover:bg-brand-dark text-white shadow-sm hover:shadow-md transition-all focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
                   >
                     Apply for this role
                     <ExternalLink className="w-4 h-4 ml-2" />
@@ -203,7 +203,7 @@ export default function JobDetailPage() {
                     <Button
                       size="lg"
                       variant="outline"
-                      className="w-full sm:w-auto border-white/20 bg-white/5 text-white hover:bg-white/10"
+                      className="w-full sm:w-auto border-slate-300 bg-white text-slate-700 hover:border-brand hover:text-brand"
                     >
                       More jobs at {job.company_name || 'this company'}
                     </Button>

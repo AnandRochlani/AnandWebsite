@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, FileText, Plus, Trash2, CheckCircle, AlertCircle, LogOut, ArrowUp, ArrowDown, GripVertical, Save, Pencil, Settings, Image as ImageIcon, Star } from 'lucide-react';
+import { BookOpen, FileText, Plus, Trash2, CheckCircle, AlertCircle, LogOut, ArrowUp, ArrowDown, GripVertical, Save, Pencil, Image as ImageIcon, Star, Sliders, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { useAdmin } from '@/context/AdminContext';
@@ -8,6 +8,9 @@ import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { fetchCourses, fetchBlogPosts, adminCreateOrUpdateCourse, adminDeleteCourse, adminCreateOrUpdateBlogPost, adminDeleteBlogPost, adminUpdateBlogOrder } from '@/data/dbApi';
+import { fetchJobs, adminCreateJob, adminDeleteJob } from '@/data/jobsApi';
+import SettingsTab from '@/components/admin/SettingsTab';
+import ImageUploader from '@/components/admin/ImageUploader';
 
 const AdminPage = () => {
   const { 
@@ -28,21 +31,41 @@ const AdminPage = () => {
   
   const [allCourses, setAllCourses] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
+  const [allJobs, setAllJobs] = useState([]);
+  const [jobsLoading, setJobsLoading] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
-  
+
+  const loadJobs = async () => {
+    try {
+      setJobsLoading(true);
+      const result = await fetchJobs({ page: 1, limit: 50 });
+      setAllJobs(Array.isArray(result?.data) ? result.data : []);
+    } catch (e) {
+      setAllJobs([]);
+    } finally {
+      setJobsLoading(false);
+    }
+  };
+
   useEffect(() => {
     let mounted = true;
     const run = async () => {
       try {
         setDataLoading(true);
-        const [courses, posts] = await Promise.all([fetchCourses(), fetchBlogPosts()]);
+        const [courses, posts, jobsResult] = await Promise.all([
+          fetchCourses(),
+          fetchBlogPosts(),
+          fetchJobs({ page: 1, limit: 50 }).catch(() => ({ data: [] })),
+        ]);
         if (!mounted) return;
         setAllCourses(Array.isArray(courses) ? courses : []);
         setAllPosts(Array.isArray(posts) ? posts : []);
+        setAllJobs(Array.isArray(jobsResult?.data) ? jobsResult.data : []);
       } catch (e) {
         if (!mounted) return;
         setAllCourses([]);
         setAllPosts([]);
+        setAllJobs([]);
       } finally {
         if (mounted) setDataLoading(false);
       }
@@ -85,18 +108,44 @@ const AdminPage = () => {
     }
   }, [dataLoading]);
 
-  // Get all System Design blogs for ordering
-  const systemDesignBlogs = useMemo(() => {
-    return (allPosts || [])
-      .filter(post => post.category === 'System Design' && post.series && post.order !== undefined)
-      .sort((a, b) => (a.order || 999) - (b.order || 999));
-  }, [allPosts]);
-  
-  const [blogOrderList, setBlogOrderList] = useState([]);
-  
+  // Manage Blog Order: the admin first selects a course, then we load blogs
+  // associated with that course (matched by category — that's how blogs and
+  // courses are linked today). Default selection is the first course so
+  // there's always something to look at.
+  const [orderCourseId, setOrderCourseId] = useState(null);
+
   useEffect(() => {
-    setBlogOrderList(systemDesignBlogs.map(post => ({ id: post.id, title: post.title, order: post.order || 999 })));
-  }, [systemDesignBlogs]);
+    if (orderCourseId == null && allCourses.length > 0) {
+      setOrderCourseId(allCourses[0].id);
+    }
+  }, [allCourses, orderCourseId]);
+
+  const orderSelectedCourse = useMemo(
+    () => (allCourses || []).find((c) => c.id === orderCourseId) || null,
+    [allCourses, orderCourseId]
+  );
+
+  // Blogs that belong to the selected course (matched by category).
+  const courseBlogs = useMemo(() => {
+    if (!orderSelectedCourse) return [];
+    return (allPosts || [])
+      .filter((post) => post.category === orderSelectedCourse.category)
+      .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+  }, [allPosts, orderSelectedCourse]);
+
+  const [blogOrderList, setBlogOrderList] = useState([]);
+
+  useEffect(() => {
+    setBlogOrderList(
+      courseBlogs.map((post, idx) => ({
+        id: post.id,
+        title: post.title,
+        // Posts that don't have an order yet still need a stable display
+        // number so the "n. Title" rendering looks coherent.
+        order: post.order ?? idx + 1,
+      }))
+    );
+  }, [courseBlogs]);
 
   // Course Form State
   const initialCourseState = {
@@ -109,6 +158,7 @@ const AdminPage = () => {
     rating: '',
     studentsEnrolled: '',
     category: 'Web Development',
+    featuredImage: '',
     isExternal: false,
     externalUrl: '',
     modules: [{ title: '', lessons: '', duration: '' }]
@@ -122,9 +172,23 @@ const AdminPage = () => {
     content: '',
     author: '',
     date: '',
-    category: 'Web Development'
+    category: 'Web Development',
+    featuredImage: ''
   };
   const [blogForm, setBlogForm] = useState(initialBlogState);
+
+  // Job Form State
+  const initialJobState = {
+    title: '',
+    company_name: '',
+    location: '',
+    description: '',
+    skills: '',
+    min_experience: '',
+    max_experience: '',
+    apply_url: '',
+  };
+  const [jobForm, setJobForm] = useState(initialJobState);
 
   // Schema Form State
   const [schemaForm, setSchemaForm] = useState({
@@ -320,6 +384,7 @@ const AdminPage = () => {
       rating: course.rating ?? '',
       studentsEnrolled: course.studentsEnrolled ?? '',
       category: course.category || 'Web Development',
+      featuredImage: course.featuredImage || '',
       isExternal: Boolean(course.isExternal),
       externalUrl: course.externalUrl || '',
       modules: (course.modules || []).map((m) => ({
@@ -343,7 +408,8 @@ const AdminPage = () => {
       content: post.content || '',
       author: post.author || '',
       date: post.date || '',
-      category: post.category || 'Web Development'
+      category: post.category || 'Web Development',
+      featuredImage: post.featuredImage || ''
     });
     setErrors({});
   };
@@ -367,6 +433,81 @@ const AdminPage = () => {
       setTimeout(() => window.location.reload(), 600);
     } catch (error) {
       toast({ title: "Error", description: error?.message || 'Failed to delete blog post', variant: "destructive" });
+    }
+  };
+
+  // ── Jobs ────────────────────────────────────────────────────────────────
+  const validateJob = () => {
+    const newErrors = {};
+    if (!jobForm.title.trim()) newErrors.jobTitle = 'Title is required';
+    if (!jobForm.company_name.trim()) newErrors.jobCompany = 'Company is required';
+    if (jobForm.apply_url && !/^https?:\/\//i.test(jobForm.apply_url.trim())) {
+      newErrors.jobApplyUrl = 'Apply URL must start with http(s)://';
+    }
+    if (jobForm.min_experience !== '' && Number.isNaN(Number(jobForm.min_experience))) {
+      newErrors.jobMinExp = 'Must be a number';
+    }
+    if (jobForm.max_experience !== '' && Number.isNaN(Number(jobForm.max_experience))) {
+      newErrors.jobMaxExp = 'Must be a number';
+    }
+    return newErrors;
+  };
+
+  const handleJobSubmit = async (e) => {
+    e.preventDefault();
+    const validationErrors = validateJob();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    const skillsList = String(jobForm.skills || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    const payload = {
+      title: jobForm.title.trim(),
+      company_name: jobForm.company_name.trim(),
+      location: jobForm.location.trim() || null,
+      description: jobForm.description || null,
+      apply_url: jobForm.apply_url.trim() || null,
+      min_experience: jobForm.min_experience === '' ? null : Number(jobForm.min_experience),
+      max_experience: jobForm.max_experience === '' ? null : Number(jobForm.max_experience),
+      skills: skillsList,
+    };
+
+    try {
+      await adminCreateJob(payload);
+      toast({
+        title: 'Success!',
+        description: 'Job added successfully',
+        className: 'bg-green-600 border-green-700 text-white',
+      });
+      setJobForm(initialJobState);
+      setErrors({});
+      loadJobs();
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: error?.message || 'Failed to add job',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleDeleteJob = async (job) => {
+    if (!window.confirm(`Delete job: "${job.title}"?`)) return;
+    try {
+      await adminDeleteJob(job.id);
+      toast({ title: 'Deleted', description: 'Job deleted successfully' });
+      setAllJobs((prev) => prev.filter((j) => j.id !== job.id));
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: error?.message || 'Failed to delete job',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -475,7 +616,7 @@ const AdminPage = () => {
       <SEOHead 
         title="Admin Dashboard"
         description="Manage your website content with the admin dashboard. Add and edit courses and blog posts, manage blog order, schema data, and image alt tags from one central location."
-        canonical="https://www.anandrochlani.com/admin"
+        canonical="https://anandrochlani.com/admin"
         keywords="admin dashboard, content management, add courses, add blog posts, blog order, schema management, image alt tags, website management"
       />
 
@@ -488,7 +629,7 @@ const AdminPage = () => {
           >
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
-              <p className="text-gray-400">Manage courses, blog posts, schema data, and images</p>
+              <p className="text-gray-400">Manage courses, blog posts, schema data, images, and site-wide settings</p>
             </div>
             
             <Button 
@@ -502,7 +643,7 @@ const AdminPage = () => {
           </motion.div>
 
           {/* Tabs */}
-          <div className="flex space-x-4 mb-8">
+          <div className="flex flex-wrap gap-2 sm:gap-4 mb-8">
             <button
               onClick={() => setActiveTab('course')}
               className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
@@ -524,6 +665,17 @@ const AdminPage = () => {
             >
               <FileText className="w-5 h-5 mr-2" />
               Add Blog Post
+            </button>
+            <button
+              onClick={() => setActiveTab('jobs')}
+              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                activeTab === 'jobs'
+                  ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <Briefcase className="w-5 h-5 mr-2" />
+              Add Job
             </button>
             <button
               onClick={() => setActiveTab('order')}
@@ -557,6 +709,17 @@ const AdminPage = () => {
             >
               <ImageIcon className="w-5 h-5 mr-2" />
               Images
+            </button>
+            <button
+              onClick={() => setActiveTab('settings')}
+              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                activeTab === 'settings'
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <Sliders className="w-5 h-5 mr-2" />
+              Site Settings
             </button>
           </div>
 
@@ -722,6 +885,16 @@ const AdminPage = () => {
                           )}
                         </div>
                       )}
+                    </div>
+
+                    {/* Featured Image: paste a URL or upload from device */}
+                    <div className="md:col-span-2">
+                      <ImageUploader
+                        label="Featured Image"
+                        accentColor="purple-500"
+                        value={courseForm.featuredImage}
+                        onChange={(next) => setCourseForm({ ...courseForm, featuredImage: next })}
+                      />
                     </div>
                   </div>
 
@@ -898,6 +1071,14 @@ const AdminPage = () => {
                     </select>
                   </div>
 
+                  {/* Featured Image: paste a URL or upload from device */}
+                  <ImageUploader
+                    label="Featured Image"
+                    accentColor="pink-500"
+                    value={blogForm.featuredImage}
+                    onChange={(next) => setBlogForm({ ...blogForm, featuredImage: next })}
+                  />
+
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-300">Description</label>
                     <textarea
@@ -984,6 +1165,185 @@ const AdminPage = () => {
                   </div>
                 </motion.div>
               )}
+              {activeTab === 'jobs' && (
+                <motion.form
+                  key="job-form"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.3 }}
+                  onSubmit={handleJobSubmit}
+                  className="space-y-6"
+                >
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-300">Job Title</label>
+                      <input
+                        type="text"
+                        value={jobForm.title}
+                        onChange={(e) => setJobForm({ ...jobForm, title: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        placeholder="e.g. Senior Backend Engineer"
+                      />
+                      {errors.jobTitle && <span className="text-red-400 text-sm flex items-center"><AlertCircle className="w-3 h-3 mr-1"/>{errors.jobTitle}</span>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-300">Company</label>
+                      <input
+                        type="text"
+                        value={jobForm.company_name}
+                        onChange={(e) => setJobForm({ ...jobForm, company_name: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        placeholder="Company name"
+                      />
+                      {errors.jobCompany && <span className="text-red-400 text-sm flex items-center"><AlertCircle className="w-3 h-3 mr-1"/>{errors.jobCompany}</span>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-300">Location</label>
+                      <input
+                        type="text"
+                        value={jobForm.location}
+                        onChange={(e) => setJobForm({ ...jobForm, location: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        placeholder="e.g. Remote, Bangalore, NYC"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-300">Apply URL</label>
+                      <input
+                        type="url"
+                        value={jobForm.apply_url}
+                        onChange={(e) => setJobForm({ ...jobForm, apply_url: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        placeholder="https://company.com/careers/apply"
+                      />
+                      {errors.jobApplyUrl && <span className="text-red-400 text-sm flex items-center"><AlertCircle className="w-3 h-3 mr-1"/>{errors.jobApplyUrl}</span>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-300">Min Experience (years)</label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.5"
+                        value={jobForm.min_experience}
+                        onChange={(e) => setJobForm({ ...jobForm, min_experience: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        placeholder="0"
+                      />
+                      {errors.jobMinExp && <span className="text-red-400 text-sm flex items-center"><AlertCircle className="w-3 h-3 mr-1"/>{errors.jobMinExp}</span>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-300">Max Experience (years)</label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.5"
+                        value={jobForm.max_experience}
+                        onChange={(e) => setJobForm({ ...jobForm, max_experience: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        placeholder="5"
+                      />
+                      {errors.jobMaxExp && <span className="text-red-400 text-sm flex items-center"><AlertCircle className="w-3 h-3 mr-1"/>{errors.jobMaxExp}</span>}
+                    </div>
+
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="text-sm font-medium text-gray-300">Skills (comma-separated)</label>
+                      <input
+                        type="text"
+                        value={jobForm.skills}
+                        onChange={(e) => setJobForm({ ...jobForm, skills: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        placeholder="React, Node.js, PostgreSQL"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="text-sm font-medium text-gray-300">Description (HTML supported)</label>
+                      <textarea
+                        value={jobForm.description}
+                        onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none h-40 font-mono text-sm"
+                        placeholder="<p>About the role…</p>"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4 pt-4">
+                    <Button type="submit" className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white">
+                      Create Job
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setJobForm(initialJobState);
+                        setErrors({});
+                      }}
+                      className="border-white/20 text-white hover:bg-white/10"
+                    >
+                      Reset
+                    </Button>
+                  </div>
+                </motion.form>
+              )}
+              {activeTab === 'jobs' && (
+                <motion.div
+                  key="job-list"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="mt-10 pt-8 border-t border-white/10"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-bold text-white">Recent Jobs</h3>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={loadJobs}
+                      className="border-white/20 text-white hover:bg-white/10"
+                      disabled={jobsLoading}
+                    >
+                      {jobsLoading ? 'Refreshing…' : 'Refresh'}
+                    </Button>
+                  </div>
+                  {allJobs.length === 0 ? (
+                    <p className="text-gray-400 text-center py-8">No jobs found.</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {allJobs.map((job) => (
+                        <div
+                          key={job.id}
+                          className="flex items-center justify-between gap-4 p-4 rounded-lg bg-black/20 border border-white/10"
+                        >
+                          <div className="min-w-0">
+                            <p className="text-white font-medium truncate">{job.title}</p>
+                            <p className="text-xs text-gray-400 truncate">
+                              {job.company_name}
+                              {job.location ? ` • ${job.location}` : ''}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteJob(job)}
+                              className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20"
+                              title="Delete job"
+                            >
+                              <Trash2 className="w-4 h-4 text-red-400" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              )}
               {activeTab === 'order' && (
                 <motion.div
                   key="order-form"
@@ -993,14 +1353,57 @@ const AdminPage = () => {
                   transition={{ duration: 0.3 }}
                   className="space-y-6"
                 >
-                  <div className="mb-6">
-                    <h2 className="text-2xl font-bold text-white mb-2">Manage System Design Blog Order</h2>
-                    <p className="text-gray-400">Reorder the System Design tutorial series by moving blogs up or down.</p>
+                  <div className="mb-2">
+                    <h2 className="text-2xl font-bold text-white mb-2">Manage Blog Order</h2>
+                    <p className="text-gray-400">
+                      Pick a course, then reorder the blog series associated with it.
+                      Blogs are matched to a course by category.
+                    </p>
                   </div>
 
-                  {blogOrderList.length === 0 ? (
+                  {/* Course selector */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-300">Course</label>
+                    <select
+                      value={orderCourseId ?? ''}
+                      onChange={(e) => setOrderCourseId(Number(e.target.value))}
+                      className="w-full px-4 py-2 rounded-lg bg-black/20 border border-white/10 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      disabled={dataLoading || allCourses.length === 0}
+                    >
+                      {allCourses.length === 0 ? (
+                        <option value="">— No courses available —</option>
+                      ) : (
+                        allCourses.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name} ({c.category})
+                          </option>
+                        ))
+                      )}
+                    </select>
+                    {orderSelectedCourse && (
+                      <p className="text-xs text-gray-500">
+                        Showing blogs in category{' '}
+                        <span className="text-blue-400 font-medium">
+                          {orderSelectedCourse.category}
+                        </span>
+                      </p>
+                    )}
+                  </div>
+
+                  {dataLoading ? (
                     <div className="text-center py-12 text-gray-400">
-                      <p>No System Design blogs found with order numbers.</p>
+                      <p>Loading courses and blogs…</p>
+                    </div>
+                  ) : !orderSelectedCourse ? (
+                    <div className="text-center py-12 text-gray-400">
+                      <p>Select a course to load its blog order.</p>
+                    </div>
+                  ) : blogOrderList.length === 0 ? (
+                    <div className="text-center py-12 text-gray-400">
+                      <p>
+                        No blogs found in the &ldquo;{orderSelectedCourse.category}&rdquo; category.
+                        Add a blog post with that category, then come back to reorder it.
+                      </p>
                     </div>
                   ) : (
                     <>
@@ -1063,10 +1466,16 @@ const AdminPage = () => {
                           type="button"
                           variant="outline"
                           onClick={() => {
-                            setBlogOrderList(systemDesignBlogs.map(post => ({ id: post.id, title: post.title, order: post.order || 999 })));
+                            setBlogOrderList(
+                              courseBlogs.map((post, idx) => ({
+                                id: post.id,
+                                title: post.title,
+                                order: post.order ?? idx + 1,
+                              }))
+                            );
                             toast({
-                              title: "Reset",
-                              description: "Order reset to original",
+                              title: 'Reset',
+                              description: 'Order reset to current saved values',
                             });
                           }}
                           className="border-white/20 text-white hover:bg-white/10"
@@ -1153,6 +1562,7 @@ const AdminPage = () => {
                   </form>
                 </motion.div>
               )}
+              {activeTab === 'settings' && <SettingsTab key="settings-tab" />}
               {activeTab === 'images' && (
                 <motion.div
                   key="images-form"

@@ -10,13 +10,23 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/app-shell.html"
     }
   ],
   "redirects": [
     {
       "source": "/blog/17",
       "destination": "/blog/throughput-explained-a-beginners-guide-to-system-design-scale-2026",
+      "permanent": true
+    },
+    {
+      "source": "/services",
+      "destination": "/courses",
+      "permanent": true
+    },
+    {
+      "source": "/services/:path*",
+      "destination": "/courses",
       "permanent": true
     }
   ],

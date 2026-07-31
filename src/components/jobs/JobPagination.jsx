@@ -8,11 +8,11 @@ export default function JobPagination({ page, limit, total, onPageChange, disabl
   const canNext = page < totalPages;
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/10">
-      <p className="text-sm text-gray-400">
-        Page <span className="text-white font-medium">{page}</span> of{' '}
-        <span className="text-white font-medium">{totalPages}</span>
-        <span className="text-gray-500"> · {total} roles</span>
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-slate-200">
+      <p className="text-sm text-slate-500">
+        Page <span className="text-slate-900 font-medium">{page}</span> of{' '}
+        <span className="text-slate-900 font-medium">{totalPages}</span>
+        <span className="text-slate-400"> · {total} roles</span>
       </p>
       <div className="flex items-center gap-2">
         <Button
@@ -20,7 +20,7 @@ export default function JobPagination({ page, limit, total, onPageChange, disabl
           variant="outline"
           disabled={disabled || !canPrev}
           onClick={() => onPageChange(page - 1)}
-          className="border-white/20 bg-white/5 text-white hover:bg-white/10 disabled:opacity-40"
+          className="border-slate-300 bg-white text-slate-700 hover:border-brand hover:text-brand disabled:opacity-40"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
           Previous
@@ -30,7 +30,7 @@ export default function JobPagination({ page, limit, total, onPageChange, disabl
           variant="outline"
           disabled={disabled || !canNext}
           onClick={() => onPageChange(page + 1)}
-          className="border-white/20 bg-white/5 text-white hover:bg-white/10 disabled:opacity-40"
+          className="border-slate-300 bg-white text-slate-700 hover:border-brand hover:text-brand disabled:opacity-40"
         >
           Next
           <ChevronRight className="w-4 h-4 ml-1" />

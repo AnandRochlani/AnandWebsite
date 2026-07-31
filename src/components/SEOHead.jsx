@@ -1,18 +1,50 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useContext } from 'react';
+import { SiteSettingsContext } from '@/context/SiteSettingsContext';
 
-const SEOHead = ({ 
-  title, 
-  description, 
-  image = 'https://www.anandrochlani.com/og-image.jpg',
+const SEOHead = ({
+  title,
+  description,
+  image,
   type = 'website',
   canonical,
   keywords,
+  // Set on not-found / empty states. The SPA rewrite makes Vercel answer 200 for
+  // any unknown path, so without this Google indexes "Post Not Found" as a soft 404.
+  noindex = false,
   // Article-specific (optional)
   authorName,
   publishedTime,
   modifiedTime
 }) => {
-  const siteUrl = 'https://www.anandrochlani.com';
+  // Pull DB-backed defaults if the provider is mounted; otherwise fall back
+  // to the same hardcoded values that lived here before. Warn (once) in
+  // dev so a missing provider doesn't silently regress page metadata.
+  const ctx = useContext(SiteSettingsContext);
+  if (!ctx && typeof window !== 'undefined' && !window.__SEOHEAD_NO_PROVIDER_WARNED__) {
+    window.__SEOHEAD_NO_PROVIDER_WARNED__ = true;
+    // eslint-disable-next-line no-console
+    console.warn(
+      '[SEOHead] SiteSettingsProvider is not mounted; falling back to hardcoded SEO defaults.'
+    );
+  }
+  const get = ctx?.get || ((_k, fb) => fb);
+
+  // Apex domain only: www.anandrochlani.com is not attached in Vercel (connection
+  // refused), so canonicals must never point at it.
+  const siteUrl = get('seo.site_url', 'https://anandrochlani.com');
+  const siteName = get('seo.site_name', 'AnandRochlani');
+  const defaultTitle = get('seo.default_title', 'Courses & Tech Blog | AnandRochlani');
+  const defaultDescription = get(
+    'seo.default_description',
+    'Master web development, design, and data science with expert-led courses and tech blog posts. Join thousands learning new skills.'
+  );
+  const defaultKeywords = get('seo.default_keywords', null);
+  const defaultOgImage = get(
+    'seo.default_og_image',
+    'https://anandrochlani.com/og-image.jpg'
+  );
+  const logoUrl = get('seo.logo_url', `${siteUrl}/logo.png`);
+  const resolvedImage = image || defaultOgImage;
   
   // Build canonical URL - always match the current page to prevent SEO errors
   // Normalize pathname: remove trailing slash except for root
@@ -51,10 +83,11 @@ const SEOHead = ({
     fullUrl = currentUrl || siteUrl;
   }
   // Only append brand name if title doesn't already contain it
-  const fullTitle = title 
-    ? (title.includes('AnandRochlani') ? title : `${title} | AnandRochlani`)
-    : 'Courses & Tech Blog | AnandRochlani';
-  const fullDescription = description || 'Master web development, design, and data science with expert-led courses and tech blog posts. Join thousands learning new skills.';
+  const fullTitle = title
+    ? (title.includes(siteName) ? title : `${title} | ${siteName}`)
+    : defaultTitle;
+  const fullDescription = description || defaultDescription;
+  const fullKeywords = keywords || defaultKeywords;
   const isArticle = type === 'article';
 
   const schemaJson = useMemo(() => {
@@ -68,7 +101,7 @@ const SEOHead = ({
           },
           "headline": fullTitle,
           "description": fullDescription,
-          "image": image,
+          "image": resolvedImage,
           ...(publishedTime ? { "datePublished": publishedTime } : {}),
           ...(modifiedTime ? { "dateModified": modifiedTime } : {}),
           ...(authorName
@@ -81,10 +114,10 @@ const SEOHead = ({
             : {}),
           "publisher": {
             "@type": "Organization",
-            "name": "AnandRochlani",
+            "name": siteName,
             "logo": {
               "@type": "ImageObject",
-              "url": "https://www.anandrochlani.com/logo.png"
+              "url": logoUrl
             }
           }
         }
@@ -96,16 +129,16 @@ const SEOHead = ({
           "url": fullUrl,
           "publisher": {
             "@type": "Organization",
-            "name": "AnandRochlani",
+            "name": siteName,
             "logo": {
               "@type": "ImageObject",
-              "url": "https://www.anandrochlani.com/logo.png"
+              "url": logoUrl
             }
           }
         };
 
     return JSON.stringify(schema);
-  }, [authorName, fullDescription, fullTitle, fullUrl, image, isArticle, modifiedTime, publishedTime]);
+  }, [authorName, fullDescription, fullTitle, fullUrl, isArticle, logoUrl, modifiedTime, publishedTime, resolvedImage, siteName]);
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -150,8 +183,13 @@ const SEOHead = ({
     document.title = fullTitle;
     ensureMeta({ name: 'title', content: fullTitle });
     ensureMeta({ name: 'description', content: fullDescription });
-    ensureMeta({ name: 'robots', content: 'index, follow' });
-    if (keywords) ensureMeta({ name: 'keywords', content: keywords });
+    ensureMeta({
+      name: 'robots',
+      content: noindex
+        ? 'noindex, follow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+    });
+    if (fullKeywords) ensureMeta({ name: 'keywords', content: fullKeywords });
 
     // Canonical
     ensureLink({ rel: 'canonical', href: fullUrl });
@@ -161,8 +199,8 @@ const SEOHead = ({
     ensureMeta({ property: 'og:url', content: fullUrl });
     ensureMeta({ property: 'og:title', content: fullTitle });
     ensureMeta({ property: 'og:description', content: fullDescription });
-    ensureMeta({ property: 'og:image', content: image });
-    ensureMeta({ property: 'og:site_name', content: 'AnandRochlani' });
+    ensureMeta({ property: 'og:image', content: resolvedImage });
+    ensureMeta({ property: 'og:site_name', content: siteName });
     ensureMeta({ property: 'og:locale', content: 'en_US' });
 
     // Twitter
@@ -170,11 +208,18 @@ const SEOHead = ({
     ensureMeta({ name: 'twitter:url', content: fullUrl });
     ensureMeta({ name: 'twitter:title', content: fullTitle });
     ensureMeta({ name: 'twitter:description', content: fullDescription });
-    ensureMeta({ name: 'twitter:image', content: image });
+    ensureMeta({ name: 'twitter:image', content: resolvedImage });
 
-    // Structured data
-    ensureJsonLd({ id: 'seohead-jsonld', json: schemaJson });
-  }, [fullDescription, fullTitle, fullUrl, image, keywords, schemaJson, type]);
+    // Structured data. Prerendered pages (seo-pipeline/prerender.mjs) already ship a
+    // richer, route-specific JSON-LD graph — BlogPosting plus BreadcrumbList — so only
+    // inject this thinner client-side fallback when no prerendered block is present.
+    const prerenderedLd = document.head.querySelector(
+      'script[type="application/ld+json"][id^="ld-prerender-"]'
+    );
+    if (!prerenderedLd) {
+      ensureJsonLd({ id: 'seohead-jsonld', json: schemaJson });
+    }
+  }, [fullDescription, fullTitle, fullUrl, fullKeywords, noindex, resolvedImage, schemaJson, siteName, type]);
 
   return null;
 };

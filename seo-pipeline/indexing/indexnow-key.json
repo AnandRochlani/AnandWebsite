@@ -1,0 +1,6 @@
+{
+  "key": "28f12e8dea56331a331cf358cfc18b92",
+  "host": "anandrochlani.com",
+  "createdAt": "2026-07-31T04:15:37.141Z",
+  "note": "IndexNow API key. Keep this file — regenerating the key invalidates the deployed public/<key>.txt."
+}

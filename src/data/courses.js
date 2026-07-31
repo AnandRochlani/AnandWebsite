@@ -1,6 +1,7 @@
 export const defaultCourses = [
   {
     id: 9,
+    slug: "system-design-fundamental",
     name: "System Design Fundamental",
     description: "Master system design fundamentals—scalability, load balancing, caching, databases, and distributed systems. Designed for interview prep and real-world architecture thinking.",
     instructor: "Anand Rochlani",

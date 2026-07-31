@@ -255,10 +255,10 @@ export default function JobsPage() {
         title="Job openings"
         description="Browse curated job openings from leading technology companies. Roles are with third-party employers; apply on their official sites."
         keywords="tech jobs, software engineer jobs, developer careers, remote jobs, job board"
-        canonical="https://www.anandrochlani.com/jobs"
+        canonical="https://anandrochlani.com/jobs"
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 pb-16">
+      <div className="min-h-screen bg-slate-50 pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -266,13 +266,10 @@ export default function JobsPage() {
             transition={{ duration: 0.7 }}
             className="text-center mb-10"
           >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">
-              Open{' '}
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                roles
-              </span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 mb-4">
+              Open <span className="text-brand">roles</span>
             </h1>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-2">
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-2">
               Opportunities at partner companies—aggregated for discovery. AnandRochlani does not
               employ these roles; apply through each employer&apos;s official application link.
             </p>
@@ -284,18 +281,18 @@ export default function JobsPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-6 space-y-4"
+                className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4 sm:p-6 space-y-4"
               >
                 <div className="flex flex-wrap items-center gap-2">
-                  <Filter className="w-5 h-5 text-purple-400" />
-                  <span className="text-white font-medium">Filters</span>
+                  <Filter className="w-5 h-5 text-brand" />
+                  <span className="text-slate-900 font-medium">Filters</span>
                   {selectedCompanyId ? (
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-purple-500/20 text-purple-200 text-sm border border-purple-500/30">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-brand-soft text-brand text-sm font-semibold">
                       {selectedCompanyName || `Company #${selectedCompanyId}`}
                       <button
                         type="button"
                         onClick={clearCompanyFilter}
-                        className="p-0.5 rounded hover:bg-white/10"
+                        className="p-0.5 rounded hover:bg-brand/10"
                         aria-label="Clear company filter"
                       >
                         <X className="w-3.5 h-3.5" />
@@ -306,20 +303,20 @@ export default function JobsPage() {
                     type="button"
                     variant="outline"
                     onClick={handleReset}
-                    className="ml-auto border-white/20 bg-white/5 text-gray-300 hover:bg-white/10 text-sm h-9"
+                    className="ml-auto border-slate-300 bg-white text-slate-700 hover:border-brand hover:text-brand text-sm h-9"
                   >
                     Reset
                   </Button>
                 </div>
 
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                   <input
                     type="text"
                     value={qInput}
                     onChange={(e) => setQInput(e.target.value)}
                     placeholder="Search title or description..."
-                    className="w-full pl-11 pr-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full pl-11 pr-4 py-3 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand"
                   />
                 </div>
 
@@ -329,7 +326,7 @@ export default function JobsPage() {
                     value={locationInput}
                     onChange={(e) => setLocationInput(e.target.value)}
                     placeholder="Location"
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand"
                   />
                   {!selectedCompanyId ? (
                     <input
@@ -337,7 +334,7 @@ export default function JobsPage() {
                       value={companyInput}
                       onChange={(e) => setCompanyInput(e.target.value)}
                       placeholder="Company name"
-                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand"
                     />
                   ) : (
                     <div className="hidden sm:block" aria-hidden />
@@ -353,7 +350,7 @@ export default function JobsPage() {
                       flushToUrl({ min_exp: e.target.value }, true)
                     }
                     placeholder="Min years exp."
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand"
                   />
                   <input
                     type="number"
@@ -363,7 +360,7 @@ export default function JobsPage() {
                       flushToUrl({ max_exp: e.target.value }, true)
                     }
                     placeholder="Max years exp."
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand"
                   />
                   <div className="sm:col-span-2">
                     <input
@@ -371,21 +368,21 @@ export default function JobsPage() {
                       value={skillsInput}
                       onChange={(e) => setSkillsInput(e.target.value)}
                       placeholder="Skills (comma-separated, e.g. go, python)"
-                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand"
                     />
                   </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                  <label className="text-sm text-gray-400 flex items-center gap-2">
+                  <label className="text-sm text-slate-500 flex items-center gap-2">
                     Per page
                     <select
                       value={limitVal}
                       onChange={(e) => flushToUrl({ limit: e.target.value }, true)}
-                      className="bg-white/5 border border-white/10 text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500"
+                      className="bg-white border border-slate-300 text-slate-900 rounded-lg px-3 py-2 focus:ring-2 focus:ring-brand"
                     >
                       {[20, 50, 100].map((n) => (
-                        <option key={n} value={n} className="bg-slate-900">
+                        <option key={n} value={n} className="bg-white">
                           {n}
                         </option>
                       ))}
@@ -396,28 +393,28 @@ export default function JobsPage() {
 
               {jobsState.loading ? (
                 <div className="flex justify-center py-20">
-                  <Loader2 className="w-10 h-10 text-purple-500 animate-spin" />
+                  <Loader2 className="w-10 h-10 text-brand animate-spin" />
                 </div>
               ) : jobsState.error ? (
-                <p className="text-center text-red-400 py-12">{jobsState.error}</p>
+                <p className="text-center text-red-500 py-12">{jobsState.error}</p>
               ) : jobsState.data.length === 0 ? (
-                <div className="text-center py-16 rounded-xl border border-white/10 bg-white/[0.02]">
-                  <Briefcase className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                  <p className="text-gray-300 mb-2">No roles match these filters.</p>
+                <div className="text-center py-16 rounded-2xl border border-slate-200 bg-white shadow-sm">
+                  <Briefcase className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                  <p className="text-slate-600 mb-2">No roles match these filters.</p>
                   <Button
                     type="button"
                     onClick={handleReset}
-                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
+                    className="bg-brand hover:bg-brand-dark text-white font-semibold rounded-lg"
                   >
                     Clear filters
                   </Button>
                 </div>
               ) : (
                 <>
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-slate-500 text-sm">
                     Showing{' '}
-                    <span className="text-white font-medium">{jobsState.data.length}</span> of{' '}
-                    <span className="text-white font-medium">{jobsState.total}</span> roles
+                    <span className="text-slate-900 font-medium">{jobsState.data.length}</span> of{' '}
+                    <span className="text-slate-900 font-medium">{jobsState.total}</span> roles
                   </p>
                   <div className="grid gap-4 sm:grid-cols-2">
                     {jobsState.data.map((job, index) => (
@@ -443,17 +440,17 @@ export default function JobsPage() {
                 className="lg:sticky lg:top-24"
               >
                 <div className="flex items-center gap-2 mb-4">
-                  <Building2 className="w-5 h-5 text-purple-400" />
-                  <h2 className="text-lg font-semibold text-white">Browse by company</h2>
+                  <Building2 className="w-5 h-5 text-brand" />
+                  <h2 className="text-lg font-semibold text-slate-900">Browse by company</h2>
                 </div>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-sm text-slate-500 mb-4">
                   Select a company to filter the list. Names and openings are sourced from public
                   career pages.
                 </p>
 
                 {strip.loading ? (
                   <div className="flex justify-center py-8">
-                    <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-brand animate-spin" />
                   </div>
                 ) : (
                   <div className="flex lg:flex-col gap-3 overflow-x-auto pb-2 lg:overflow-visible lg:pb-0 -mx-1 px-1">
@@ -474,7 +471,7 @@ export default function JobsPage() {
                   type="button"
                   variant="outline"
                   onClick={() => setModalOpen(true)}
-                  className="w-full mt-4 border-white/20 bg-white/5 text-white hover:bg-white/10"
+                  className="w-full mt-4 border-slate-300 bg-white text-slate-700 hover:border-brand hover:text-brand"
                 >
                   See more companies
                 </Button>

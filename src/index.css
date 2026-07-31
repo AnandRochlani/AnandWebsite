@@ -23,7 +23,8 @@
 }
 
 body {
-    @apply bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 bg-slate-900 text-white;
+    /* Educative-style light theme: white pages; dark "ink" bands are opt-in per section */
+    @apply bg-white text-slate-900;
     font-family: 'DM Sans', sans-serif;
     margin: 0;
     -webkit-font-smoothing: antialiased;
@@ -50,89 +51,89 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(13, 11, 51, 0.05);
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(168, 85, 247, 0.5);
+  background: rgba(85, 83, 255, 0.4);
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(168, 85, 247, 0.7);
+  background: rgba(85, 83, 255, 0.6);
 }
 
 /* Firefox scrollbar */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(168, 85, 247, 0.5) rgba(255, 255, 255, 0.05);
+  scrollbar-color: rgba(85, 83, 255, 0.4) rgba(13, 11, 51, 0.05);
 }
 
-/* Blog typography (applies to ALL blog posts) */
+/* Blog typography (applies to ALL blog posts) — light theme */
 .blog-content {
-  color: rgb(226 232 240); /* slate-200 */
+  color: rgb(51 65 85); /* slate-700 */
   line-height: 1.75;
 }
 
 .blog-content h2 {
   margin-top: 2.5rem;
   margin-bottom: 1rem;
-  font-size: 1.875rem; /* ~text-3xl */
+  font-size: 1.875rem;
   font-weight: 800;
-  color: white;
+  color: rgb(15 23 42); /* slate-900 */
   line-height: 1.2;
 }
 
 @media (min-width: 640px) {
   .blog-content h2 {
-    font-size: 2.25rem; /* ~text-4xl */
+    font-size: 2.25rem;
   }
 }
 
 .blog-content h3 {
   margin-top: 2rem;
   margin-bottom: 0.75rem;
-  font-size: 1.5rem; /* ~text-2xl */
+  font-size: 1.5rem;
   font-weight: 700;
-  color: rgb(233 213 255); /* purple-200 */
+  color: rgb(30 27 100); /* deep indigo */
   line-height: 1.25;
 }
 
 @media (min-width: 640px) {
   .blog-content h3 {
-    font-size: 1.875rem; /* ~text-3xl */
+    font-size: 1.875rem;
   }
 }
 
 .blog-content p {
   margin: 1rem 0;
   font-size: 1rem;
-  color: rgb(226 232 240); /* slate-200 */
+  color: rgb(51 65 85); /* slate-700 */
 }
 
 @media (min-width: 640px) {
   .blog-content p {
-    font-size: 1.125rem; /* ~text-lg */
+    font-size: 1.125rem;
   }
 }
 
 .blog-content strong {
-  color: white;
+  color: rgb(15 23 42); /* slate-900 */
   font-weight: 600;
 }
 
 .blog-content a {
-  color: rgb(196 181 253); /* purple-300 */
+  color: #5553FF; /* brand */
   text-decoration: underline;
   text-underline-offset: 4px;
-  text-decoration-color: rgba(168, 85, 247, 0.4); /* purple-500/40 */
+  text-decoration-color: rgba(85, 83, 255, 0.35);
   transition: color 200ms ease, text-decoration-color 200ms ease;
 }
 
 .blog-content a:hover {
-  color: rgb(249 168 212); /* pink-300 */
-  text-decoration-color: rgba(244, 114, 182, 0.5); /* pink-400/50 */
+  color: #4341D6; /* brand-dark */
+  text-decoration-color: rgba(67, 65, 214, 0.6);
 }
 
 .blog-content ul,
@@ -143,16 +144,16 @@ body {
 
 .blog-content li {
   margin: 0.5rem 0;
-  color: rgb(226 232 240); /* slate-200 */
+  color: rgb(51 65 85); /* slate-700 */
 }
 
 .blog-content blockquote {
   margin: 1.5rem 0;
-  border-left: 4px solid rgba(168, 85, 247, 0.5);
+  border-left: 4px solid rgba(85, 83, 255, 0.5);
   padding: 0.75rem 1rem;
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  color: rgb(226 232 240);
+  background: rgb(248 250 252); /* slate-50 */
+  color: rgb(51 65 85);
   font-style: italic;
 }

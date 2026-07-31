@@ -1,3 +1,5 @@
+import { slugify, isNumericString } from '@/lib/slug.js';
+
 const JSON_HEADERS = { 'Content-Type': 'application/json' };
 
 async function jsonFetch(url, options = {}) {
@@ -11,31 +13,73 @@ async function jsonFetch(url, options = {}) {
   return data;
 }
 
+// Make sure every course has a slug, even when coming from the local dev
+// fallback (the bundled defaults may not have one).
+function ensureCourseSlug(course) {
+  if (!course) return course;
+  if (course.slug) return course;
+  const derived = slugify(course.name);
+  return derived ? { ...course, slug: derived } : course;
+}
+
 export async function fetchCourses() {
   try {
     const data = await jsonFetch('/api/public/courses');
-    return data.courses || [];
+    return (data.courses || []).map(ensureCourseSlug);
   } catch (e) {
     // Local dev fallback (when /api isn't available under Vite dev server)
     try {
       const mod = await import('./courses.js');
-      return typeof mod.getAllCourses === 'function' ? mod.getAllCourses() : [];
+      const list = typeof mod.getAllCourses === 'function' ? mod.getAllCourses() : [];
+      return list.map(ensureCourseSlug);
     } catch (e2) {
       return [];
     }
   }
 }
 
-export async function fetchCourseById(id) {
+export async function fetchCourseBySlug(slug) {
+  const value = String(slug || '');
+  if (!value) return null;
+  // If a numeric id leaks through (e.g. an old saved-courses cookie), fall
+  // back to the id-based lookup. The public URL still uses slug only.
+  const queryString = isNumericString(value)
+    ? `id=${encodeURIComponent(value)}`
+    : `slug=${encodeURIComponent(value)}`;
   try {
-    const data = await jsonFetch(`/api/public/courses?id=${encodeURIComponent(id)}`);
-    return data.course || null;
+    const data = await jsonFetch(`/api/public/courses?${queryString}`);
+    return ensureCourseSlug(data.course || null);
   } catch (e) {
     // Local dev fallback
     try {
       const mod = await import('./courses.js');
       const all = typeof mod.getAllCourses === 'function' ? mod.getAllCourses() : [];
-      return all.find((c) => Number(c.id) === Number(id)) || null;
+      const match = isNumericString(value)
+        ? all.find((c) => Number(c.id) === Number(value))
+        : all.find((c) => (c.slug || slugify(c.name)) === value.toLowerCase());
+      return ensureCourseSlug(match || null);
+    } catch (e2) {
+      return null;
+    }
+  }
+}
+
+// Public helper: accept either a slug or legacy numeric id.
+// Frontend routes should use slugs; numeric ids are supported for old links only.
+export async function fetchCourseBySlugOrId(slugOrId) {
+  return fetchCourseBySlug(slugOrId);
+}
+
+// Kept for admin tooling (the admin panel still works with numeric ids).
+export async function fetchCourseById(id) {
+  try {
+    const data = await jsonFetch(`/api/public/courses?id=${encodeURIComponent(id)}`);
+    return ensureCourseSlug(data.course || null);
+  } catch (e) {
+    try {
+      const mod = await import('./courses.js');
+      const all = typeof mod.getAllCourses === 'function' ? mod.getAllCourses() : [];
+      return ensureCourseSlug(all.find((c) => Number(c.id) === Number(id)) || null);
     } catch (e2) {
       return null;
     }
@@ -124,5 +168,37 @@ export async function adminUpdateBlogOrder(blogOrderList) {
     credentials: 'include',
     body: JSON.stringify(blogOrderList),
   });
+}
+
+// ── Site settings ────────────────────────────────────────────────────────
+
+export async function fetchSiteSettings() {
+  try {
+    const data = await jsonFetch('/api/public/settings');
+    return data?.settings || {};
+  } catch (e) {
+    // Local dev fallback — use the bundled defaults so the site still renders.
+    try {
+      const mod = await import('./siteSettings.js');
+      return typeof mod.getDefaultSettingsMap === 'function' ? mod.getDefaultSettingsMap() : {};
+    } catch (e2) {
+      return {};
+    }
+  }
+}
+
+export async function adminFetchSiteSettings() {
+  const data = await jsonFetch('/api/admin/settings', { credentials: 'include' });
+  return Array.isArray(data?.settings) ? data.settings : [];
+}
+
+export async function adminUpdateSiteSettings(updates) {
+  const data = await jsonFetch('/api/admin/settings', {
+    method: 'PUT',
+    headers: JSON_HEADERS,
+    credentials: 'include',
+    body: JSON.stringify({ updates }),
+  });
+  return Array.isArray(data?.settings) ? data.settings : [];
 }
 

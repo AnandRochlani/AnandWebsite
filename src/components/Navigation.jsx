@@ -43,15 +43,15 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-lg border-b border-white/10">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group">
-            <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-2 rounded-lg group-hover:scale-110 transition-transform duration-300">
+            <div className="bg-brand p-2 rounded-lg group-hover:scale-110 transition-transform duration-300">
               <Code2 className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="text-xl font-bold text-slate-900">
               AnandRochlani
             </span>
           </Link>
@@ -64,15 +64,15 @@ const Navigation = () => {
                 to={link.path}
                 className={`relative text-sm font-medium transition-colors duration-300 ${
                   isActive(link.path)
-                    ? 'text-purple-400'
-                    : 'text-gray-300 hover:text-white'
+                    ? 'text-brand'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 {link.name}
                 {isActive(link.path) && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute -bottom-6 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500"
+                    className="absolute -bottom-6 left-0 right-0 h-0.5 bg-brand"
                   />
                 )}
               </Link>
@@ -83,23 +83,33 @@ const Navigation = () => {
               to="/saved-courses"
               className={`relative flex items-center space-x-1 text-sm font-medium transition-colors duration-300 ${
                 isActive('/saved-courses')
-                  ? 'text-purple-400'
-                  : 'text-gray-300 hover:text-white'
+                  ? 'text-brand'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <span>Saved Items</span>
               {savedCourseIds.length > 0 && (
-                <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-pink-500 rounded-full">
+                <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-brand rounded-full">
                   {savedCourseIds.length}
                 </span>
               )}
               {isActive('/saved-courses') && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute -bottom-6 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500"
+                  className="absolute -bottom-6 left-0 right-0 h-0.5 bg-brand"
                 />
               )}
             </Link>
+
+            {/* Primary CTA — Udemy course */}
+            <a
+              href="https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors duration-300"
+            >
+              Get the Course
+            </a>
 
             {/* Admin Section */}
             {isAuthenticated && (
@@ -129,12 +139,12 @@ const Navigation = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors duration-300"
+            className="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors duration-300"
           >
             {mobileMenuOpen ? (
-              <X className="w-6 h-6 text-white" />
+              <X className="w-6 h-6 text-slate-900" />
             ) : (
-              <Menu className="w-6 h-6 text-white" />
+              <Menu className="w-6 h-6 text-slate-900" />
             )}
           </button>
         </div>
@@ -148,7 +158,7 @@ const Navigation = () => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-slate-800/95 backdrop-blur-lg border-t border-white/10"
+            className="md:hidden bg-white/95 backdrop-blur-lg border-t border-slate-200"
           >
             <div className="px-4 py-4 space-y-2">
               {navLinks.map((link) => (
@@ -158,8 +168,8 @@ const Navigation = () => {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`block px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
                     isActive(link.path)
-                      ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-400'
-                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                      ? 'bg-brand-soft text-brand'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   }`}
                 >
                   {link.name}
@@ -171,8 +181,8 @@ const Navigation = () => {
                 onClick={() => setMobileMenuOpen(false)}
                 className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
                   isActive('/saved-courses')
-                    ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-400'
-                    : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                    ? 'bg-brand-soft text-brand'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
                 <div className="flex items-center">
@@ -180,14 +190,24 @@ const Navigation = () => {
                   Saved Items
                 </div>
                 {savedCourseIds.length > 0 && (
-                  <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-pink-500 rounded-full">
+                  <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-brand rounded-full">
                     {savedCourseIds.length}
                   </span>
                 )}
               </Link>
 
+              <a
+                href="https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-center bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors duration-300"
+              >
+                Get the Course
+              </a>
+
               {/* Mobile Admin Section */}
-              <div className="pt-2 border-t border-white/10 mt-2">
+              <div className="pt-2 border-t border-slate-200 mt-2">
                 {isAuthenticated && (
                   <>
                     <Link

@@ -34,6 +34,51 @@ export async function forwardGetJson(pathWithLeadingSlash, queryString = '') {
   return { status: r.status, body };
 }
 
+/**
+ * Forward an arbitrary JSON request (POST/PUT/PATCH/DELETE) to the upstream
+ * job aggregator API. Optional bearer token is read from JOBS_API_TOKEN.
+ * @param {string} method
+ * @param {string} pathWithLeadingSlash
+ * @param {unknown} [body]
+ * @param {string} [queryString]
+ */
+export async function forwardJson(method, pathWithLeadingSlash, body, queryString = '') {
+  const base = getJobsApiBase();
+  const qs =
+    queryString === '' || queryString == null
+      ? ''
+      : queryString.startsWith('?')
+        ? queryString
+        : `?${queryString}`;
+
+  const url = `${base}${pathWithLeadingSlash}${qs}`;
+  const headers = { accept: 'application/json' };
+  const token = process.env.JOBS_API_TOKEN;
+  if (token) headers.authorization = `Bearer ${token}`;
+
+  const init = {
+    method,
+    headers,
+  };
+
+  if (body !== undefined && body !== null && method !== 'GET' && method !== 'DELETE') {
+    headers['content-type'] = 'application/json';
+    init.body = typeof body === 'string' ? body : JSON.stringify(body);
+  }
+
+  const r = await fetch(url, init);
+
+  const text = await r.text();
+  let parsed;
+  try {
+    parsed = text ? JSON.parse(text) : null;
+  } catch {
+    parsed = { error: 'Invalid JSON from job API', detail: text?.slice(0, 200) };
+  }
+
+  return { status: r.status, body: parsed };
+}
+
 /** Vercel / Node: req.query object → query string (preserves repeated keys as arrays). */
 export function vercelQueryToString(query) {
   const params = new URLSearchParams();

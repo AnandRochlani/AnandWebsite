@@ -38,3 +38,6 @@ build
 # GSC service-account key + generated inspection reports (seo pipeline)
 seo-pipeline/.gsc-service-account.json
 seo-pipeline/reports/
+
+# Vite transient config bundles
+vite.config.js.timestamp-*.mjs

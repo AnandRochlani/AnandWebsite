@@ -76,3 +76,25 @@ export async function fetchCompanyById(id) {
   if (data && data.id != null) return data;
   return data;
 }
+
+// ── Admin (requires admin session cookie) ───────────────────────────────
+
+const JSON_HEADERS = { 'Content-Type': 'application/json' };
+
+export async function adminCreateJob(payload) {
+  const data = await jsonFetch('/api/admin/jobs', {
+    method: 'POST',
+    headers: JSON_HEADERS,
+    credentials: 'include',
+    body: JSON.stringify(payload),
+  });
+  if (data && data.job) return data.job;
+  return data;
+}
+
+export async function adminDeleteJob(id) {
+  await jsonFetch(`/api/admin/jobs/${encodeURIComponent(String(id))}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+}

@@ -7,6 +7,7 @@ import SaveButton from '@/components/SaveButton';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import { optimizeImageUrl, generateImageSrcset } from '@/lib/utils';
+import { slugify } from '@/lib/slug.js';
 
 const SavedCoursesPage = () => {
   const { getSavedCourses, removeSavedCourse } = useSavedCourses();
@@ -20,20 +21,20 @@ const SavedCoursesPage = () => {
 
   // Memoize filtered courses to prevent recalculation
   const filteredCourses = useMemo(() => {
-    return filter === 'All' 
-      ? savedCourses 
+    return filter === 'All'
+      ? savedCourses
       : savedCourses.filter(course => course.category === filter);
   }, [savedCourses, filter]);
 
   return (
     <>
-      <SEOHead 
+      <SEOHead
         title="My Courses"
         description="View and manage your saved courses. Access your personal learning wishlist and continue your learning journey."
-        canonical="https://www.anandrochlani.com/saved-courses"
+        canonical="https://anandrochlani.com/saved-courses"
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 pt-24 pb-16">
+      <div className="min-h-screen bg-white pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -41,10 +42,13 @@ const SavedCoursesPage = () => {
             transition={{ duration: 0.8 }}
             className="mb-12"
           >
-            <h1 className="text-4xl font-bold text-white mb-4">
-              My <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Courses</span>
+            <p className="text-brand font-semibold text-sm uppercase tracking-wider mb-2">
+              My Learning
+            </p>
+            <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-4">
+              My Courses
             </h1>
-            <p className="text-xl text-gray-300">
+            <p className="text-xl text-slate-600">
               Your personal learning wishlist
             </p>
           </motion.div>
@@ -64,8 +68,8 @@ const SavedCoursesPage = () => {
                     onClick={() => setFilter(category)}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                       filter === category
-                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                        : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                        ? 'bg-brand text-white shadow-sm'
+                        : 'bg-white border border-slate-300 text-slate-600 hover:border-brand hover:text-brand'
                     }`}
                   >
                     {category}
@@ -82,8 +86,8 @@ const SavedCoursesPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                   >
-                    <Link to={`/courses/${course.id}`}>
-                      <div className="group h-full rounded-xl overflow-hidden bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                    <Link to={`/courses/${course.slug || slugify(course.name)}`}>
+                      <div className="group h-full rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                         <div className="relative h-48 overflow-hidden">
                           <img
                             src={optimizeImageUrl(course.featuredImage, 250, 30)}
@@ -91,29 +95,27 @@ const SavedCoursesPage = () => {
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             alt={course.name}
                             loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent" />
-                          <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-purple-500/80 backdrop-blur-sm text-white text-xs font-medium">
-                            {course.category}
-                          </span>
-                          
                           {/* Save Button */}
                           <div className="absolute top-4 right-4 z-10">
-                            <SaveButton 
-                              courseId={course.id} 
+                            <SaveButton
+                              courseId={course.id}
                               className="bg-black/40 backdrop-blur-md hover:bg-black/60"
                             />
                           </div>
                         </div>
                         <div className="p-6">
-                          <h3 className="text-xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors duration-300 line-clamp-2">
+                          <span className="inline-block px-3 py-1 rounded-full bg-brand-soft text-brand text-xs font-semibold mb-3">
+                            {course.category}
+                          </span>
+                          <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-brand transition-colors duration-300 line-clamp-2">
                             {course.name}
                           </h3>
-                          <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                          <p className="text-slate-600 text-sm mb-4 line-clamp-2">
                             {course.description}
                           </p>
-                          <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                          <div className="flex items-center justify-between text-sm text-slate-500 mb-4">
                             <span className="flex items-center">
                               <Clock className="w-4 h-4 mr-1" />
                               {course.duration}
@@ -123,8 +125,8 @@ const SavedCoursesPage = () => {
                               {course.studentsEnrolled.toLocaleString()}
                             </span>
                           </div>
-                          <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                            <span className="text-2xl font-bold text-white">{course.price}</span>
+                          <div className="flex items-center justify-between pt-4 border-t border-slate-200">
+                            <span className="text-2xl font-bold text-slate-900">{course.price}</span>
                             <Button
                               onClick={(e) => {
                                 e.preventDefault();
@@ -132,7 +134,7 @@ const SavedCoursesPage = () => {
                               }}
                               variant="ghost"
                               size="sm"
-                              className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                              className="text-red-500 hover:text-red-600 hover:bg-red-50"
                             >
                               <Trash2 className="w-4 h-4 mr-1" />
                               Remove
@@ -150,13 +152,13 @@ const SavedCoursesPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6 }}
-              className="text-center py-16 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm"
+              className="text-center py-16 bg-slate-50 rounded-2xl border border-slate-200"
             >
-              <BookOpen className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-white mb-2">No courses saved yet</h3>
-              <p className="text-gray-400 mb-6">Start exploring and save courses for later!</p>
+              <BookOpen className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-slate-900 mb-2">No courses saved yet</h3>
+              <p className="text-slate-500 mb-6">Start exploring and save courses for later!</p>
               <Link to="/courses">
-                <Button className="bg-gradient-to-r from-purple-500 to-pink-500">
+                <Button className="bg-brand hover:bg-brand-dark text-white font-semibold rounded-lg">
                   Explore Courses
                 </Button>
               </Link>

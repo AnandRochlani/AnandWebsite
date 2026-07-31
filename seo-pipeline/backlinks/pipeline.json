@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "note": "Outreach state. Managed by outreach.mjs — safe to hand-edit, keep the shape. Entries are added from prospects.json with `outreach.mjs add <id>`.",
+  "updated": "2026-07-31T00:00:00.000Z",
+  "config": {
+    "followUpDays": 7,
+    "maxFollowUps": 2,
+    "researchStaleDays": 30
+  },
+  "entries": []
+}
