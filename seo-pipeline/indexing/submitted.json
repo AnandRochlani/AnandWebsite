@@ -113,7 +113,55 @@
       "lastSubmittedAt": "2026-07-31T05:16:00.776Z",
       "lastStatus": 202,
       "submissions": 1
+    },
+    "https://anandrochlani.com/system-design-case-studies": {
+      "signature": "a8d2623067b0a522",
+      "lastmod": "2026-07-31",
+      "contentHash": null,
+      "lastSubmittedAt": "2026-07-31T05:54:37.931Z",
+      "lastStatus": 200,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/system-design-glossary": {
+      "signature": "a8d2623067b0a522",
+      "lastmod": "2026-07-31",
+      "contentHash": null,
+      "lastSubmittedAt": "2026-07-31T05:54:37.931Z",
+      "lastStatus": 200,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog/system-design-interview-preparation-complete-guide-2026": {
+      "signature": "a5d9cd551fc874ac",
+      "lastmod": "2026-07-31",
+      "contentHash": "ced987a1880f1b4d",
+      "lastSubmittedAt": "2026-07-31T05:54:37.931Z",
+      "lastStatus": 200,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog/cap-theorem-explained-system-design-interview": {
+      "signature": "3d12cf968096ef54",
+      "lastmod": "2026-07-31",
+      "contentHash": "e302e8b75125bba1",
+      "lastSubmittedAt": "2026-07-31T05:54:37.931Z",
+      "lastStatus": 200,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog/sql-vs-nosql-system-design-interview": {
+      "signature": "9658eac15b3f094e",
+      "lastmod": "2026-07-31",
+      "contentHash": "3537feb3ea1c705a",
+      "lastSubmittedAt": "2026-07-31T05:54:37.931Z",
+      "lastStatus": 200,
+      "submissions": 1
+    },
+    "https://anandrochlani.com/blog/latency-vs-throughput-system-design": {
+      "signature": "2b1983b2ad9e5c2d",
+      "lastmod": "2026-07-31",
+      "contentHash": "2b80919ea425c385",
+      "lastSubmittedAt": "2026-07-31T05:54:37.931Z",
+      "lastStatus": 200,
+      "submissions": 1
     }
   },
-  "updatedAt": "2026-07-31T05:16:00.776Z"
+  "updatedAt": "2026-07-31T05:54:37.931Z"
 }
