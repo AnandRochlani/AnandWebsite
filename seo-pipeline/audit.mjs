@@ -439,7 +439,15 @@ function parseHtml(html) {
  * URL inventory
  * ------------------------------------------------------------------ */
 
-const STATIC_ROUTES = ['/', '/courses', '/blog', '/about', '/jobs'];
+const STATIC_ROUTES = [
+  '/',
+  '/courses',
+  '/blog',
+  '/about',
+  '/system-design-case-studies',
+  '/system-design-glossary',
+  '/jobs',
+];
 
 async function loadInventory(base) {
   const inventory = { posts: [], courses: [], apiErrors: [] };

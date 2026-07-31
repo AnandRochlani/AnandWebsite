@@ -31,9 +31,26 @@ function url(loc, lastmod, changefreq, priority) {
   </url>`;
 }
 
+function mergeByKey(bundledItems, liveItems, keyFor) {
+  const merged = new Map();
+  for (const item of bundledItems) {
+    const key = keyFor(item);
+    if (key) merged.set(key, item);
+  }
+  // Live data wins for existing records, while newly bundled content is still
+  // included before the production database has seeded it.
+  for (const item of liveItems) {
+    const key = keyFor(item);
+    if (key) merged.set(key, item);
+  }
+  return [...merged.values()];
+}
+
 async function main() {
-  let posts;
-  let courses;
+  const bundledPosts = getAllBlogPosts();
+  const bundledCourses = defaultCourses;
+  let posts = bundledPosts;
+  let courses = bundledCourses;
   try {
     const [postsRes, coursesRes] = await Promise.all([
       fetch(`${SITE}/api/public/blog-posts`),
@@ -47,11 +64,15 @@ async function main() {
     if (!postsType.includes('application/json') || !coursesType.includes('application/json')) {
       throw new Error(`API returned non-JSON content: posts ${postsType}, courses ${coursesType}`);
     }
-    posts = (await postsRes.json()).posts || [];
-    courses = (await coursesRes.json()).courses || [];
+    const livePosts = (await postsRes.json()).posts || [];
+    const liveCourses = (await coursesRes.json()).courses || [];
+    posts = mergeByKey(bundledPosts, livePosts, (post) => post.slug);
+    courses = mergeByKey(
+      bundledCourses,
+      liveCourses,
+      (course) => course.slug || String(course.id || '')
+    );
   } catch (error) {
-    posts = getAllBlogPosts();
-    courses = defaultCourses;
     console.warn(
       `Live content unavailable (${error.message}); generating from ${posts.length} bundled posts and ${courses.length} bundled courses.`
     );
@@ -72,6 +93,8 @@ async function main() {
     url(`${CANONICAL}/courses`, today, 'weekly', '0.9'),
     url(`${CANONICAL}/blog`, today, 'daily', '0.9'),
     url(`${CANONICAL}/about`, today, 'monthly', '0.7'),
+    url(`${CANONICAL}/system-design-case-studies`, today, 'weekly', '0.8'),
+    url(`${CANONICAL}/system-design-glossary`, today, 'monthly', '0.7'),
     url(`${CANONICAL}/jobs`, today, 'daily', '0.5'),
   ];
 

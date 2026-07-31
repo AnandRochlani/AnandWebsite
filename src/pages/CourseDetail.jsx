@@ -299,6 +299,80 @@ const CourseDetail = () => {
                 </motion.div>
               )}
 
+              {isSystemDesign && (
+                <motion.section
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  className="rounded-2xl bg-white border border-slate-200 shadow-sm p-8"
+                >
+                  <h2 className="text-2xl font-bold text-slate-900">Free tutorials or the guided course?</h2>
+                  <p className="mt-3 text-slate-600 leading-relaxed">
+                    Both cover the same practical System Design foundation. Choose the format
+                    that fits how you learn and how soon your interview is.
+                  </p>
+                  <div className="mt-6 overflow-x-auto">
+                    <table className="w-full border-collapse text-left text-sm">
+                      <thead>
+                        <tr className="border-b border-slate-200 text-slate-900">
+                          <th className="py-3 pr-4">Option</th>
+                          <th className="py-3 pr-4">Best for</th>
+                          <th className="py-3">Includes</th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-slate-600">
+                        <tr className="border-b border-slate-100">
+                          <th className="py-4 pr-4 font-semibold text-slate-900">Free tutorials</th>
+                          <td className="py-4 pr-4">Learning one topic or case study at a time</td>
+                          <td className="py-4">Written guides, roadmap, glossary, and checklist</td>
+                        </tr>
+                        <tr>
+                          <th className="py-4 pr-4 font-semibold text-slate-900">Udemy course</th>
+                          <td className="py-4 pr-4">Following one guided video curriculum</td>
+                          <td className="py-4">5h 40m, 49 lectures, and four complete case-study sections</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="mt-6 flex flex-wrap gap-4 text-sm font-semibold">
+                    <Link to="/blog/system-design-interview-preparation-complete-guide-2026" className="text-brand">
+                      Follow the free roadmap →
+                    </Link>
+                    <Link to="/system-design-case-studies" className="text-brand">
+                      Browse case studies →
+                    </Link>
+                  </div>
+                </motion.section>
+              )}
+
+              {isSystemDesign && (
+                <motion.section
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  className="rounded-2xl bg-white border border-slate-200 shadow-sm p-8"
+                >
+                  <h2 className="text-2xl font-bold text-slate-900">Frequently asked questions</h2>
+                  <div className="mt-6 space-y-6">
+                    {[
+                      ['Who is this System Design course for?', 'It is designed for beginners, junior engineers, career switchers, and self-learners preparing for entry-level or early-career System Design interviews.'],
+                      ['Do I need prior System Design experience?', 'No. Basic programming knowledge and a general understanding of clients, servers, and APIs are helpful, but the curriculum begins with core terminology.'],
+                      ['What case studies are included?', 'The course covers a social bookmarking service, consistent hashing, a coding contest platform, Facebook News Feed, and Google Typeahead.'],
+                      ['How long is the course?', 'The current Udemy curriculum contains 8 sections, 49 lectures, and 5 hours 40 minutes of video.'],
+                      ['Can I start with the free material?', 'Yes. The free roadmap, glossary, checklist, and case studies are complete learning resources. Choose the course when you prefer a guided video sequence.'],
+                      ['Does the course guarantee an interview result?', 'No course can guarantee a hiring outcome. It provides a structured foundation and practice material; results also depend on experience, communication, and repeated mock interviews.'],
+                    ].map(([question, answer]) => (
+                      <div key={question}>
+                        <h3 className="text-lg font-semibold text-slate-900">{question}</h3>
+                        <p className="mt-2 leading-7 text-slate-600">{answer}</p>
+                      </div>
+                    ))}
+                  </div>
+                </motion.section>
+              )}
+
               {/* About Instructor */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}

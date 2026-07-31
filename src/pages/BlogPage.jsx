@@ -62,7 +62,12 @@ const BlogPage = () => {
 
   // Memoize featured post to prevent recalculation
   const featuredPost = useMemo(
-    () => allBlogPosts.find((post) => post.featured) || allBlogPosts[0],
+    () =>
+      allBlogPosts.find(
+        (post) => post.slug === 'system-design-interview-preparation-complete-guide-2026'
+      ) ||
+      allBlogPosts.find((post) => post.featured) ||
+      allBlogPosts[0],
     [allBlogPosts]
   );
 

@@ -2,17 +2,19 @@
 
 ## The article target
 
-Publish **8 substantial articles this month (2 per week)**. There is no SEO rule that a
+Publish **8 substantial articles this month (2 per week)**, using the additional four
+release articles as an early September buffer. There is no SEO rule that a
 website needs a particular total number of articles. For this site, the useful target is a
 focused cluster of **30–40 high-quality System Design pages over the next 6 months**, not a
 large library of unrelated posts.
 
 At the end of this release the crawlable cluster contains:
 
-- 9 existing System Design tutorials
-- 8 new long-form articles, each 1,400–1,900 words
+- 9 expanded System Design tutorials, now 1,400–1,700+ words
+- 12 new long-form articles, each 1,250–1,900+ words
 - 1 focused course landing page
 - 1 author and editorial-trust page
+- 1 case-study hub and 1 System Design glossary
 
 The eight generic template posts remain retained in the database, but they are removed from
 the blog index, sitemap, and public crawl surface. Their old direct routes now return 404, so
@@ -35,7 +37,7 @@ qualified readers to the Udemy course.
 
 ## Publishing calendar
 
-All eight articles are publish-ready and are inserted idempotently during deployment.
+All twelve articles are publish-ready and are inserted idempotently during deployment.
 Use the calendar below for the second distribution pass, internal-link refresh, and
 Search Console inspection.
 
@@ -55,7 +57,9 @@ Search Console inspection.
 ### Week 1 — foundation and discovery
 
 - Deploy prerendering, real API routing, canonical cleanup, sitemap cleanup, and real 404s.
-- Publish all eight reviewed articles through the deployment seed.
+- Publish all twelve reviewed articles through the deployment seed.
+- Keep CAP theorem, SQL vs NoSQL, latency vs throughput, and the complete interview-prep
+  pillar as the ready-to-distribute follow-on set.
 - Verify `/api/public/blog-posts`, one new article, the course page, `/about`, and a random
   nonexistent URL.
 - Submit `sitemap.xml` in Google Search Console and submit all new URLs through IndexNow.
@@ -96,9 +100,9 @@ Every article must keep:
 - one descriptive H1 and a primary-keyword title under roughly 60 characters;
 - a unique 120–160 character meta description;
 - the primary query in the opening and one natural subheading;
-- 1,300–1,900 words when the topic needs that depth;
+- at least 1,200 words, normally 1,300–1,900 when the topic needs that depth;
 - one worked example, analogy, or real failure mode;
-- 2–4 descriptive internal links;
+- 2–8 descriptive internal links, with higher counts reserved for pillar pages;
 - exactly one sponsored Udemy CTA;
 - author, published/modified dates, BlogPosting schema, breadcrumb schema, and descriptive
   image alt text.
@@ -121,7 +125,7 @@ establishes the baseline. Record:
 
 | KPI | Month-one target |
 |---|---:|
-| New System Design articles indexed | 8/8 |
+| New System Design articles indexed | 12/12 |
 | Valid indexable URLs with unique metadata | 100% |
 | Article pages with course CTA and sponsored rel | 100% |
 | Broken internal blog links | 0 |
@@ -136,5 +140,5 @@ qualified organic readers who click through to the System Design course.
 
 ## Next-month queue
 
-Prioritize CAP theorem, SQL vs NoSQL, CDN, message queues, and rate limiting after Search
-Console validates which existing pages and queries are gaining impressions.
+Prioritize CDN, message queues, rate limiting, database indexing, and polling vs WebSockets
+after Search Console validates which existing pages and queries are gaining impressions.

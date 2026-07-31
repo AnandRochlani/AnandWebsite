@@ -1,4 +1,5 @@
 import { seoArticles } from './seoArticles.js';
+import { expandLegacySystemDesignPosts } from './legacySystemDesignExpansions.js';
 
 export const defaultBlogPosts = [
   {
@@ -859,8 +860,11 @@ const withSlugs = (posts) => {
   });
 };
 
-export const blogPosts = withSlugs(applyBlogOrder(applyBlogEdits([...defaultBlogPosts, ...seoArticles, ...getLocalBlogPosts()])));
+const allBundledPosts = () =>
+  expandLegacySystemDesignPosts([...defaultBlogPosts, ...seoArticles, ...getLocalBlogPosts()]);
+
+export const blogPosts = withSlugs(applyBlogOrder(applyBlogEdits(allBundledPosts())));
 
 export const getAllBlogPosts = () => {
-  return withSlugs(applyBlogOrder(applyBlogEdits([...defaultBlogPosts, ...seoArticles, ...getLocalBlogPosts()])));
+  return withSlugs(applyBlogOrder(applyBlogEdits(allBundledPosts())));
 };

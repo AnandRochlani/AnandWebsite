@@ -3,8 +3,7 @@
  * Validate the generated static SEO surface before deployment.
  *
  * This intentionally inspects dist/ (what crawlers receive), not React source.
- * Structural failures exit non-zero and block the build. Content-depth findings
- * are warnings so editors can improve legacy articles without breaking deploys.
+ * Structural and content-quality failures exit non-zero and block the build.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -100,9 +99,24 @@ function validateIndexable(url, file) {
   }
 
   if (new URL(url).pathname.startsWith('/blog/')) {
-    const article = html.match(/<article\b[\s\S]*?<\/article>/i)?.[0] || '';
+    const article =
+      html.match(/<div\b[^>]*id="static-article-body"[^>]*>([\s\S]*?)<\/div>/i)?.[1] || '';
     const words = text(article).split(/\s+/).filter(Boolean).length;
-    if (words < 300) warnings.push(`${url}: thin article body (${words} words)`);
+    if (words < 1200) errors.push(`${url}: thin article body (${words} words, minimum 1200)`);
+    const internalLinks = [
+      ...article.matchAll(/<a\b[^>]*href="(\/(?:blog|system-design)[^"]*)"[^>]*>/gi),
+    ];
+    if (internalLinks.length < 2 || internalLinks.length > 8) {
+      errors.push(`${url}: expected 2-8 contextual internal links, found ${internalLinks.length}`);
+    }
+    const sponsoredUdemyLinks = [
+      ...article.matchAll(
+        /<a\b(?=[^>]*href="https:\/\/www\.udemy\.com\/course\/system-design-fundamental\/[^"]*")(?=[^>]*rel="[^"]*\bsponsored\b[^"]*")[^>]*>/gi
+      ),
+    ];
+    if (sponsoredUdemyLinks.length !== 1) {
+      errors.push(`${url}: expected one sponsored Udemy CTA, found ${sponsoredUdemyLinks.length}`);
+    }
   }
 
   pages.push({ url, title: title.value, description: description.value });
@@ -161,6 +175,8 @@ for (const asset of [
   'site.webmanifest',
   'robots.txt',
   'sitemap.xml',
+  'system-design-roadmap.svg',
+  'system-design-interview-checklist.md',
 ]) {
   if (!fs.existsSync(path.join(DIST, asset))) errors.push(`dist/${asset}: missing`);
 }

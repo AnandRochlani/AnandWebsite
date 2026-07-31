@@ -258,6 +258,8 @@ const staticHeader = `\t\t\t<header id="static-header">
 \t\t\t\t\t\t<a href="/">Home</a>
 \t\t\t\t\t\t<a href="/courses">Courses</a>
 \t\t\t\t\t\t<a href="/blog">Blog</a>
+\t\t\t\t\t\t<a href="/system-design-case-studies">Case Studies</a>
+\t\t\t\t\t\t<a href="/system-design-glossary">Glossary</a>
 \t\t\t\t\t\t<a href="/about">About</a>
 \t\t\t\t\t\t<a href="/jobs">Jobs</a>
 \t\t\t\t\t</div>
@@ -270,6 +272,8 @@ const staticFooter = `\t\t\t<footer id="static-footer">
 \t\t\t\t\t<a href="/">Home</a>
 \t\t\t\t\t<a href="/courses">Courses</a>
 \t\t\t\t\t<a href="/blog">Blog</a>
+\t\t\t\t\t<a href="/system-design-case-studies">Case Studies</a>
+\t\t\t\t\t<a href="/system-design-glossary">Glossary</a>
 \t\t\t\t\t<a href="/about">About</a>
 \t\t\t\t\t<a href="/jobs">Jobs</a>
 \t\t\t\t</nav>
@@ -298,6 +302,12 @@ function postBody(post, allPosts) {
     .filter(Boolean)
     .map(esc)
     .join(' · ');
+  const hasCourseCta = String(post.content || '').includes(
+    'udemy.com/course/system-design-fundamental/'
+  );
+  const fallbackCourseCta = hasCourseCta
+    ? ''
+    : `\n\t\t\t\t\t<p><a href="${esc(COURSE_URL)}" rel="sponsored noopener">Go deeper: System Design Fundamentals for Interviews on Udemy</a></p>`;
 
   return `\t\t\t<main id="static-content">
 \t\t\t\t<article id="static-blog-post-content">
@@ -307,10 +317,9 @@ function postBody(post, allPosts) {
 \t\t\t\t\t<h1>${esc(post.title)}</h1>
 \t\t\t\t\t<p>${meta}</p>${img}
 \t\t\t\t\t<p>${esc(post.description || '')}</p>
-\t\t\t\t\t<div>
+\t\t\t\t\t<div id="static-article-body">
 ${sanitize(post.content || '')}
-\t\t\t\t\t</div>
-\t\t\t\t\t<p><a href="${esc(COURSE_URL)}" rel="sponsored noopener">Go deeper: System Design Fundamentals for Interviews on Udemy</a></p>${seriesNav(allPosts, post.slug)}
+\t\t\t\t\t</div>${fallbackCourseCta}${seriesNav(allPosts, post.slug)}
 \t\t\t\t</article>
 \t\t\t</main>`;
 }
@@ -400,6 +409,27 @@ function bundledContent() {
   };
 }
 
+function mergeByKey(bundledItems, liveItems, keyFor, resolve = (_bundled, live) => live) {
+  const merged = new Map();
+  for (const item of bundledItems) {
+    const key = keyFor(item);
+    if (key) merged.set(key, item);
+  }
+  // Keep published/admin edits authoritative while retaining bundled articles
+  // that have not reached the production database yet.
+  for (const item of liveItems) {
+    const key = keyFor(item);
+    if (key) merged.set(key, merged.has(key) ? resolve(merged.get(key), item) : item);
+  }
+  return [...merged.values()];
+}
+
+function contentWordCount(item) {
+  return toText(item?.content || '')
+    .split(/\s+/)
+    .filter(Boolean).length;
+}
+
 async function main() {
   const templatePath = path.join(DIST, 'index.html');
   if (!fs.existsSync(templatePath)) {
@@ -408,21 +438,41 @@ async function main() {
   }
   const template = fs.readFileSync(templatePath, 'utf8');
 
-  let posts = [];
-  let courses = [];
+  const bundled = bundledContent();
+  let posts = bundled.posts;
+  let courses = bundled.courses;
   try {
     const [p, c] = await Promise.all([
       getJson(`${API_BASE}/api/public/blog-posts`),
       getJson(`${API_BASE}/api/public/courses`).catch(() => ({ courses: [] })),
     ]);
-    posts = (p.posts || []).filter((x) => x && x.slug);
-    courses = c.courses || [];
+    posts = mergeByKey(
+      bundled.posts,
+      (p.posts || []).filter((x) => x && x.slug),
+      (post) => post.slug,
+      (bundledPost, livePost) =>
+        contentWordCount(bundledPost) > contentWordCount(livePost)
+          ? {
+              ...livePost,
+              title: bundledPost.title,
+              description: bundledPost.description,
+              content: bundledPost.content,
+              readTime: bundledPost.readTime,
+              series: bundledPost.series,
+              order: bundledPost.order,
+            }
+          : livePost
+    );
+    courses = mergeByKey(
+      bundled.courses,
+      c.courses || [],
+      (course) => course.slug || String(course.id || '')
+    );
   } catch (e) {
     // A remote API outage must not turn a production deploy back into one generic
     // client-rendered shell. The bundled content is the same fail-safe used by the
     // public API, so core pages still ship crawlable HTML and can be refreshed on
     // the next deploy after the API is restored.
-    ({ posts, courses } = bundledContent());
     console.warn(
       `[prerender] remote content unavailable (${e.message}); using ${posts.length} bundled posts and ${courses.length} bundled courses.`
     );
@@ -565,6 +615,112 @@ async function main() {
     written
   );
 
+  /* case-study collection */
+  write(
+    '/system-design-case-studies',
+    renderPage(template, {
+      head: headTags({
+        title: 'System Design Case Studies for Interviews',
+        description:
+          'Practice five complete System Design case studies covering requirements, estimates, APIs, architecture, bottlenecks, and interview trade-offs.',
+        canonical: `${CANONICAL_HOST}/system-design-case-studies`,
+        type: 'website',
+        jsonLd: [
+          {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'System Design Case Studies for Interviews',
+            url: `${CANONICAL_HOST}/system-design-case-studies`,
+            isPartOf: { '@id': `${CANONICAL_HOST}/#website` },
+            publisher: organization,
+          },
+          breadcrumb([
+            { name: 'Home', url: `${CANONICAL_HOST}/` },
+            { name: 'System Design Case Studies', url: `${CANONICAL_HOST}/system-design-case-studies` },
+          ]),
+        ],
+      }),
+      body: [
+        staticHeader,
+        listBody(
+          'System Design Case Studies for Interviews',
+          'Practice complete designs from requirements and capacity estimates through architecture, bottlenecks, failures, and trade-offs.',
+          [
+            ['Design a URL Shortener', 'designing-a-url-shortener-complete-system-design-case-study', 'Read-heavy lookup, caching, replication, and sharding.'],
+            ['Design a Social Bookmarking Service', 'design-a-social-bookmarking-service-delicious-system-design-case-study', 'Tags, cache partitioning, and data growth.'],
+            ['Design a Coding Contest Platform', 'design-a-coding-contest-platform-leetcode-system-design-interview', 'Sandbox workers, queues, traffic spikes, and leaderboards.'],
+            ['Design Facebook News Feed', 'design-facebook-news-feed-system-design-interview-guide', 'Fanout, feed caches, hot users, and ranking.'],
+            ['Design Google Typeahead', 'design-google-typeahead-autocomplete-system-design-interview', 'Tries, precomputation, caching, and low latency.'],
+          ].map(([title, slug, description]) => ({
+            title,
+            description,
+            url: `/blog/${slug}`,
+          }))
+        ),
+        staticFooter,
+      ].join('\n'),
+    }),
+    written
+  );
+
+  /* glossary / definition hub */
+  write(
+    '/system-design-glossary',
+    renderPage(template, {
+      head: headTags({
+        title: 'System Design Glossary: 20 Essential Terms',
+        description:
+          'A concise System Design glossary covering caching, sharding, replication, consistency, queues, latency, throughput, and interview terminology.',
+        canonical: `${CANONICAL_HOST}/system-design-glossary`,
+        type: 'website',
+        jsonLd: [
+          {
+            '@context': 'https://schema.org',
+            '@type': 'DefinedTermSet',
+            name: 'System Design Glossary',
+            url: `${CANONICAL_HOST}/system-design-glossary`,
+            description: 'Definitions of essential System Design and distributed-systems terms.',
+          },
+          breadcrumb([
+            { name: 'Home', url: `${CANONICAL_HOST}/` },
+            { name: 'System Design Glossary', url: `${CANONICAL_HOST}/system-design-glossary` },
+          ]),
+        ],
+      }),
+      body: [
+        staticHeader,
+        `\t\t\t<main id="static-content">
+\t\t\t\t<h1>System Design Glossary</h1>
+\t\t\t\t<p>Twenty terms you should be able to define, compare, and apply during a System Design interview.</p>
+\t\t\t\t<dl>
+\t\t\t\t\t<dt>Availability</dt><dd>The percentage of time a system successfully serves requests.</dd>
+\t\t\t\t\t<dt>Cache</dt><dd>Fast temporary storage that reduces latency and database load.</dd>
+\t\t\t\t\t<dt>CAP theorem</dt><dd>During a network partition, a distributed operation chooses consistency or availability.</dd>
+\t\t\t\t\t<dt>CDN</dt><dd>A distributed network that serves cached content close to users.</dd>
+\t\t\t\t\t<dt>Consistency</dt><dd>A guarantee describing the ordering or freshness clients observe.</dd>
+\t\t\t\t\t<dt>Consistent hashing</dt><dd>A partitioning method where membership changes move only a small share of keys.</dd>
+\t\t\t\t\t<dt>Database index</dt><dd>A structure that speeds reads at the cost of storage and write work.</dd>
+\t\t\t\t\t<dt>Eventual consistency</dt><dd>Replicas may temporarily disagree but converge later.</dd>
+\t\t\t\t\t<dt>Horizontal scaling</dt><dd>Adding machines or instances to increase capacity.</dd>
+\t\t\t\t\t<dt>Idempotency</dt><dd>Repeating an operation has the same final effect as performing it once.</dd>
+\t\t\t\t\t<dt>Latency</dt><dd>The time one operation spends in the system.</dd>
+\t\t\t\t\t<dt>Load balancer</dt><dd>A component that distributes requests across healthy instances.</dd>
+\t\t\t\t\t<dt>Message queue</dt><dd>A durable buffer that decouples producers and consumers.</dd>
+\t\t\t\t\t<dt>Partition key</dt><dd>The value that decides which shard stores a record.</dd>
+\t\t\t\t\t<dt>Replication</dt><dd>Maintaining multiple data copies for availability, reads, or recovery.</dd>
+\t\t\t\t\t<dt>Sharding</dt><dd>Splitting a dataset across independent partitions.</dd>
+\t\t\t\t\t<dt>SLA</dt><dd>A reliability commitment measured through service objectives.</dd>
+\t\t\t\t\t<dt>Throughput</dt><dd>The amount of work completed per unit of time.</dd>
+\t\t\t\t\t<dt>Vertical scaling</dt><dd>Increasing the resources of one machine.</dd>
+\t\t\t\t\t<dt>Write-ahead log</dt><dd>An append-only change record written before database pages update.</dd>
+\t\t\t\t</dl>
+\t\t\t</main>`,
+        staticFooter,
+      ].join('\n'),
+    }),
+    written
+  );
+
   /* one file per post */
   for (const post of posts) {
     const canonical = `${CANONICAL_HOST}/blog/${post.slug}`;
@@ -628,6 +784,38 @@ async function main() {
     written
   );
 
+  const courseFaqs = [
+    {
+      question: 'Who is this System Design course for?',
+      answer:
+        'It is designed for beginners, junior developers, career switchers, and self-taught engineers preparing for System Design interviews.',
+    },
+    {
+      question: 'Do I need prior System Design experience?',
+      answer:
+        'No. Basic programming knowledge and familiarity with client-server applications or APIs are helpful, but the course starts from the fundamentals.',
+    },
+    {
+      question: 'Which case studies are included?',
+      answer:
+        'The curriculum covers a social bookmarking service, consistent hashing, a coding contest platform, Facebook News Feed, and Google Typeahead.',
+    },
+    {
+      question: 'How long is the course?',
+      answer: 'The course contains 8 sections and 49 lectures with approximately 5 hours and 40 minutes of video.',
+    },
+    {
+      question: 'Can I use the free resources before enrolling?',
+      answer:
+        'Yes. Start with the System Design roadmap, glossary, interview checklist, tutorials, and case-study hub, then use the course for a guided sequence.',
+    },
+    {
+      question: 'Does the course guarantee an interview result?',
+      answer:
+        'No course can guarantee an interview outcome. This course provides a structured learning path and practical case studies for preparation.',
+    },
+  ];
+
   for (const c of courses) {
     const name = c.name || c.title || `Course ${c.id}`;
     // CoursesPage links to the slug form, so that is the primary indexable URL.
@@ -663,6 +851,18 @@ async function main() {
               { name: 'Courses', url: `${CANONICAL_HOST}/courses` },
               { name, url: canonical },
             ]),
+            {
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: courseFaqs.map(({ question, answer }) => ({
+                '@type': 'Question',
+                name: question,
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: answer,
+                },
+              })),
+            },
           ],
         }),
         body: [
@@ -670,6 +870,16 @@ async function main() {
           `\t\t\t<main id="static-content">
 \t\t\t\t<h1>${esc(name)}</h1>
 \t\t\t\t<p>${esc(c.description ? clamp(c.description, 400) : '')}</p>
+\t\t\t\t<h2>Free tutorials or the guided course?</h2>
+\t\t\t\t<p>Use the free roadmap, glossary, checklist, tutorials, and case studies for self-paced reference. Choose the course when you want the same fundamentals arranged as a guided video curriculum.</p>
+\t\t\t\t<p><a href="/blog/system-design-interview-preparation-complete-guide-2026">Read the complete interview-preparation guide</a> · <a href="/system-design-case-studies">Explore the case-study hub</a></p>
+\t\t\t\t<h2>Frequently asked questions</h2>
+${courseFaqs
+  .map(
+    ({ question, answer }) =>
+      `\t\t\t\t<h3>${esc(question)}</h3>\n\t\t\t\t<p>${esc(answer)}</p>`
+  )
+  .join('\n')}
 \t\t\t</main>`,
           staticFooter,
         ].join('\n'),
@@ -763,7 +973,7 @@ async function main() {
 
   const label = DRY_RUN ? 'would write' : 'wrote';
   console.log(`[prerender] ${label} ${written.length} static pages to ${path.relative(process.cwd(), DIST)}/`);
-  console.log(`[prerender]   ${posts.length} blog posts, ${courses.length} courses, 5 core pages`);
+  console.log(`[prerender]   ${posts.length} blog posts, ${courses.length} courses, 7 core pages`);
   if (DRY_RUN) for (const w of written) console.log(`  ${w.route}  →  ${w.file}  (${w.bytes} bytes)`);
 }
 

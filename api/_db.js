@@ -305,6 +305,27 @@ export async function seedIfEmpty(sql) {
     `;
   }
 
+  // Upgrade the original System Design tutorials only while they are still the
+  // short seeded versions. Longer administrator edits remain authoritative.
+  for (const p of seededBlogPosts.filter(
+    (post) => post.category === 'System Design' && Number(post.order) >= 1 && Number(post.order) <= 9
+  )) {
+    await sql`
+      UPDATE blog_posts
+      SET
+        title = ${p.title},
+        description = ${p.description || null},
+        content = ${p.content || null},
+        author = ${p.author || null},
+        read_time = ${p.readTime || null},
+        series = ${p.series || null},
+        series_order = ${typeof p.order === 'number' ? p.order : null},
+        updated_at = NOW()
+      WHERE slug = ${p.slug}
+        AND array_length(regexp_split_to_array(trim(regexp_replace(COALESCE(content, ''), '<[^>]+>', ' ', 'g')), E'\\s+'), 1) < 1000;
+    `;
+  }
+
   // Ensure sequences are aligned even after explicit-id seeding.
   // Without this, subsequent inserts can reuse an existing id and violate the pkey.
   await sql`

@@ -22,6 +22,8 @@ const AdminLoginPage = lazy(() => import('@/pages/AdminLoginPage'));
 const JobsPage = lazy(() => import('@/pages/JobsPage'));
 const JobDetailPage = lazy(() => import('@/pages/JobDetailPage'));
 const AboutPage = lazy(() => import('@/pages/AboutPage'));
+const SystemDesignCaseStudiesPage = lazy(() => import('@/pages/SystemDesignCaseStudiesPage'));
+const SystemDesignGlossaryPage = lazy(() => import('@/pages/SystemDesignGlossaryPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 // Loading fallback component
@@ -52,6 +54,8 @@ function App() {
                       <Route path="/blog" element={<BlogPage />} />
                       <Route path="/blog/:slug" element={<BlogPostDetail />} />
                       <Route path="/about" element={<AboutPage />} />
+                      <Route path="/system-design-case-studies" element={<SystemDesignCaseStudiesPage />} />
+                      <Route path="/system-design-glossary" element={<SystemDesignGlossaryPage />} />
                       <Route path="/jobs" element={<JobsPage />} />
                       <Route path="/jobs/:id" element={<JobDetailPage />} />
                       <Route path="/saved-courses" element={<SavedCoursesPage />} />

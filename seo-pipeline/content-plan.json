@@ -95,22 +95,38 @@
     },
     {
       "order": 18,
-      "status": "queued",
-      "slug": "cap-theorem-explained-consistency-availability-partition-tolerance",
-      "workingTitle": "CAP Theorem Explained: Consistency, Availability, Partition Tolerance (2026)",
+      "status": "drafted",
+      "slug": "system-design-interview-preparation-complete-guide-2026",
+      "workingTitle": "System Design Interview Preparation: Complete Guide (2026)",
+      "primaryKeyword": "system design interview preparation",
+      "secondaryKeywords": ["system design roadmap", "system design study plan", "system design interview checklist"]
+    },
+    {
+      "order": 19,
+      "status": "drafted",
+      "slug": "cap-theorem-explained-system-design-interview",
+      "workingTitle": "CAP Theorem Explained for System Design Interviews (2026)",
       "primaryKeyword": "cap theorem explained",
       "secondaryKeywords": ["cap theorem interview", "consistency vs availability", "eventual consistency"]
     },
     {
-      "order": 19,
-      "status": "queued",
-      "slug": "sql-vs-nosql-how-to-choose-a-database-system-design-interview",
-      "workingTitle": "SQL vs NoSQL: How to Choose a Database in a System Design Interview",
+      "order": 20,
+      "status": "drafted",
+      "slug": "sql-vs-nosql-system-design-interview",
+      "workingTitle": "SQL vs NoSQL for System Design Interviews (2026)",
       "primaryKeyword": "sql vs nosql system design",
       "secondaryKeywords": ["choose database interview", "when to use nosql"]
     },
     {
-      "order": 20,
+      "order": 21,
+      "status": "drafted",
+      "slug": "latency-vs-throughput-system-design",
+      "workingTitle": "Latency vs Throughput in System Design (2026)",
+      "primaryKeyword": "latency vs throughput system design",
+      "secondaryKeywords": ["p99 latency", "system throughput", "Little's Law system design"]
+    },
+    {
+      "order": 22,
       "status": "queued",
       "slug": "content-delivery-network-cdn-explained-system-design",
       "workingTitle": "CDN Explained: How Content Delivery Networks Work (2026)",
@@ -118,7 +134,7 @@
       "secondaryKeywords": ["content delivery network system design", "edge caching"]
     },
     {
-      "order": 21,
+      "order": 23,
       "status": "queued",
       "slug": "message-queues-explained-kafka-rabbitmq-system-design",
       "workingTitle": "Message Queues Explained: Async Processing in System Design (2026)",
@@ -126,7 +142,7 @@
       "secondaryKeywords": ["kafka vs rabbitmq interview", "async processing architecture"]
     },
     {
-      "order": 22,
+      "order": 24,
       "status": "queued",
       "slug": "design-a-rate-limiter-system-design-interview-guide",
       "workingTitle": "Design a Rate Limiter: System Design Interview Guide (2026)",
@@ -134,7 +150,7 @@
       "secondaryKeywords": ["token bucket vs sliding window", "api rate limiting"]
     },
     {
-      "order": 23,
+      "order": 25,
       "status": "queued",
       "slug": "database-indexing-explained-system-design-interview",
       "workingTitle": "Database Indexing Explained: B-Trees, Trade-offs, and Interview Answers",
@@ -142,7 +158,7 @@
       "secondaryKeywords": ["b-tree index interview", "index trade-offs"]
     },
     {
-      "order": 24,
+      "order": 26,
       "status": "queued",
       "slug": "websockets-vs-polling-real-time-communication-system-design",
       "workingTitle": "WebSockets vs Polling vs SSE: Real-Time Communication in System Design",
@@ -150,7 +166,7 @@
       "secondaryKeywords": ["real time system design", "long polling interview"]
     },
     {
-      "order": 25,
+      "order": 27,
       "status": "queued",
       "slug": "design-a-chat-system-whatsapp-system-design-interview",
       "workingTitle": "Design a Chat System like WhatsApp: System Design Interview (2026)",
@@ -158,7 +174,7 @@
       "secondaryKeywords": ["design chat application interview", "message delivery guarantees"]
     },
     {
-      "order": 26,
+      "order": 28,
       "status": "queued",
       "slug": "design-instagram-photo-sharing-system-design-interview",
       "workingTitle": "Design Instagram: Photo Sharing System Design Interview (2026)",
@@ -166,7 +182,7 @@
       "secondaryKeywords": ["design photo sharing service", "blob storage architecture"]
     },
     {
-      "order": 27,
+      "order": 29,
       "status": "queued",
       "slug": "design-youtube-video-streaming-system-design-interview",
       "workingTitle": "Design YouTube: Video Streaming System Design Interview (2026)",
@@ -174,7 +190,7 @@
       "secondaryKeywords": ["video streaming architecture", "design video platform interview"]
     },
     {
-      "order": 28,
+      "order": 30,
       "status": "queued",
       "slug": "design-uber-ride-sharing-system-design-interview",
       "workingTitle": "Design Uber: Ride-Sharing System Design Interview (2026)",
@@ -182,7 +198,7 @@
       "secondaryKeywords": ["geospatial index interview", "design ride sharing app"]
     },
     {
-      "order": 29,
+      "order": 31,
       "status": "queued",
       "slug": "design-a-web-crawler-system-design-interview-guide",
       "workingTitle": "Design a Web Crawler: System Design Interview Guide (2026)",
@@ -190,7 +206,7 @@
       "secondaryKeywords": ["design search engine crawler", "url frontier"]
     },
     {
-      "order": 30,
+      "order": 32,
       "status": "queued",
       "slug": "design-a-notification-system-push-email-sms-system-design",
       "workingTitle": "Design a Notification System: Push, Email, SMS at Scale (2026)",
@@ -198,7 +214,7 @@
       "secondaryKeywords": ["push notification architecture", "design notification service interview"]
     },
     {
-      "order": 31,
+      "order": 33,
       "status": "queued",
       "slug": "idempotency-and-retries-distributed-systems-interview",
       "workingTitle": "Idempotency and Retries: Distributed Systems Interview Essentials",

@@ -18,6 +18,7 @@ const Navigation = () => {
     { name: 'Home', path: '/' },
     { name: 'Courses', path: '/courses' },
     { name: 'Tutorials', path: '/blog' },
+    { name: 'Case Studies', path: '/system-design-case-studies' },
     { name: 'About', path: '/about' },
     { name: 'Jobs', path: '/jobs' },
   ];

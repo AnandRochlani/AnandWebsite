@@ -112,6 +112,17 @@ const Footer = () => {
           {/* Featured course */}
           <div>
             <h3 className="text-white font-semibold mb-4">Guided Learning</h3>
+            <div className="mb-4 space-y-2 text-sm">
+              <Link to="/system-design-case-studies" className="block text-slate-400 hover:text-white">
+                System Design case studies
+              </Link>
+              <Link to="/system-design-glossary" className="block text-slate-400 hover:text-white">
+                System Design glossary
+              </Link>
+              <a href="/system-design-interview-checklist.md" className="block text-slate-400 hover:text-white">
+                Download interview checklist
+              </a>
+            </div>
             <a
               href="https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73"
               target="_blank"
