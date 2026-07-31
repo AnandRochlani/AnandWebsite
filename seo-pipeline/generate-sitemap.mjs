@@ -10,7 +10,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const SITE = (process.env.SITE_URL || 'https://anandrochlani.com').replace(/\/$/, '');
-const CANONICAL = 'https://www.anandrochlani.com'; // matches canonical tags in SEOHead
+const CANONICAL = 'https://anandrochlani.com'; // apex only — www is not attached in Vercel
 const here = path.dirname(fileURLToPath(import.meta.url));
 const outPath = path.join(here, '..', 'public', 'sitemap.xml');
 

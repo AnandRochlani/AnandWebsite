@@ -1,11 +1,19 @@
-# robots.txt for AnandRochlani
-# https://www.anandrochlani.com/robots.txt
+# robots.txt for anandrochlani.com
+# Canonical host is the APEX domain. The www subdomain is not attached in Vercel
+# and fails TLS, so it must never appear in sitemaps, canonicals, or here.
 
 User-agent: *
+Allow: /
 
-# Disallow admin pages from search engines
+# Admin surfaces — no search value, keep them out of the index.
+Disallow: /admin
 Disallow: /admin/
 Disallow: /admin/login
 
-# Sitemap location
-Sitemap: https://www.anandrochlani.com/sitemap.xml
+# Personalised / stateful pages — thin and user-specific.
+Disallow: /saved-courses
+
+# Never index raw API responses as pages.
+Disallow: /api/
+
+Sitemap: https://anandrochlani.com/sitemap.xml
