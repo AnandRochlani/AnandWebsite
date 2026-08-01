@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Search, X } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 
 const terms = [
@@ -25,8 +26,18 @@ const terms = [
   ['Write-ahead log', 'An append-only change record written before database pages are updated.'],
 ];
 
-const SystemDesignGlossaryPage = () => (
-  <>
+const SystemDesignGlossaryPage = () => {
+  const [query, setQuery] = useState('');
+  const filteredTerms = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return terms;
+    return terms.filter(([term, definition]) =>
+      `${term} ${definition}`.toLowerCase().includes(normalized)
+    );
+  }, [query]);
+
+  return (
+    <>
     <SEOHead
       title="System Design Glossary: 20 Essential Terms"
       description="A concise System Design glossary covering caching, sharding, replication, consistency, queues, latency, throughput, and interview terminology."
@@ -38,14 +49,54 @@ const SystemDesignGlossaryPage = () => (
         <p className="text-sm font-semibold uppercase tracking-wider text-brand">Reference</p>
         <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-6xl">System Design Glossary</h1>
         <p className="mt-6 max-w-3xl text-xl leading-8 text-slate-600">Twenty terms you should be able to define, compare, and apply during a System Design interview.</p>
+
+        <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <label htmlFor="glossary-search" className="block text-sm font-semibold text-slate-900">
+            Find a term or concept
+          </label>
+          <div className="relative mt-2">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+            <input
+              id="glossary-search"
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Try “cache”, “consistency”, or “partition”"
+              className="min-h-12 w-full rounded-xl border border-slate-300 bg-white pl-12 pr-12 text-slate-900 placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                aria-label="Clear glossary search"
+                className="absolute right-2 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          <p className="mt-2 text-sm text-slate-500" aria-live="polite">
+            Showing {filteredTerms.length} of {terms.length} terms
+          </p>
+        </div>
+
         <dl className="mt-12 grid gap-5 md:grid-cols-2">
-          {terms.map(([term, definition]) => (
+          {filteredTerms.map(([term, definition]) => (
             <div key={term} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <dt className="text-xl font-bold text-slate-900">{term}</dt>
               <dd className="mt-2 leading-7 text-slate-600">{definition}</dd>
             </div>
           ))}
         </dl>
+        {filteredTerms.length === 0 && (
+          <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
+            <h2 className="text-xl font-bold text-slate-900">No matching term yet</h2>
+            <p className="mt-2 text-slate-600">Try a broader word, or clear the search to browse all definitions.</p>
+            <button type="button" onClick={() => setQuery('')} className="mt-5 rounded-lg bg-brand px-5 py-3 font-semibold text-white hover:bg-brand-dark">
+              Show all terms
+            </button>
+          </div>
+        )}
         <div className="mt-12 rounded-2xl border border-brand/20 bg-brand-soft p-7">
           <h2 className="text-2xl font-bold text-slate-900">Turn definitions into decisions</h2>
           <p className="mt-3 text-slate-600">Use the complete learning path to see when each concept belongs in an architecture and which trade-off it introduces.</p>
@@ -53,7 +104,8 @@ const SystemDesignGlossaryPage = () => (
         </div>
       </section>
     </div>
-  </>
-);
+    </>
+  );
+};
 
 export default SystemDesignGlossaryPage;

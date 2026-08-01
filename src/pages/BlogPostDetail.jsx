@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useLayoutEffect, useState, useRef } from 'react';
 import { useParams, Link, useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, ArrowLeft, Share2, Facebook, Twitter, Linkedin, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, Share2, Linkedin, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchBlogPostBySlugOrId, fetchBlogPosts } from '@/data/dbApi';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -31,7 +31,12 @@ const BlogPostDetail = () => {
   const [post, setPost] = useState(null);
   const [allBlogPosts, setAllBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+  // Which URL param the post in state was actually fetched for. On an in-app
+  // navigation `slug` changes a render before the fetch effect runs, so without
+  // this the still-stale `post` looks like a slug mismatch and the canonical
+  // redirect below bounces the reader straight back to the article they left.
+  const [loadedSlug, setLoadedSlug] = useState(null);
+
   useEffect(() => {
     let mounted = true;
     const run = async () => {
@@ -49,7 +54,10 @@ const BlogPostDetail = () => {
         setPost(null);
         setAllBlogPosts([]);
       } finally {
-        if (mounted) setLoading(false);
+        if (mounted) {
+          setLoadedSlug(slug);
+          setLoading(false);
+        }
       }
     };
     run();
@@ -181,16 +189,40 @@ const BlogPostDetail = () => {
     }
   }, [relatedPosts]);
 
-  const handleShare = (platform) => {
-    toast({
-      title: `Sharing on ${platform}`,
-      description: "🚧 This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
-    });
+  const handleShare = async () => {
+    const shareData = {
+      title: post?.title || document.title,
+      text: post?.description || '',
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+      await navigator.clipboard.writeText(shareData.url);
+      toast({
+        title: 'Article link copied',
+        description: 'The link is ready to paste into a message or note.',
+      });
+    } catch (error) {
+      if (error?.name !== 'AbortError') {
+        toast({
+          title: 'Could not share automatically',
+          description: 'Copy the page address from your browser instead.',
+          variant: 'destructive',
+        });
+      }
+    }
   };
 
+  // Everything below is only meaningful once the fetch for THIS slug has landed.
+  const isStale = loadedSlug !== slug;
+
   // Redirect numeric/legacy URLs to canonical slug URL
-  const shouldRedirect = Boolean(post && slug && post.slug && slug !== post.slug);
-  const isNotFound = !loading && !post;
+  const shouldRedirect = Boolean(!isStale && post && slug && post.slug && slug !== post.slug);
+  const isNotFound = !loading && !isStale && !post;
 
   if (shouldRedirect) {
     return <Navigate to={`/blog/${post.slug}`} replace />;
@@ -216,7 +248,7 @@ const BlogPostDetail = () => {
     );
   }
 
-  if (loading || !post) {
+  if (loading || isStale || !post) {
     return (
       <div className="min-h-screen bg-white pt-24 flex items-center justify-center">
         <div className="text-center text-slate-500">Loading...</div>
@@ -352,38 +384,14 @@ const BlogPostDetail = () => {
               <span>By {post.author}</span>
             </div>
 
-            {/* Share Buttons */}
-            <div className="hidden items-center space-x-2">
-              <span className="text-slate-500 text-sm mr-2">Share:</span>
-              <button
-                onClick={() => handleShare('Facebook')}
-                className="p-2 rounded-lg bg-slate-100 hover:bg-brand-soft text-slate-500 hover:text-brand transition-all duration-300"
-                aria-label="Share on Facebook"
-              >
-                <Facebook className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => handleShare('Twitter')}
-                className="p-2 rounded-lg bg-slate-100 hover:bg-brand-soft text-slate-500 hover:text-brand transition-all duration-300"
-                aria-label="Share on Twitter"
-              >
-                <Twitter className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => handleShare('LinkedIn')}
-                className="p-2 rounded-lg bg-slate-100 hover:bg-brand-soft text-slate-500 hover:text-brand transition-all duration-300"
-                aria-label="Share on LinkedIn"
-              >
-                <Linkedin className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => handleShare('Link')}
-                className="p-2 rounded-lg bg-slate-100 hover:bg-brand-soft text-slate-500 hover:text-brand transition-all duration-300"
-                aria-label="Copy link"
-              >
-                <Share2 className="w-5 h-5" />
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={handleShare}
+              className="inline-flex min-h-11 items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-brand hover:text-brand"
+            >
+              <Share2 className="mr-2 h-4 w-4" />
+              Share this article
+            </button>
           </motion.div>
 
           {/* Featured Image */}
@@ -412,6 +420,27 @@ const BlogPostDetail = () => {
             className="blog-content prose prose-slate prose-lg max-w-none mb-16"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
+
+          <aside className="mb-12 rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8" aria-label="About the author">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand text-lg font-extrabold text-white" aria-hidden="true">
+                AR
+              </div>
+              <div className="flex-1">
+                <p className="text-xs font-semibold uppercase tracking-wider text-brand">About the author</p>
+                <h2 className="mt-1 text-xl font-bold text-slate-900">{post.author || 'Anand Rochlani'}</h2>
+                <p className="mt-2 leading-relaxed text-slate-600">
+                  Anand is a Member of Technical Staff at Salesforce and creates practical interview-prep lessons focused on clear reasoning, reusable patterns, and explicit trade-offs.
+                </p>
+                <div className="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
+                  <Link to="/about" className="text-brand hover:text-brand-dark">Read the full bio →</Link>
+                  <a href="https://in.linkedin.com/in/anand-rochlani" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-brand hover:text-brand-dark">
+                    <Linkedin className="mr-1.5 h-4 w-4" /> LinkedIn
+                  </a>
+                </div>
+              </div>
+            </div>
+          </aside>
 
           {/* Series Navigation - Previous/Next */}
           {post.series && (previousPost || nextPost) && (

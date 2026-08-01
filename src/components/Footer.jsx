@@ -35,11 +35,11 @@ const Footer = () => {
   const brandName = get('footer.brand_name', 'AnandRochlani');
   const tagline = get(
     'footer.tagline',
-    'System design tutorials, interview case studies, and practical courses for software engineers.'
+    'Practical System Design and coding interview preparation for software engineers.'
   );
   const copyright = get(
     'footer.copyright',
-    '© 2026 AnandRochlani. Practical System Design learning for software engineers.'
+    '© 2026 AnandRochlani. Practical engineering interview preparation.'
   );
   const quickLinksRaw = get('footer.quick_links', FALLBACK_QUICK_LINKS);
   const socialLinksRaw = get('social.links', FALLBACK_SOCIAL);

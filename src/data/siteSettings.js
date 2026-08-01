@@ -26,7 +26,7 @@ export const defaultSiteSettings = [
   // ── Hero (HomePage) ─────────────────────────────────────────────
   {
     key: 'home.hero.badge',
-    value: 'System Design, made practical',
+    value: 'Engineering interviews, made practical',
     category: 'hero',
     type: 'text',
     label: 'Hero badge text',
@@ -34,7 +34,7 @@ export const defaultSiteSettings = [
   },
   {
     key: 'home.hero.title.line1',
-    value: 'Understand System Design.',
+    value: 'Prepare with a clear plan.',
     category: 'hero',
     type: 'text',
     label: 'Hero title — line 1',
@@ -42,7 +42,7 @@ export const defaultSiteSettings = [
   },
   {
     key: 'home.hero.title.line2',
-    value: 'Explain it with confidence.',
+    value: 'Explain your thinking with confidence.',
     category: 'hero',
     type: 'text',
     label: 'Hero title — line 2 (accent)',
@@ -51,7 +51,7 @@ export const defaultSiteSettings = [
   {
     key: 'home.hero.subtitle',
     value:
-      'Build strong fundamentals with a clear tutorial path, practical architecture case studies, and an interview-focused course.',
+      'Prepare for System Design and coding interviews with focused tutorials, reusable problem-solving patterns, complete case studies, and guided courses.',
     category: 'hero',
     type: 'textarea',
     label: 'Hero subtitle',
@@ -83,7 +83,7 @@ export const defaultSiteSettings = [
   },
   {
     key: 'home.hero.cta_secondary.label',
-    value: 'Explore the course',
+    value: 'Compare interview courses',
     category: 'hero',
     type: 'text',
     label: 'Secondary CTA label',
@@ -110,7 +110,7 @@ export const defaultSiteSettings = [
   {
     key: 'home.feature.blog.description',
     value:
-      'Follow the free System Design tutorial series from latency and throughput through databases, caching, and complete case studies.',
+      'Follow focused tutorials for System Design fundamentals, architecture case studies, and reusable coding interview patterns.',
     category: 'features',
     type: 'textarea',
     label: 'Blog feature card — description',
@@ -118,7 +118,7 @@ export const defaultSiteSettings = [
   },
   {
     key: 'home.feature.courses.title',
-    value: 'Learn with a guided course',
+    value: 'Choose a guided interview track',
     category: 'features',
     type: 'text',
     label: 'Courses feature card — title',
@@ -127,7 +127,7 @@ export const defaultSiteSettings = [
   {
     key: 'home.feature.courses.description',
     value:
-      'Use a structured curriculum when you want a focused path, practical explanations, and preparation you can revisit before interviews.',
+      'Choose System Design, Amazon coding patterns, or the Google 50-problem path when you want a structured curriculum.',
     category: 'features',
     type: 'textarea',
     label: 'Courses feature card — description',
@@ -146,7 +146,7 @@ export const defaultSiteSettings = [
   {
     key: 'footer.tagline',
     value:
-      'System design tutorials, interview case studies, and practical courses for software engineers.',
+      'Practical System Design and coding interview preparation for software engineers.',
     category: 'footer',
     type: 'textarea',
     label: 'Footer tagline',
@@ -154,7 +154,7 @@ export const defaultSiteSettings = [
   },
   {
     key: 'footer.copyright',
-    value: '© 2026 AnandRochlani. Practical System Design learning for software engineers.',
+    value: '© 2026 AnandRochlani. Practical engineering interview preparation.',
     category: 'footer',
     type: 'text',
     label: 'Copyright line',

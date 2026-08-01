@@ -1,5 +1,6 @@
 import React from 'react';
 import { ExternalLink, GraduationCap, Linkedin, Youtube } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 
@@ -23,14 +24,15 @@ const AboutPage = () => (
         <p className="mt-6 text-xl leading-8 text-slate-600">
           I’m a Member of Technical Staff at Salesforce and a System Design educator. I create
           practical lessons that help software engineers understand scalable architecture,
-          explain trade-offs clearly, and prepare for System Design interviews.
+          recognise reusable coding patterns, explain trade-offs clearly, and prepare for technical interviews.
         </p>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            ['5h 40m', 'Course content'],
-            ['49', 'Video lectures'],
-            ['4.8★', 'Udemy rating'],
+            ['3', 'Interview courses'],
+            ['2', 'Interview tracks'],
+            ['49', 'Published lectures'],
+            ['4.8★', 'Published course rating'],
           ].map(([value, label]) => (
             <div key={label} className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
               <p className="text-3xl font-extrabold text-slate-900">{value}</p>
@@ -43,19 +45,20 @@ const AboutPage = () => (
           <section>
             <h2 className="text-2xl font-bold text-slate-900">What I teach</h2>
             <p className="mt-3">
-              The free tutorial series covers latency, throughput, load balancing, caching,
-              replication, sharding, consistent hashing, and complete interview case studies.
-              Each lesson starts with the problem, then explains the architecture and the
-              trade-offs you should discuss with an interviewer.
+              The free library covers latency, throughput, load balancing, caching,
+              replication, sharding, complete architecture case studies, and the reusable
+              patterns behind coding interview problems. Each lesson starts with the problem,
+              then explains the reasoning and trade-offs you should communicate to an interviewer.
             </p>
           </section>
           <section>
-            <h2 className="text-2xl font-bold text-slate-900">About the course</h2>
+            <h2 className="text-2xl font-bold text-slate-900">About the courses</h2>
             <p className="mt-3">
-              System Design Fundamentals for Interviews is a beginner-friendly Udemy course
-              with 8 sections, 49 lectures, and real case studies including a social
-              bookmarking service, a coding contest platform, Facebook News Feed, and Google
-              Typeahead. The course was last updated in February 2026.
+              System Design Fundamentals for Interviews is the published Udemy course, with
+              8 sections, 49 lectures, and complete architecture case studies. Two coding
+              interview curricula are currently in production: an Amazon-focused 15-pattern
+              path and a Google-focused 50-problem path. Their full outlines are available so
+              learners can evaluate the scope before launch.
             </p>
           </section>
           <section>
@@ -68,6 +71,27 @@ const AboutPage = () => (
             </p>
           </section>
         </div>
+
+        <section className="mt-12">
+          <p className="text-sm font-semibold uppercase tracking-wider text-brand">Choose a track</p>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            <Link to="/courses/system-design-fundamental" className="group rounded-2xl border border-slate-200 p-6 hover:border-brand hover:shadow-lg">
+              <span className="text-xs font-semibold uppercase tracking-wider text-emerald-700">Available now</span>
+              <h2 className="mt-2 text-xl font-bold text-slate-900 group-hover:text-brand">System Design fundamentals</h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">Architecture building blocks and complete interview case studies.</p>
+            </Link>
+            <Link to="/courses/amazon-coding-interview-patterns" className="group rounded-2xl border border-slate-200 p-6 hover:border-brand hover:shadow-lg">
+              <span className="text-xs font-semibold uppercase tracking-wider text-amber-700">In production</span>
+              <h2 className="mt-2 text-xl font-bold text-slate-900 group-hover:text-brand">Amazon coding patterns</h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">Fifteen reusable patterns, mock interviews, and leadership preparation.</p>
+            </Link>
+            <Link to="/courses/google-coding-interview-50-problems" className="group rounded-2xl border border-slate-200 p-6 hover:border-brand hover:shadow-lg">
+              <span className="text-xs font-semibold uppercase tracking-wider text-amber-700">In production</span>
+              <h2 className="mt-2 text-xl font-bold text-slate-900 group-hover:text-brand">Google 50-problem path</h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">Google-tagged problems organised by pattern and interview signal.</p>
+            </Link>
+          </div>
+        </section>
 
         <div className="mt-12 flex flex-wrap gap-4">
           <a href={COURSE_URL} target="_blank" rel="sponsored noopener noreferrer">

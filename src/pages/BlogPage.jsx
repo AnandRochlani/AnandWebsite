@@ -176,7 +176,7 @@ const BlogPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="text-center mb-12"
+            className="text-center mb-10"
           >
             <p className="text-brand font-semibold text-sm uppercase tracking-wider mb-3">Free System Design &amp; coding interview tutorials</p>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight mb-4">
@@ -186,6 +186,37 @@ const BlogPage = () => {
               Follow the series in order for a guided path, or jump straight to the topic you need today.
             </p>
           </motion.div>
+
+          <section className="mb-12 grid gap-5 md:grid-cols-2" aria-label="Choose a tutorial track">
+            <Link
+              to="/blog/system-design-interview-preparation-complete-guide-2026"
+              className="group rounded-2xl border border-slate-200 bg-slate-50 p-6 transition hover:border-brand hover:bg-white hover:shadow-lg"
+            >
+              <div className="flex items-start gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-ink text-sm font-bold text-white">SD</span>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-brand">System Design track</p>
+                  <h2 className="mt-1 text-xl font-bold text-slate-900 group-hover:text-brand">Start with the complete roadmap</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">Learn the fundamentals, interview framework, estimation, and complete architecture cases in sequence.</p>
+                  <span className="mt-4 inline-flex items-center text-sm font-semibold text-brand">Open the roadmap <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
+                </div>
+              </div>
+            </Link>
+            <Link
+              to="/blog/leetcode-patterns-coding-interview-guide"
+              className="group rounded-2xl border border-slate-200 bg-slate-50 p-6 transition hover:border-brand hover:bg-white hover:shadow-lg"
+            >
+              <div className="flex items-start gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand text-sm font-bold text-white">15</span>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-brand">Coding interview track</p>
+                  <h2 className="mt-1 text-xl font-bold text-slate-900 group-hover:text-brand">Learn patterns instead of answers</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">Recognise the fifteen recurring problem shapes behind unfamiliar LeetCode questions.</p>
+                  <span className="mt-4 inline-flex items-center text-sm font-semibold text-brand">See all 15 patterns <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
+                </div>
+              </div>
+            </Link>
+          </section>
 
           {/* Featured Post */}
           {featuredPost && (

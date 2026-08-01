@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, Users, TrendingUp, Search, Filter, Star, BookOpen, Crown, ExternalLink } from 'lucide-react';
+import { ArrowRight, Clock, Users, TrendingUp, Search, Filter, Star, BookOpen, Crown, ExternalLink } from 'lucide-react';
 import { fetchCourses } from '@/data/dbApi';
 import { isInProduction } from '@/data/courses';
 import SaveButton from '@/components/SaveButton';
@@ -134,6 +134,36 @@ const CoursesPage = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+          <section className="mb-12">
+            <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-wider text-brand">Choose by interview round</p>
+                <h2 className="mt-2 text-3xl font-extrabold text-slate-900">Three focused preparation tracks</h2>
+              </div>
+              <p className="max-w-md text-sm leading-relaxed text-slate-600">Published and in-production courses are clearly labelled before you open them.</p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              <Link to="/courses/system-design-fundamental" className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:border-brand hover:shadow-lg">
+                <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">Available now</span>
+                <h3 className="mt-4 text-xl font-bold text-slate-900 group-hover:text-brand">System Design fundamentals</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">For architecture rounds: scalability, storage, caching, and complete case studies.</p>
+                <span className="mt-5 inline-flex items-center text-sm font-semibold text-brand">View course <ArrowRight className="ml-1.5 h-4 w-4" /></span>
+              </Link>
+              <Link to="/courses/amazon-coding-interview-patterns" className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:border-brand hover:shadow-lg">
+                <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-800">In production</span>
+                <h3 className="mt-4 text-xl font-bold text-slate-900 group-hover:text-brand">Amazon coding patterns</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">For coding rounds: fifteen reusable patterns, mock interviews, and leadership stories.</p>
+                <span className="mt-5 inline-flex items-center text-sm font-semibold text-brand">Preview curriculum <ArrowRight className="ml-1.5 h-4 w-4" /></span>
+              </Link>
+              <Link to="/courses/google-coding-interview-50-problems" className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:border-brand hover:shadow-lg">
+                <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-800">In production</span>
+                <h3 className="mt-4 text-xl font-bold text-slate-900 group-hover:text-brand">Google 50-problem path</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">For Google-style rounds: tagged problems, GCA narration, and pattern mapping.</p>
+                <span className="mt-5 inline-flex items-center text-sm font-semibold text-brand">Preview curriculum <ArrowRight className="ml-1.5 h-4 w-4" /></span>
+              </Link>
+            </div>
+          </section>
+
           {/* Featured Courses */}
           {featuredCourses.length > 0 && (
             <motion.div

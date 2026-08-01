@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Code2, Heart, Shield, LogOut } from 'lucide-react';
+import { Menu, X, Code2, Heart, Shield, LogOut, ChevronDown, LibraryBig } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSavedCourses } from '@/context/SavedCoursesContext';
 import { useAuth } from '@/context/AuthContext';
@@ -8,6 +8,7 @@ import { useToast } from '@/components/ui/use-toast';
 
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { savedCourseIds } = useSavedCourses();
@@ -16,11 +17,15 @@ const Navigation = () => {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'Courses', path: '/courses' },
     { name: 'Tutorials', path: '/blog' },
-    { name: 'Case Studies', path: '/system-design-case-studies' },
-    { name: 'About', path: '/about' },
     { name: 'Jobs', path: '/jobs' },
+  ];
+
+  const resourceLinks = [
+    { name: 'System Design case studies', path: '/system-design-case-studies', description: 'Practise complete architecture questions' },
+    { name: 'System Design glossary', path: '/system-design-glossary', description: 'Review essential terms and trade-offs' },
+    { name: 'Interview checklist', path: '/system-design-interview-checklist.md', description: 'Use the step-by-step practice checklist', document: true },
+    { name: 'About Anand', path: '/about', description: 'Experience, teaching, and editorial approach' },
   ];
 
   const isActive = (path) => {
@@ -29,6 +34,8 @@ const Navigation = () => {
     }
     return location.pathname.startsWith(path);
   };
+
+  const resourcesActive = resourceLinks.some((link) => isActive(link.path));
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -66,7 +73,7 @@ const Navigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -87,6 +94,68 @@ const Navigation = () => {
                 )}
               </Link>
             ))}
+
+            <div
+              className="relative"
+              onMouseLeave={() => setResourcesOpen(false)}
+              onKeyDown={(event) => {
+                if (event.key === 'Escape') setResourcesOpen(false);
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setResourcesOpen((open) => !open)}
+                aria-expanded={resourcesOpen}
+                aria-haspopup="menu"
+                className={`inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold transition-colors ${
+                  resourcesActive ? 'text-brand' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Resources
+                <ChevronDown className={`h-4 w-4 transition-transform ${resourcesOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {resourcesOpen && (
+                <div
+                  role="menu"
+                  className="absolute right-0 top-full mt-2 w-80 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-900/10"
+                >
+                  <div className="px-3 pb-2 pt-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                    Learning resources
+                  </div>
+                  {resourceLinks.map((link) => (
+                    link.document ? (
+                      <a
+                        key={link.path}
+                        href={link.path}
+                        role="menuitem"
+                        onClick={() => setResourcesOpen(false)}
+                        className="group flex gap-3 rounded-xl px-3 py-3 hover:bg-slate-50"
+                      >
+                        <LibraryBig className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+                        <span>
+                          <span className="block text-sm font-semibold text-slate-900 group-hover:text-brand">{link.name}</span>
+                          <span className="mt-0.5 block text-xs leading-relaxed text-slate-500">{link.description}</span>
+                        </span>
+                      </a>
+                    ) : (
+                      <Link
+                        key={link.path}
+                        to={link.path}
+                        role="menuitem"
+                        onClick={() => setResourcesOpen(false)}
+                        className="group flex gap-3 rounded-xl px-3 py-3 hover:bg-slate-50"
+                      >
+                        <LibraryBig className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+                        <span>
+                          <span className="block text-sm font-semibold text-slate-900 group-hover:text-brand">{link.name}</span>
+                          <span className="mt-0.5 block text-xs leading-relaxed text-slate-500">{link.description}</span>
+                        </span>
+                      </Link>
+                    )
+                  ))}
+                </div>
+              )}
+            </div>
             
             {/* Saved Items Link */}
             <Link
@@ -114,14 +183,12 @@ const Navigation = () => {
             </Link>
 
             {/* Primary CTA — Udemy course */}
-            <a
-              href="https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73"
-              target="_blank"
-              rel="sponsored noopener noreferrer"
+            <Link
+              to="/courses"
               className="inline-flex min-h-11 items-center bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors duration-300"
             >
-              System Design Course
-            </a>
+              Explore Courses
+            </Link>
 
             {/* Admin Section */}
             {isAuthenticated && (
@@ -153,7 +220,7 @@ const Navigation = () => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={mobileMenuOpen}
-            className="md:hidden inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg hover:bg-slate-100 transition-colors duration-300"
+            className="lg:hidden inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg hover:bg-slate-100 transition-colors duration-300"
           >
             {mobileMenuOpen ? (
               <X className="w-6 h-6 text-slate-900" />
@@ -172,7 +239,7 @@ const Navigation = () => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-white border-t border-slate-200 shadow-xl"
+            className="lg:hidden bg-white border-t border-slate-200 shadow-xl"
           >
             <div className="px-4 py-4 space-y-2">
               {navLinks.map((link) => (
@@ -190,6 +257,33 @@ const Navigation = () => {
                   {link.name}
                 </Link>
               ))}
+
+              <div className="border-t border-slate-200 pt-3">
+                <p className="px-4 pb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">Resources</p>
+                {resourceLinks.map((link) => (
+                  link.document ? (
+                    <a
+                      key={link.path}
+                      href={link.path}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block rounded-lg px-4 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    >
+                      {link.name}
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.path}
+                      to={link.path}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`block rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
+                        isActive(link.path) ? 'bg-brand-soft text-brand' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  )
+                ))}
+              </div>
               
               <Link
                 to="/saved-courses"
@@ -211,15 +305,13 @@ const Navigation = () => {
                 )}
               </Link>
 
-              <a
-                href="https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73"
-                target="_blank"
-                rel="sponsored noopener noreferrer"
+              <Link
+                to="/courses"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block min-h-11 text-center bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors duration-300"
               >
-                Explore the System Design Course
-              </a>
+                Explore Interview Courses
+              </Link>
 
               {/* Mobile Admin Section */}
               <div className="pt-2 border-t border-slate-200 mt-2">
