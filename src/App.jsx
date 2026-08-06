@@ -25,6 +25,7 @@ const JobDetailPage = lazy(() => import('@/pages/JobDetailPage'));
 const AboutPage = lazy(() => import('@/pages/AboutPage'));
 const SystemDesignCaseStudiesPage = lazy(() => import('@/pages/SystemDesignCaseStudiesPage'));
 const SystemDesignGlossaryPage = lazy(() => import('@/pages/SystemDesignGlossaryPage'));
+const EduEnginePage = lazy(() => import('@/pages/EduEnginePage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 // Loading fallback component
@@ -69,6 +70,7 @@ function App() {
                           </ProtectedRoute>
                         }
                       />
+                      <Route path="/edu-engine" element={<EduEnginePage />} />
                       <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                   </Suspense>

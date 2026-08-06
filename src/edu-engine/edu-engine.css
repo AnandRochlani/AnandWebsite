@@ -1,0 +1,451 @@
+/*
+  edu-engine styles.
+
+  Every rule below reads from --edu-* custom properties set by EduThemeProvider.
+  No colour, radius or font is hard-coded here — swapping the theme object is
+  the only thing needed to reskin a lesson.
+*/
+
+.edu-root {
+  background: var(--edu-bg);
+  color: var(--edu-ink);
+  font-family: var(--edu-font-body);
+}
+
+.edu-root :focus-visible {
+  outline: 3px solid var(--edu-ring);
+  outline-offset: 3px;
+}
+
+/* ---------- Lesson shell ---------- */
+
+.edu-lesson {
+  max-width: 76ch;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+@media (min-width: 768px) {
+  .edu-lesson {
+    padding: 3rem 2rem 5rem;
+  }
+}
+
+.edu-lesson__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--edu-primary);
+}
+
+.edu-lesson__title {
+  font-family: var(--edu-font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.12;
+  margin: 0.75rem 0 0.5rem;
+  color: var(--edu-ink);
+}
+
+.edu-lesson__summary {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--edu-ink-2);
+  margin: 0 0 1rem;
+}
+
+.edu-lesson__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--edu-ink-3);
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--edu-border);
+}
+
+/* ---------- Ornamental divider ---------- */
+
+.edu-divider {
+  height: 16px;
+  margin: 2.5rem auto 1.25rem;
+  background-image: var(--edu-ornament-divider);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.edu-divider[data-empty='true'] {
+  height: 1px;
+  background-image: none;
+  background-color: var(--edu-border);
+  margin: 2.5rem 0 1.5rem;
+}
+
+/* ---------- Prose ---------- */
+
+.edu-heading {
+  font-family: var(--edu-font-display);
+  color: var(--edu-ink);
+  line-height: 1.25;
+  font-weight: 700;
+  scroll-margin-top: 6rem;
+}
+
+.edu-heading--2 {
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  margin: 2.25rem 0 0.75rem;
+}
+
+.edu-heading--3 {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  margin: 1.75rem 0 0.5rem;
+}
+
+.edu-prose {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--edu-ink-2);
+  margin: 0 0 1.125rem;
+}
+
+.edu-prose strong {
+  color: var(--edu-ink);
+  font-weight: 700;
+}
+
+.edu-prose a,
+.edu-list a {
+  color: var(--edu-link);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.edu-prose code,
+.edu-list code {
+  font-family: var(--edu-font-mono);
+  font-size: 0.9em;
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  background: var(--edu-sunken);
+  color: var(--edu-ink);
+}
+
+.edu-list {
+  margin: 0 0 1.25rem;
+  /* Tailwind's preflight sets `list-style: none` on ul/ol, so the marker has to
+     be restored explicitly rather than left to the browser default. */
+  list-style-type: disc;
+  list-style-position: outside;
+  padding-left: 1.35rem;
+  color: var(--edu-ink-2);
+  line-height: 1.8;
+  font-size: 1.0625rem;
+}
+
+ol.edu-list {
+  list-style-type: decimal;
+}
+
+.edu-list li {
+  margin-bottom: 0.4rem;
+}
+
+.edu-list li::marker {
+  color: var(--edu-primary);
+  font-weight: 700;
+}
+
+/* ---------- Callout ---------- */
+
+.edu-callout {
+  display: flex;
+  gap: 0.875rem;
+  padding: 1rem 1.125rem;
+  margin: 1.5rem 0;
+  border-radius: var(--edu-radius);
+  border: 1px solid var(--edu-callout-border);
+  border-left: 4px solid var(--edu-callout-accent);
+  background: var(--edu-callout-bg);
+  color: var(--edu-ink-2);
+  line-height: 1.7;
+}
+
+.edu-callout__icon {
+  flex-shrink: 0;
+  color: var(--edu-callout-accent);
+  margin-top: 0.15rem;
+}
+
+.edu-callout__label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--edu-callout-accent);
+  margin-bottom: 0.25rem;
+}
+
+.edu-callout__body > :last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Code ---------- */
+
+.edu-code {
+  margin: 1.5rem 0;
+  border-radius: var(--edu-radius);
+  border: 1px solid var(--edu-code-border);
+  background: var(--edu-code-bg);
+  overflow: hidden;
+  box-shadow: var(--edu-shadow);
+}
+
+.edu-code__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0.875rem;
+  border-bottom: 1px solid var(--edu-code-border);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--edu-accent);
+}
+
+.edu-code__file {
+  font-family: var(--edu-font-mono);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--edu-code-ink);
+  opacity: 0.75;
+  font-weight: 400;
+}
+
+.edu-code pre {
+  margin: 0;
+  padding: 1rem 1.125rem;
+  overflow-x: auto;
+  font-family: var(--edu-font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--edu-code-ink);
+  tab-size: 2;
+}
+
+/* ---------- Quiz ---------- */
+
+.edu-quiz {
+  margin: 2rem 0;
+  padding: 1.25rem;
+  border: 1px solid var(--edu-border);
+  border-radius: var(--edu-radius-lg);
+  background: var(--edu-surface);
+  box-shadow: var(--edu-shadow);
+}
+
+.edu-quiz__q {
+  font-family: var(--edu-font-display);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  color: var(--edu-ink);
+  margin: 0 0 0.875rem;
+  line-height: 1.4;
+}
+
+.edu-quiz__options {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.edu-quiz__option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--edu-border);
+  border-radius: var(--edu-radius);
+  background: var(--edu-bg);
+  color: var(--edu-ink-2);
+  font: inherit;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.edu-quiz__option:hover:not(:disabled) {
+  border-color: var(--edu-border-strong);
+  background: var(--edu-surface-2);
+}
+
+.edu-quiz__option:disabled {
+  cursor: default;
+}
+
+.edu-quiz__option[data-state='correct'] {
+  border-color: var(--edu-tip);
+  background: var(--edu-tip-bg);
+  color: var(--edu-ink);
+}
+
+.edu-quiz__option[data-state='wrong'] {
+  border-color: var(--edu-danger);
+  background: var(--edu-danger-bg);
+  color: var(--edu-ink);
+}
+
+.edu-quiz__marker {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--edu-border-strong);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--edu-ink-3);
+}
+
+.edu-quiz__option[data-state='correct'] .edu-quiz__marker {
+  border-color: var(--edu-tip);
+  background: var(--edu-tip);
+  color: var(--edu-on-accent);
+}
+
+.edu-quiz__option[data-state='wrong'] .edu-quiz__marker {
+  border-color: var(--edu-danger);
+  background: var(--edu-danger);
+  color: var(--edu-on-accent);
+}
+
+.edu-quiz__explain {
+  margin: 0.875rem 0 0;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--edu-border);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--edu-ink-2);
+}
+
+/* ---------- Figure ---------- */
+
+.edu-figure {
+  margin: 1.75rem 0;
+}
+
+.edu-figure__frame {
+  padding: 1rem;
+  border: 1px solid var(--edu-border);
+  border-radius: var(--edu-radius-lg);
+  background: var(--edu-surface);
+  box-shadow: var(--edu-shadow);
+  overflow-x: auto;
+}
+
+.edu-figure img,
+.edu-figure svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.edu-figure figcaption {
+  margin-top: 0.625rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--edu-ink-3);
+  text-align: center;
+}
+
+/* ---------- Key-points panel ---------- */
+
+.edu-keypoints {
+  margin: 2rem 0;
+  padding: 1.25rem 1.375rem;
+  border: 1px solid var(--edu-border);
+  border-radius: var(--edu-radius-lg);
+  background: var(--edu-surface-2);
+  position: relative;
+  overflow: hidden;
+}
+
+.edu-keypoints::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--edu-ornament-jali);
+  background-size: 40px 40px;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.edu-keypoints > * {
+  position: relative;
+}
+
+.edu-keypoints__title {
+  font-family: var(--edu-font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--edu-ink);
+  margin: 0 0 0.75rem;
+}
+
+/* ---------- Lesson navigation ---------- */
+
+.edu-lessonnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--edu-border);
+}
+
+.edu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.125rem;
+  border-radius: var(--edu-radius);
+  border: 1px solid var(--edu-border-strong);
+  background: var(--edu-surface);
+  color: var(--edu-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.edu-btn:hover {
+  background: var(--edu-surface-2);
+  border-color: var(--edu-primary);
+}
+
+.edu-btn--primary {
+  background: var(--edu-primary);
+  border-color: var(--edu-primary);
+  color: var(--edu-on-accent);
+}
+
+.edu-btn--primary:hover {
+  background: var(--edu-primary-hover);
+  border-color: var(--edu-primary-hover);
+}
