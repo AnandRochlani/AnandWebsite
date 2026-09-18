@@ -122,6 +122,9 @@ const Footer = () => {
               <a href="/system-design-interview-checklist.md" className="block text-slate-400 hover:text-white">
                 Download interview checklist
               </a>
+              <a href="https://crmcloudmastery.com/" className="block text-slate-400 hover:text-white">
+                Salesforce courses: CRM Cloud Mastery
+              </a>
             </div>
             <a
               href="https://www.udemy.com/course/system-design-fundamental/?referralCode=4D123B9F202E6D906A73"

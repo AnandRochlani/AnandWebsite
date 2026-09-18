@@ -337,6 +337,7 @@ const staticFooter = `\t\t\t<footer id="static-footer">
 \t\t\t\t\t<a href="/system-design-glossary">Glossary</a>
 \t\t\t\t\t<a href="/about">About</a>
 \t\t\t\t\t<a href="/jobs">Jobs</a>
+\t\t\t\t\t<a href="https://crmcloudmastery.com/">Salesforce courses: CRM Cloud Mastery</a>
 \t\t\t\t</nav>
 \t\t\t</footer>`;
 
